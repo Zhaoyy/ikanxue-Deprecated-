@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">看雪论坛</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="daily_english_url">http://open.iciba.com/dsapi</string>
+
+    <string name="default_daily_en">For without progress there will be stagnation and decay.</string>
+  <string name="default_daily_zh">如果没有进步，就会停滞，就会衰败。《哈利波特与凤凰社》</string>
+  <string name="default_daily_pic">http://cdn.iciba.com/news/word/2015-06-27.jpg</string>
+</resources>

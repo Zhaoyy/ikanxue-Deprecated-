@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- text color  -->
+  <color name="text_black_1">#DF000000</color>
+  <color name="text_black_2">#8A000000</color>
+  <color name="text_black_3">#43000000</color>
+  <color name="text_black_4">#1F000000</color>
+
+  <color name="app_main_color">#14E715</color>
+  <color name="orange">#FF9800</color>
+  <color name="orange_dark">#Ef6C00</color>
+  <color name="orange_light">#FFB74D</color>
+</resources>
