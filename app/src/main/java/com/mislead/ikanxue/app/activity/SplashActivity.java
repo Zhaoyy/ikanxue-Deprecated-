@@ -1,6 +1,7 @@
 package com.mislead.ikanxue.app.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,23 +20,30 @@ import com.mislead.ikanxue.app.util.DailyEnglishUtil;
  **/
 public class SplashActivity extends Activity {
 
-    private static String TAG = "SplashActivity";
-    private TextView tvDailyEn;
+  private static String TAG = "SplashActivity";
+  private TextView tvDailyEn;
   private TextView tvDailyZh;
   private ImageView ivDaily;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-
-      tvDailyEn = (TextView) findViewById(R.id.tv_daily_en);
-      tvDailyZh = (TextView) findViewById(R.id.tv_daily_zh);
-      ivDaily = (ImageView) findViewById(R.id.iv_daily);
-
-      setDailyEnglish();
-
+  private Runnable runnable = new Runnable() {
+    @Override public void run() {
+      startActivity(new Intent(SplashActivity.this, MainActivity.class));
+      SplashActivity.this.finish();
     }
+  };
+
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_splash);
+
+    tvDailyEn = (TextView) findViewById(R.id.tv_daily_en);
+    tvDailyZh = (TextView) findViewById(R.id.tv_daily_zh);
+    ivDaily = (ImageView) findViewById(R.id.iv_daily);
+
+    setDailyEnglish();
+
+    tvDailyEn.postDelayed(runnable, 2000);
+  }
 
   private void setDailyEnglish() {
 
@@ -51,6 +59,6 @@ public class SplashActivity extends Activity {
       tvDailyEn.setText(dailyEnglish.getContent());
     }
 
-    ivDaily.setImageResource(R.mipmap.daily);
+    ivDaily.setImageResource(R.drawable.daily);
   }
 }

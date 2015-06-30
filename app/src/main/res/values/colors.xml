@@ -10,4 +10,6 @@
   <color name="orange">#FF9800</color>
   <color name="orange_dark">#Ef6C00</color>
   <color name="orange_light">#FFB74D</color>
+
+  <color name="flow_item_selected">#fff3f4f5</color>
 </resources>
