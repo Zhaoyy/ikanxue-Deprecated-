@@ -1,6 +1,5 @@
 package com.mislead.ikanxue.app.activity;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -9,10 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mislead.ikanxue.app.R;
-import com.mislead.ikanxue.app.util.AndroidHelper;
-import com.mislead.ikanxue.app.util.DailyEnglishUtil;
-import com.mislead.ikanxue.app.util.ShPreUtil;
-import com.mislead.ikanxue.app.util.VolleyHelper;
+import com.mislead.ikanxue.app.api.Api;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,8 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     tvHello.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        String string = ShPreUtil.getString(DailyEnglishUtil.SH_LAST_DAILY_PIC_URL);
-        VolleyHelper.requestImageWithCacheSimple(string, AndroidHelper.getImageDiskCache(), null);
+        new Api().getForumToken();
       }
     });
   }

@@ -10,9 +10,10 @@
       android:id="@+id/iv_daily"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:minHeight="240dp"
+      android:minHeight="280dp"
       android:contentDescription="@string/app_name"
       android:scaleType="centerCrop"
+      android:src="@mipmap/daily"
       />
 
   <ImageView
@@ -20,7 +21,7 @@
       android:background="@mipmap/flow_home_mask"
       android:layout_width="fill_parent"
       android:layout_height="120dp"
-      android:layout_marginTop="120dp"
+      android:layout_marginTop="160dp"
       />
 
   <TextView
@@ -65,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/splash_kanxue"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="40dp"
         android:textColor="@color/text_black_2"
         android:textSize="@dimen/text_size_normal"
         />

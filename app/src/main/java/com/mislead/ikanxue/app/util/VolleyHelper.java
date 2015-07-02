@@ -3,15 +3,19 @@ package com.mislead.ikanxue.app.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.mislead.ikanxue.app.model.ImageDiskCache;
+import java.util.Map;
+import org.json.JSONObject;
 
 /**
  * VolleyHelper
@@ -36,9 +40,33 @@ public class VolleyHelper {
    * @param url request url
    * @param listener handle request listener
    */
-  public static void requestStringGet(String url, RespinseListener<String> listener) {
+  public static void requestStringGet(String url, ResponseListener<String> listener) {
     StringRequest request = new StringRequest(Request.Method.GET, url, listener, listener);
     request.setShouldCache(true);
+    request.setTag(url);
+    queue.add(request);
+  }
+
+  public static void requestJSONObject(int method, String url, JSONObject requestJson,
+      ResponseListener<JSONObject> listener) {
+
+    requestJSONObjectWithHeader(method, url, requestJson, listener, null);
+  }
+
+  public static void requestJSONObjectWithHeader(int method, String url, JSONObject requestJson,
+      ResponseListener<JSONObject> listener, final Map<String, String> header) {
+    JsonObjectRequest request;
+    if (header == null) {
+      request = new JsonObjectRequest(method, url, requestJson, listener, listener);
+    } else {
+      request = new JsonObjectRequest(method, url, requestJson, listener, listener) {
+        @Override public Map<String, String> getHeaders() throws AuthFailureError {
+          return header;
+        }
+      };
+    }
+    request.setRetryPolicy(new DefaultRetryPolicy(500, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     request.setTag(url);
     queue.add(request);
   }
@@ -57,19 +85,19 @@ public class VolleyHelper {
    * @param listener handler request listener
    */
   public static void requestImageWithoutCache(String url, int maxWidth, int maxHeight,
-      Bitmap.Config config, RespinseListener<Bitmap> listener) {
+      Bitmap.Config config, ResponseListener<Bitmap> listener) {
     ImageRequest request = new ImageRequest(url, listener, maxWidth, maxHeight, config, listener);
     request.setShouldCache(true);
     request.setTag(url);
     queue.add(request);
   }
 
-  public static void requestImageViewWithoutCache(String url, RespinseListener<Bitmap> listener) {
+  public static void requestImageViewWithoutCache(String url, ResponseListener<Bitmap> listener) {
     requestImageViewWithoutCache(url, Bitmap.Config.RGB_565, listener);
   }
 
   public static void requestImageViewWithoutCache(String url, Bitmap.Config config,
-      RespinseListener<Bitmap> listener) {
+      ResponseListener<Bitmap> listener) {
     requestImageWithoutCache(url, 0, 0, config, listener);
   }
 
@@ -81,8 +109,8 @@ public class VolleyHelper {
    * ImageLoader.ImageCache, ImageLoader.ImageListener)}
    *
    * @param url request url
-   * @param imageView imageView to diaplay image
-   * @param cache image cacher
+   * @param imageView imageView to display image
+   * @param cache image cache
    * @param defaultImageResId default image
    * @param errorImageResId error image
    * @param maxWidth maximum image width
@@ -130,7 +158,7 @@ public class VolleyHelper {
 
   /**
    * getCacheKey
-   * get cache key about image url, used for getImage from cahcer;
+   * get cache key about image url, used for getImage from cache;
    * @param url       image url
    * @param maxWidth  cache maximum width
    * @param maxHeight cache maximum height
@@ -145,7 +173,7 @@ public class VolleyHelper {
     return getCacheKey(url, 0, 0);
   }
 
-  public static interface RespinseListener<T> extends Response.Listener<T>, Response.ErrorListener {
+  public static interface ResponseListener<T> extends Response.Listener<T>, Response.ErrorListener {
 
   }
 

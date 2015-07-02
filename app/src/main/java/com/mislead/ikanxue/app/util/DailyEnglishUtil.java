@@ -1,11 +1,8 @@
 package com.mislead.ikanxue.app.util;
 
-import android.content.Context;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mislead.ikanxue.app.model.DailyEnglish;
-import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -24,10 +21,10 @@ public class DailyEnglishUtil {
   public static final String SH_LAST_DAILY_PIC_URL = "last_daily_pic_url";
   private static final String SH_LAST_DAILY_DATE = "last_daily_date";
 
-  private VolleyHelper.RespinseListener<String> listener = null;
+  private VolleyHelper.ResponseListener<String> listener = null;
 
   public DailyEnglishUtil prepareListener() {
-    listener = new VolleyHelper.RespinseListener<String>() {
+    listener = new VolleyHelper.ResponseListener<String>() {
       @Override public void onErrorResponse(VolleyError volleyError) {
         LogHelper.e(volleyError.getMessage());
       }

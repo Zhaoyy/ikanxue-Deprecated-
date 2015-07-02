@@ -4,7 +4,10 @@
     <file url="file://$PROJECT_DIR$/app/build.gradle" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/activity/MainActivity.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/activity/SplashActivity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/api/Api.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/CookieStorage.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/DailyEnglish.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/ObjStorage.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/util/AndroidHelper.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/util/BitmapHelper.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/util/DailyEnglishUtil.java" charset="UTF-8" />
