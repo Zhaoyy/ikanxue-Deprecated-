@@ -21,7 +21,7 @@ public class DailyEnglishUtil {
 
   private static final String SH_LAST_DAILY_EN = "last_daily_en";
   private static final String SH_LAST_DAILY_ZH = "last_daily_zh";
-  private static final String SH_LAST_DAILY_PIC_URL = "last_daily_pic_url";
+  public static final String SH_LAST_DAILY_PIC_URL = "last_daily_pic_url";
   private static final String SH_LAST_DAILY_DATE = "last_daily_date";
 
   private VolleyHelper.RespinseListener<String> listener = null;
@@ -34,7 +34,6 @@ public class DailyEnglishUtil {
 
       @Override public void onResponse(String s) {
 
-        LogHelper.e(TAG, s);
         Gson gson = new Gson();
         DailyEnglish object = gson.fromJson(s, DailyEnglish.class);
 
@@ -42,6 +41,8 @@ public class DailyEnglishUtil {
         ShPreUtil.setVal(SH_LAST_DAILY_ZH, object.getNote());
         ShPreUtil.setVal(SH_LAST_DAILY_PIC_URL, object.getPicture());
         ShPreUtil.setVal(SH_LAST_DAILY_DATE, object.getDateline());
+        // cache the image
+        VolleyHelper.requestAndCacheImage(object.getPicture(), AndroidHelper.getImageDiskCache());
       }
     };
 
@@ -55,7 +56,7 @@ public class DailyEnglishUtil {
     if (!today.equals(ShPreUtil.getString(SH_LAST_DAILY_DATE))) {
       getDailyEnglishFromNet();
     }
-    LogHelper.e(SH_LAST_DAILY_EN + ShPreUtil.getString(SH_LAST_DAILY_EN));
+    //LogHelper.e(SH_LAST_DAILY_EN + ShPreUtil.getString(SH_LAST_DAILY_EN));
     if (ShPreUtil.getString(SH_LAST_DAILY_EN).isEmpty()) {
       return null;
     } else {
@@ -66,7 +67,6 @@ public class DailyEnglishUtil {
 
       return dailyEnglish;
     }
-
   }
 
   private void getDailyEnglishFromNet() {

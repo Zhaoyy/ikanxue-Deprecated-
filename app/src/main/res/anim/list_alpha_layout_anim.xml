@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layoutAnimation xmlns:android="http://schemas.android.com/apk/res/android"
+    android:delay="30%"
+    android:duration="@android:integer/config_mediumAnimTime"
+    android:animation="@anim/alpha_in"
+    android:animationOrder="normal"
+    >
+
+</layoutAnimation>

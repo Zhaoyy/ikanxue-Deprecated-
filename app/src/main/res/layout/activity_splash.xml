@@ -11,14 +11,13 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:minHeight="240dp"
-      android:src="@drawable/daily"
       android:contentDescription="@string/app_name"
       android:scaleType="centerCrop"
       />
 
   <ImageView
       android:id="@+id/mask"
-      android:background="@drawable/flow_home_mask"
+      android:background="@mipmap/flow_home_mask"
       android:layout_width="fill_parent"
       android:layout_height="120dp"
       android:layout_marginTop="120dp"
@@ -52,15 +51,36 @@
       android:paddingRight="16dp"
       />
 
-  <TextView
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:gravity="center"
       android:layout_below="@id/tv_daily_zh"
       android:layout_alignParentBottom="true"
-      android:textSize="@dimen/text_size_big"
-      android:text="@string/app_name"
-     />
+      android:gravity="center"
+      android:orientation="vertical"
+      android:layoutAnimation="@anim/list_alpha_layout_anim"
+      >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/splash_kanxue"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/text_black_2"
+        android:textSize="@dimen/text_size_normal"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="@dimen/text_size_normal"
+        android:textColor="@color/text_black_2"
+        android:textStyle="italic"
+        android:text="@string/splash_text"
+        />
+
+  </LinearLayout>
 
 
 </RelativeLayout>
