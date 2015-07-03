@@ -7,10 +7,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
+import com.mislead.ikanxue.app.net.HttpClientUtil;
+import com.mislead.ikanxue.app.util.LogHelper;
+import com.mislead.ikanxue.app.volley.VolleyHelper;
+import java.util.List;
+import org.apache.http.cookie.Cookie;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
   private TextView tvHello;
   private ImageView iv;
@@ -22,9 +31,66 @@ public class MainActivity extends AppCompatActivity {
     tvHello = (TextView) findViewById(R.id.tv_hello);
     iv = (ImageView) findViewById(R.id.iv);
 
-    tvHello.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        new Api().getForumToken();
+    findViewById(R.id.btn_login).setOnClickListener(this);
+    findViewById(R.id.btn_logout).setOnClickListener(this);
+  }
+
+  private void loginClick(View v) {
+    Api.getInstance().login("winz", "kanxue153729", new HttpClientUtil.NetClientCallback() {
+      @Override public void execute(int status, String response, List<Cookie> cookies) {
+        if (status == HttpClientUtil.NET_SUCCESS) {
+          final JSONObject retObj;
+          LogHelper.e(response);
+          try {
+            retObj = new JSONObject(response);
+            final int ret = retObj.getInt("result");
+            if (ret != Api.LOGIN_SUCCESS) {
+              switch (ret) {
+                case Api.LOGIN_FAIL_LESS_THAN_FIVE:
+                  String alertText = "用户名或者密码错误,还有" + (Api.ALLOW_LOGIN_USERNAME_OR_PASSWD_ERROR_NUM
+                      - retObj.getInt("strikes")) + "尝试机会";
+                  Toast.makeText(MainActivity.this, alertText, Toast.LENGTH_SHORT).show();
+                  break;
+                case Api.LOGIN_FAIL_MORE_THAN_FIVE:
+                  Toast.makeText(MainActivity.this, R.string.login_fail_more_than_five,
+                      Toast.LENGTH_SHORT).show();
+                  break;
+              }
+              return;
+            }
+            String token = retObj.getString("securitytoken");
+            Api.getInstance().setToken(token);
+            Api.getInstance()
+                .setLoginUserInfo(retObj.getString("username"), retObj.getInt("userid"),
+                    retObj.getInt("isavatar"), retObj.getString("email"));
+
+            for (int i = 0; i < cookies.size(); i++) {
+              Cookie cookie = cookies.get(i);
+              Api.getInstance().getCookieStorage().addCookie(cookie.getName(), cookie.getValue());
+            }
+            //MainActivity.this.sendBroadcast(new Intent(
+            //    App.LOGIN_STATE_CHANGE_ACTION));
+          } catch (JSONException e) {
+            e.printStackTrace();
+          }
+        }
+      }
+    });
+  }
+
+  private void logout() {
+    Api.getInstance().logout(new VolleyHelper.ResponseListener<JSONObject>() {
+      @Override public void onErrorResponse(VolleyError volleyError) {
+
+      }
+
+      @Override public void onResponse(JSONObject jsonObject) {
+        try {
+          LogHelper.e(jsonObject.getString("result"));
+          Api.getInstance().clearLoginData();
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
       }
     });
   }
@@ -47,5 +113,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override public void onClick(View v) {
+    switch (v.getId()) {
+      case R.id.btn_login:
+        loginClick(v);
+        break;
+      case R.id.btn_logout:
+        logout();
+        break;
+      default:
+        break;
+    }
   }
 }

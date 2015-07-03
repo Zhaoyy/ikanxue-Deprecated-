@@ -6,18 +6,14 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.model.DailyEnglish;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.DailyEnglishUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
-import com.mislead.ikanxue.app.util.VolleyHelper;
+import com.mislead.ikanxue.app.volley.VolleyHelper;
 
 /**
  * SplashActivity

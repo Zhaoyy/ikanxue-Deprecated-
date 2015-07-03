@@ -1,10 +1,11 @@
 package com.mislead.ikanxue.app.util;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import com.mislead.ikanxue.app.model.ImageDiskCache;
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 
 /**
  * AndroidHelper
@@ -28,7 +29,6 @@ public class AndroidHelper {
     } else {
       cacheDirPath = mContext.getCacheDir();
     }
-    LogHelper.e(cacheDirPath.getAbsolutePath());
     imageDiskCache = new ImageDiskCache(cacheDirPath, CACHE_SIZE);
     imageDiskCache.initialize();
   }
@@ -37,5 +37,28 @@ public class AndroidHelper {
     return imageDiskCache;
   }
 
+  public static String getVersionName(Context context) {
+    PackageInfo info = getPackageInfo(context, context.getPackageName());
+
+    return info == null ? null : info.versionName;
+  }
+
+  public static int getVersionCode(Context context) {
+    PackageInfo info = getPackageInfo(context, context.getPackageName());
+
+    return info == null ? 0 : info.versionCode;
+  }
+
+  public static PackageInfo getPackageInfo(Context context, String packageName) {
+    PackageManager manager = context.getPackageManager();
+    try {
+      PackageInfo info =
+          manager.getPackageInfo(context.getPackageName(), PackageManager.GET_CONFIGURATIONS);
+      return info;
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
 
 }

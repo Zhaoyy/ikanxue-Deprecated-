@@ -11,4 +11,6 @@
   <string name="default_daily_pic">http://cdn.iciba.com/news/word/2015-06-27.jpg</string>
   <string name="splash_text">by Mislead</string>
   <string name="splash_kanxue">内容来自看雪论坛</string>
+
+  <string name="login_fail_more_than_five">您已经超出了登录失败限制次数，请等待 15 分钟后重试</string>
 </resources>

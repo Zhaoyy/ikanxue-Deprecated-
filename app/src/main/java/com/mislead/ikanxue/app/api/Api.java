@@ -6,9 +6,11 @@ import android.preference.PreferenceManager;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.model.CookieStorage;
+import com.mislead.ikanxue.app.model.KanxueResponse;
 import com.mislead.ikanxue.app.model.ObjStorage;
+import com.mislead.ikanxue.app.net.HttpClientUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
-import com.mislead.ikanxue.app.util.VolleyHelper;
+import com.mislead.ikanxue.app.volley.VolleyHelper;
 import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONException;
@@ -104,6 +106,11 @@ public class Api {
     }
   }
 
+  public void requestJSONObjectByPost(String url,
+      VolleyHelper.ResponseListener<JSONObject> listener, Map<String, String> param) {
+    VolleyHelper.requestJSONObject(Request.Method.POST, url, null, listener);
+  }
+
   /**
    * 获取securitytoken，securitytoken在做post操作时需要提交。处于登录状态得到正常token，
    * 非登录状态得到字符串guest
@@ -163,142 +170,130 @@ public class Api {
         DOMAIN + PATH + "forumdisplay.php?" + STYLE + "&f=" + id + "&page=" + page + "&order=desc";
     requestJSONObjectByGet(url, responseListener);
   }
-  //
-  ///**
-  // * 获取指定主题中的帖子列表
-  // *
-  // * @param id
-  // *            主题id
-  // * @param page
-  // *            主题帖子列表页码
-  // * @param callback
-  // */
-  //public void getForumShowthreadPage(int id, int page,
-  //		final NetClientCallback callback) {
-  //	String url = DOMAIN + PATH + "showthread.php?" + STYLE + "&t=" + id
-  //			+ "&page=" + page;
-  //	HttpClientUtil hcu = new HttpClientUtil(url, HttpClientUtil.METHOD_GET,
-  //			callback);
-  //	if (this.isLogin()) {
-  //		hcu.addCookie(this.mCookieStorage.getCookies());
-  //	}
-  //	hcu.asyncConnect();
-  //}
-  //
-  ///**
-  // * 获取完整的帖子内容。帖子内容较长时，看雪默认只传输缩略内容，可通过该接口获取完整内容。
-  // *
-  // * @param id
-  // *            帖子id
-  // * @param callback
-  // */
-  //public void getForumFullThread(int id, final NetClientCallback callback) {
-  //	String url = DOMAIN + PATH + "showpost.php?" + STYLE + "&p=" + id;
-  //	HttpClientUtil hcu = new HttpClientUtil(url, HttpClientUtil.METHOD_GET,
-  //			callback);
-  //	if (this.isLogin()) {
-  //		hcu.addCookie(this.mCookieStorage.getCookies());
-  //	}
-  //	hcu.asyncConnect();
-  //}
-  //
-  ///**
-  // * 登录看雪
-  // *
-  // * @param uname
-  // * @param passwd
-  // * @param callback
-  // */
-  //public void login(String uname, String passwd,
-  //		final NetClientCallback callback) {
-  //	String url = DOMAIN + PATH + "login.php?do=login" + "&" + STYLE;
-  //	HttpClientUtil hcu = new HttpClientUtil(url,
-  //			HttpClientUtil.METHOD_POST, callback);
-  //	hcu.addParam("vb_login_username", uname);
-  //	hcu.addParam("do", "login");
-  //	hcu.addParam("cookieuser", "1");
-  //	hcu.addParam("securitytoken", "guest");
-  //	hcu.addParam("vb_login_md5password",
-  //			SimpleHASH.md5(this.strToEnt(passwd.trim())));
-  //	hcu.addParam("vb_login_md5password_utf", SimpleHASH.md5(passwd.trim()));
-  //	hcu.asyncConnect();
-  //}
-  //
-  ///**
-  // * 设置登录用户的个人信息
-  // *
-  // * @param username
-  // *            登录用户用户名
-  // * @param id
-  // *            登录用户id
-  // * @param isavatar
-  // *            登录用户是否有头像
-  // * @param email
-  // *            登录用户email地址
-  // */
-  //public void setLoginUserInfo(String username, int id, int isavatar,
-  //		String email) {
-  //	if (username == null)
-  //		return;
-  //	Editor editor = this.mPreferences.edit();
-  //	editor.putString("username", username);
-  //	editor.putInt("userid", id);
-  //	editor.putInt("isavatar", isavatar);
-  //	editor.putString("email", email);
-  //	editor.commit();
-  //}
-  //
-  ///**
-  // * @return 用户名
-  // */
-  //public String getLoginUserName() {
-  //	return this.mPreferences.getString("username", null);
-  //}
-  //
-  ///**
-  // * @return 用户id
-  // */
-  //public int getLoginUserId() {
-  //	return this.mPreferences.getInt("userid", -1);
-  //}
-  //
-  ///**
-  // * @return 用户有头像返回true
-  // */
-  //public int getIsAvatar() {
-  //	return this.mPreferences.getInt("isavatar", 0);
-  //}
-  //
-  ///**
-  // * @return 用户email地址
-  // */
-  //public String getEmail() {
-  //	return this.mPreferences.getString("email", null);
-  //}
-  //
-  ///**
-  // * 清除登录用户个人信息
-  // */
-  //public void clearLoginData() {
-  //	this.mCookieStorage.clearAll();
-  //	Editor editor = this.mPreferences.edit();
-  //	editor.remove("username");
-  //	editor.remove("userid");
-  //	editor.remove("isavatar");
-  //	editor.commit();
-  //}
-  //
-  ///**
-  // * 登出
-  // *
-  // * @param callback
-  // */
-  //public void logout(final NetClientCallback callback) {
-  //	String url = DOMAIN + PATH + "login.php?do=logout&logouthash=" + mToken
-  //			+ "&" + STYLE;
-  //	new HttpClientUtil(url, HttpClientUtil.METHOD_GET, callback)
-  //			.asyncConnect();
-  //}
+
+  /**
+   * 获取指定主题中的帖子列表
+   *
+   * @param id 主题id
+   * @param page 主题帖子列表页码
+   */
+  public void getForumShowthreadPage(int id, int page,
+      final VolleyHelper.ResponseListener<JSONObject> responseListener) {
+    String url = DOMAIN + PATH + "showthread.php?" + STYLE + "&t=" + id + "&page=" + page;
+    requestJSONObjectByGet(url, responseListener);
+  }
+
+  /**
+   * 获取完整的帖子内容。帖子内容较长时，看雪默认只传输缩略内容，可通过该接口获取完整内容。
+   *
+   * @param id 帖子id
+   */
+  public void getForumFullThread(int id,
+      final VolleyHelper.ResponseListener<JSONObject> responseListener) {
+    String url = DOMAIN + PATH + "showpost.php?" + STYLE + "&p=" + id;
+    requestJSONObjectByGet(url, responseListener);
+  }
+
+  /**
+   * 登录看雪
+   */
+  public void login(String uname, String passwd,
+      final VolleyHelper.ResponseListener<KanxueResponse> responseListener) {
+    String url = DOMAIN + PATH + "login.php?do=login" + "&" + STYLE;
+    //String url = DOMAIN + PATH + "login.php";
+    Map<String, String> params = new HashMap<>();
+    //params.put("do", "login");
+    //params.put("styleid", "12");
+    params.put("vb_login_username", uname);
+    params.put("do", "login");
+    params.put("cookieuser", "1");
+    params.put("securitytoken", "guest");
+    params.put("vb_login_md5password", SimpleHASH.md5(this.strToEnt(passwd.trim())));
+    params.put("vb_login_md5password_utf", SimpleHASH.md5(passwd.trim()));
+
+    //url = Urlhelper.encodeParamsInUrl(url, params);
+    LogHelper.e("encodeUrl:" + url);
+    //VolleyHelper.requestStringWithEncodingParams(Request.Method.POST, url, responseListener, params);
+    VolleyHelper.requestKanxuePost(url, responseListener, params);
+  }
+
+  public void login(String uname, String passwd, final HttpClientUtil.NetClientCallback callback) {
+    String url = DOMAIN + PATH + "login.php?do=login" + "&" + STYLE;
+    HttpClientUtil hcu = new HttpClientUtil(url, HttpClientUtil.METHOD_POST, callback);
+    hcu.addParam("vb_login_username", uname);
+    hcu.addParam("do", "login");
+    hcu.addParam("cookieuser", "1");
+    hcu.addParam("securitytoken", "guest");
+    hcu.addParam("vb_login_md5password", SimpleHASH.md5(this.strToEnt(passwd.trim())));
+    hcu.addParam("vb_login_md5password_utf", SimpleHASH.md5(passwd.trim()));
+    hcu.asyncConnect();
+  }
+
+  /**
+   * 设置登录用户的个人信息
+   *
+   * @param username 登录用户用户名
+   * @param id 登录用户id
+   * @param isavatar 登录用户是否有头像
+   * @param email 登录用户email地址
+   */
+  public void setLoginUserInfo(String username, int id, int isavatar, String email) {
+    if (username == null) return;
+    SharedPreferences.Editor editor = this.mPreferences.edit();
+    editor.putString("username", username);
+    editor.putInt("userid", id);
+    editor.putInt("isavatar", isavatar);
+    editor.putString("email", email);
+    editor.commit();
+  }
+
+  /**
+   * @return 用户名
+   */
+  public String getLoginUserName() {
+    return this.mPreferences.getString("username", null);
+  }
+
+  /**
+   * @return 用户id
+   */
+  public int getLoginUserId() {
+    return this.mPreferences.getInt("userid", -1);
+  }
+
+  /**
+   * @return 用户有头像返回true
+   */
+  public int getIsAvatar() {
+    return this.mPreferences.getInt("isavatar", 0);
+  }
+
+  /**
+   * @return 用户email地址
+   */
+  public String getEmail() {
+    return this.mPreferences.getString("email", null);
+  }
+
+  /**
+   * 清除登录用户个人信息
+   */
+  public void clearLoginData() {
+    this.mCookieStorage.clearAll();
+    SharedPreferences.Editor editor = this.mPreferences.edit();
+    editor.remove("username");
+    editor.remove("userid");
+    editor.remove("isavatar");
+    editor.commit();
+  }
+
+  /**
+   * 登出
+   */
+  public void logout(final VolleyHelper.ResponseListener<JSONObject> responseListener) {
+    String url = DOMAIN + PATH + "login.php?do=logout&logouthash=" + mToken + "&" + STYLE;
+    VolleyHelper.requestJSONObject(Request.Method.GET, url, null, responseListener);
+  }
   //
   ///**
   // * 回复主题
@@ -446,63 +441,57 @@ public class Api {
   //	hcu.asyncConnect();
   //}
   //
-  ///**
-  // * 获取看雪用户头像的url
-  // *
-  // * @param userId
-  // *            用户id
-  // * @return
-  // */
-  //public String getUserHeadImageUrl(int userId) {
-  //	return DOMAIN + PATH + "image.php?u=" + userId;
-  //}
-  //
-  ///**
-  // * 获取看雪帖子中附件图片的url
-  // *
-  // * @param id
-  // *            附件id
-  // * @return
-  // */
-  //public String getAttachmentImgUrl(int id) {
-  //	return DOMAIN + PATH + "attachment.php?attachmentid=" + id
-  //			+ "&thumb=1&" + STYLE;
-  //}
-  //
-  ///**
-  // * 登录前用户密码预处理
-  // *
-  // * @param input
-  // *            去掉首位空格的用户密码
-  // * @return
-  // */
-  //private String strToEnt(String input) {
-  //	String output = "";
-  //
-  //	for (int i = 0; i < input.length(); i++) {
-  //		int ucode = input.codePointAt(i);
-  //		String tmp = "";
-  //
-  //		if (ucode > 255) {
-  //			while (ucode >= 1) {
-  //				tmp = "0123456789".charAt(ucode % 10) + tmp;
-  //				ucode /= 10;
-  //			}
-  //
-  //			if (tmp == "") {
-  //				tmp = "0";
-  //			}
-  //
-  //			tmp = "#" + tmp;
-  //			tmp = "&" + tmp;
-  //			tmp = tmp + ";";
-  //			output += tmp;
-  //		} else {
-  //			output += input.charAt(i);
-  //		}
-  //	}
-  //	return output;
-  //}
+
+  /**
+   * 获取看雪用户头像的url
+   *
+   * @param userId 用户id
+   */
+  public String getUserHeadImageUrl(int userId) {
+    return DOMAIN + PATH + "image.php?u=" + userId;
+  }
+
+  /**
+   * 获取看雪帖子中附件图片的url
+   *
+   * @param id 附件id
+   */
+  public String getAttachmentImgUrl(int id) {
+    return DOMAIN + PATH + "attachment.php?attachmentid=" + id + "&thumb=1&" + STYLE;
+  }
+
+  /**
+   * 登录前用户密码预处理
+   *
+   * @param input 去掉首位空格的用户密码
+   */
+  private String strToEnt(String input) {
+    String output = "";
+
+    for (int i = 0; i < input.length(); i++) {
+      int ucode = input.codePointAt(i);
+      String tmp = "";
+
+      if (ucode > 255) {
+        while (ucode >= 1) {
+          tmp = "0123456789".charAt(ucode % 10) + tmp;
+          ucode /= 10;
+        }
+
+        if (tmp == "") {
+          tmp = "0";
+        }
+
+        tmp = "#" + tmp;
+        tmp = "&" + tmp;
+        tmp = tmp + ";";
+        output += tmp;
+      } else {
+        output += input.charAt(i);
+      }
+    }
+    return output;
+  }
   //
   ///**
   // * 检测指定用户个人信息列表
