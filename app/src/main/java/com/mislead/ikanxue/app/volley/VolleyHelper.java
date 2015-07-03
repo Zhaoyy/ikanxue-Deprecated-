@@ -31,7 +31,7 @@ public class VolleyHelper {
   private static RequestQueue queue = null;
 
   public static void init(Context context) {
-    queue = Volley.newRequestQueue(context, new MHurlStack());
+    queue = Volley.newRequestQueue(context);
   }
 
   /**

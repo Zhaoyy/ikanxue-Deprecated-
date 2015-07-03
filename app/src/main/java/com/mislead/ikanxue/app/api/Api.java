@@ -244,7 +244,7 @@ public class Api {
     editor.putInt("userid", id);
     editor.putInt("isavatar", isavatar);
     editor.putString("email", email);
-    editor.commit();
+    editor.apply();
   }
 
   /**
@@ -284,7 +284,7 @@ public class Api {
     editor.remove("username");
     editor.remove("userid");
     editor.remove("isavatar");
-    editor.commit();
+    editor.apply();
   }
 
   /**

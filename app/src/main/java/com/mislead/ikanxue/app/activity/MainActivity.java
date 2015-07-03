@@ -86,8 +86,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
       @Override public void onResponse(JSONObject jsonObject) {
         try {
-          LogHelper.e(jsonObject.getString("result"));
+
           Api.getInstance().clearLoginData();
+          LogHelper.e(jsonObject.getString("result"));
         } catch (JSONException e) {
           e.printStackTrace();
         }

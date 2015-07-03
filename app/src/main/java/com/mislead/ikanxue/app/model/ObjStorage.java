@@ -32,7 +32,7 @@ public class ObjStorage {
 
     SharedPreferences.Editor editor = m_sharedPreferences.edit();
     editor.putString(key, Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
-    editor.commit();
+    editor.apply();
   }
 
   public Object load(String key) {
@@ -64,6 +64,6 @@ public class ObjStorage {
   public void remove(String key) {
     Editor editor = m_sharedPreferences.edit();
     editor.remove(key);
-    editor.commit();
+    editor.apply();
   }
 }

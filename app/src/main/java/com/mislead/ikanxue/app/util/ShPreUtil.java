@@ -2,7 +2,7 @@ package com.mislead.ikanxue.app.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
+import android.preference.PreferenceManager;
 
 /**
  * ShPreUtil
@@ -23,7 +23,7 @@ public class ShPreUtil {
    * @param context
    */
   public static void init(Context context) {
-    shPre = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+    shPre = PreferenceManager.getDefaultSharedPreferences(context);
     editor = shPre.edit();
   }
 
