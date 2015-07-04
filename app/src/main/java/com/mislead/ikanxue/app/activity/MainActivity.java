@@ -1,6 +1,7 @@
 package com.mislead.ikanxue.app.activity;
 
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
+import com.mislead.ikanxue.app.fragment.NavigationDrawerFragment;
 import com.mislead.ikanxue.app.net.HttpClientUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
@@ -24,12 +26,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   private TextView tvHello;
   private ImageView iv;
 
+  private DrawerLayout drawerLayout;
+
+  private NavigationDrawerFragment navigationDrawerFragment;
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
     tvHello = (TextView) findViewById(R.id.tv_hello);
     iv = (ImageView) findViewById(R.id.iv);
+    drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+    navigationDrawerFragment =
+        (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(
+            R.id.navigation_drawer);
+
+    navigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
 
     findViewById(R.id.btn_login).setOnClickListener(this);
     findViewById(R.id.btn_logout).setOnClickListener(this);

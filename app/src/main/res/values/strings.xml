@@ -4,6 +4,8 @@
   <string name="hello_world">Hello world!</string>
   <string name="action_settings">Settings</string>
 
+  <string name="empty"></string>
+
   <string name="daily_english_url">http://open.iciba.com/dsapi</string>
 
   <string name="default_daily_en">For without progress there will be stagnation and decay.</string>
