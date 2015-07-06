@@ -1,5 +1,6 @@
 package com.mislead.ikanxue.app.util;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -18,6 +19,8 @@ public class AndroidHelper {
 
   private static Context mContext;
   private static File cacheDirPath;
+
+  private static ProgressDialog progressDialog;
 
   private static ImageDiskCache imageDiskCache;
   private static final int CACHE_SIZE = 10 * 1024 * 1024;// max cache size by byte
@@ -59,6 +62,29 @@ public class AndroidHelper {
       e.printStackTrace();
       return null;
     }
+  }
+
+  public static void showProgressDialog(Context context, String msg) {
+    progressDialog = new ProgressDialog(context);
+    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    progressDialog.setMessage(msg);
+    progressDialog.show();
+  }
+
+  public static void showProgressDialog(Context context) {
+    showProgressDialog(context, "");
+  }
+
+  public static void setProgressDialogMsg(String msg) {
+    if (progressDialog == null) return;
+
+    progressDialog.setMessage(msg);
+  }
+
+  public static void hideProgressDialog() {
+    if (progressDialog == null) return;
+
+    progressDialog.dismiss();
   }
 
 }

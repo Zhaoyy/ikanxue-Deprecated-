@@ -16,8 +16,7 @@ public class BitmapHelper {
   private static String TAG = "BitmapHelper";
 
   public static Bitmap drawShadow(Bitmap map, int radius) {
-    if (map == null)
-      return null;
+    if (map == null) return null;
 
     BlurMaskFilter blurFilter = new BlurMaskFilter(radius, BlurMaskFilter.Blur.NORMAL);
     Paint shadowPaint = new Paint();
@@ -32,9 +31,10 @@ public class BitmapHelper {
   }
 
   public static byte[] convertBitmapToBytes(Bitmap bitmap) {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-      byte[] data = baos.toByteArray();
-      return data;
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    bitmap.compress(bitmap.hasAlpha() ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG, 100,
+        baos);
+    byte[] data = baos.toByteArray();
+    return data;
   }
 }

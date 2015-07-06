@@ -35,6 +35,11 @@
         android:screenOrientation="portrait"
         android:theme="@style/MainActivityTheme"
         />
+    <activity
+        android:name=".activity.LoginActivity"
+        android:screenOrientation="portrait"
+        android:label="@string/user_login"
+        />
   </application>
 
 </manifest>

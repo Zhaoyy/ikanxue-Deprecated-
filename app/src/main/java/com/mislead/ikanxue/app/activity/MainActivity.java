@@ -1,5 +1,9 @@
 package com.mislead.ikanxue.app.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -8,16 +12,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
+import com.mislead.ikanxue.app.application.MyApplication;
 import com.mislead.ikanxue.app.fragment.NavigationDrawerFragment;
-import com.mislead.ikanxue.app.net.HttpClientUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
+import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
-import java.util.List;
-import org.apache.http.cookie.Cookie;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +31,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   private DrawerLayout drawerLayout;
 
   private NavigationDrawerFragment navigationDrawerFragment;
+
+  private BroadcastReceiver logReciever = new BroadcastReceiver() {
+    @Override public void onReceive(Context context, Intent intent) {
+      if (navigationDrawerFragment.isDrawerOpen()) {
+        drawerLayout.closeDrawers();
+      }
+    }
+  };
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -45,49 +55,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     findViewById(R.id.btn_login).setOnClickListener(this);
     findViewById(R.id.btn_logout).setOnClickListener(this);
+
+    IntentFilter filter = new IntentFilter(MyApplication.LOGIN_STATE_CHANGE_ACTION);
+    registerReceiver(logReciever, filter);
   }
 
   private void loginClick(View v) {
-    Api.getInstance().login("winz", "kanxue153729", new HttpClientUtil.NetClientCallback() {
-      @Override public void execute(int status, String response, List<Cookie> cookies) {
-        if (status == HttpClientUtil.NET_SUCCESS) {
-          final JSONObject retObj;
-          LogHelper.e(response);
-          try {
-            retObj = new JSONObject(response);
-            final int ret = retObj.getInt("result");
-            if (ret != Api.LOGIN_SUCCESS) {
-              switch (ret) {
-                case Api.LOGIN_FAIL_LESS_THAN_FIVE:
-                  String alertText = "用户名或者密码错误,还有" + (Api.ALLOW_LOGIN_USERNAME_OR_PASSWD_ERROR_NUM
-                      - retObj.getInt("strikes")) + "尝试机会";
-                  Toast.makeText(MainActivity.this, alertText, Toast.LENGTH_SHORT).show();
-                  break;
-                case Api.LOGIN_FAIL_MORE_THAN_FIVE:
-                  Toast.makeText(MainActivity.this, R.string.login_fail_more_than_five,
-                      Toast.LENGTH_SHORT).show();
-                  break;
-              }
-              return;
-            }
-            String token = retObj.getString("securitytoken");
-            Api.getInstance().setToken(token);
-            Api.getInstance()
-                .setLoginUserInfo(retObj.getString("username"), retObj.getInt("userid"),
-                    retObj.getInt("isavatar"), retObj.getString("email"));
 
-            for (int i = 0; i < cookies.size(); i++) {
-              Cookie cookie = cookies.get(i);
-              Api.getInstance().getCookieStorage().addCookie(cookie.getName(), cookie.getValue());
-            }
-            //MainActivity.this.sendBroadcast(new Intent(
-            //    App.LOGIN_STATE_CHANGE_ACTION));
-          } catch (JSONException e) {
-            e.printStackTrace();
-          }
-        }
-      }
-    });
   }
 
   private void logout() {
@@ -108,9 +82,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     });
   }
 
+  @Override protected void onDestroy() {
+    unregisterReceiver(logReciever);
+    super.onDestroy();
+  }
+
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.menu_main, menu);
+    //getMenuInflater().inflate(R.menu.menu_main, menu);
     return true;
   }
 
@@ -138,6 +117,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         break;
       default:
         break;
+    }
+  }
+
+  @Override public void onBackPressed() {
+    exitApp();
+  }
+
+  private long exitTime = 0;
+
+  private void exitApp() {
+    if ((System.currentTimeMillis() - exitTime) > 800) {
+      ToastHelper.toastShort(this, "再按一次退出i看雪");
+      exitTime = System.currentTimeMillis();
+    } else {
+      finish();
     }
   }
 }

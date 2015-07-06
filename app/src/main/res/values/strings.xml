@@ -15,4 +15,12 @@
   <string name="splash_kanxue">内容来自看雪论坛</string>
 
   <string name="login_fail_more_than_five">您已经超出了登录失败限制次数，请等待 15 分钟后重试</string>
+
+  <string name="gust_user">游客</string>
+  <string name="user_name">用户名</string>
+  <string name="user_pwd">用户密码</string>
+  <string name="login">登录</string>
+  <string name="logout">退出登录</string>
+  <string name="exit">退出应用</string>
+  <string name="user_login">用户登录</string>
 </resources>

@@ -13,75 +13,80 @@
       android:orientation="vertical"
       >
 
-    <RelativeLayout
-        android:id="@+id/userInfo"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:orientation="vertical"
+        android:background="@color/title_header_color"
+        android:gravity="bottom"
         >
-
-      <!--<View-->
-      <!--android:layout_width="53dp"-->
-      <!--android:layout_height="53dp"-->
-      <!--android:layout_centerVertical="true"-->
-      <!--android:layout_marginLeft="14.5dp"-->
-      <!--android:background="@drawable/navigation_user_sharow" />-->
-
-      <RelativeLayout
-          android:id="@+id/circleLayout"
-          android:layout_width="53dp"
-          android:layout_height="53dp"
-          android:layout_centerVertical="true"
-          android:layout_marginLeft="16dp"
-          android:layout_marginRight="16dp"
+      <LinearLayout
+          android:id="@+id/userInfo"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_marginBottom="16dp"
+          android:gravity="center_vertical"
           >
 
         <ImageView
             android:id="@+id/circleIcon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerInParent="true"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:scaleType="centerCrop"
             android:src="@mipmap/ic_lancher"
             />
 
-      </RelativeLayout>
 
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用户名称"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
 
-      <TextView
-          android:id="@+id/name"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerVertical="true"
-          android:layout_toRightOf="@id/circleLayout"
-          android:text="用户名称"
-          android:textColor="@color/text_black_1"
-          android:textSize="18sp"
-          />
+      </LinearLayout>
 
-      <TextView
-          android:id="@+id/sign"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/name"
-          android:layout_marginTop="6dp"
-          android:layout_toRightOf="@id/circleLayout"
-          android:ellipsize="end"
-          android:maxLines="1"
-          android:text="用户描述"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          android:textColor="@color/text_black_2"
-          android:textSize="15sp"
-          />
-
-    </RelativeLayout>
-
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        ></LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_exit"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:gravity="center_vertical"
+        android:background="@color/text_black_4"
+        android:orientation="horizontal"
         >
 
+      <ImageView
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:src="@mipmap/ic_exit"
+          android:layout_marginLeft="28dp"
+          android:layout_marginRight="28dp"
+          android:scaleType="centerCrop"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/exit"
+          android:textColor="@color/text_black_2"
+          android:textSize="20sp"
+          />
 
     </LinearLayout>
 

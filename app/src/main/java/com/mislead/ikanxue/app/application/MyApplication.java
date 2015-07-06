@@ -16,6 +16,8 @@ public class MyApplication extends Application {
 
   private static String TAG = "MyApplication";
 
+  public static final String LOGIN_STATE_CHANGE_ACTION = "action_login_state_change";
+
   @Override public void onCreate() {
     super.onCreate();
     ShPreUtil.init(getApplicationContext());

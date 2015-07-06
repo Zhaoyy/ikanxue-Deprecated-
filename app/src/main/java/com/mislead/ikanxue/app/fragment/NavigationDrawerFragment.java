@@ -1,5 +1,10 @@
 package com.mislead.ikanxue.app.fragment;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,7 +20,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.mislead.ikanxue.app.R;
+import com.mislead.ikanxue.app.activity.LoginActivity;
+import com.mislead.ikanxue.app.api.Api;
+import com.mislead.ikanxue.app.application.MyApplication;
+import com.mislead.ikanxue.app.util.AndroidHelper;
+import com.mislead.ikanxue.app.util.ToastHelper;
+import com.mislead.ikanxue.app.volley.VolleyHelper;
 
 /**
  * NavigationDrawerFragment
@@ -24,7 +38,7 @@ import com.mislead.ikanxue.app.R;
  *         DATE: 2015/7/4
  *         DESC:
  **/
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends Fragment implements View.OnClickListener {
 
   private static String TAG = "NavigationDrawerFragment";
 
@@ -33,6 +47,19 @@ public class NavigationDrawerFragment extends Fragment {
   private DrawerLayout mDrawerLayout;
 
   private View mFragmentContainerView;
+
+  private ImageView ivHead;
+  private TextView tvName;
+  private LinearLayout userInfo;
+  private LinearLayout llExit;
+
+  private Api api = Api.getInstance();
+
+  private BroadcastReceiver logReciever = new BroadcastReceiver() {
+    @Override public void onReceive(Context context, Intent intent) {
+      showUserInfo();
+    }
+  };
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -44,6 +71,48 @@ public class NavigationDrawerFragment extends Fragment {
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     setHasOptionsMenu(true);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    ivHead = (ImageView) view.findViewById(R.id.circleIcon);
+    tvName = (TextView) view.findViewById(R.id.name);
+
+    userInfo = (LinearLayout) view.findViewById(R.id.userInfo);
+    userInfo.setOnClickListener(this);
+    view.findViewById(R.id.ll_exit).setOnClickListener(this);
+
+    showUserInfo();
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    IntentFilter filter = new IntentFilter(MyApplication.LOGIN_STATE_CHANGE_ACTION);
+
+    getActivity().registerReceiver(logReciever, filter);
+  }
+
+  @Override public void onDetach() {
+    super.onDetach();
+    getActivity().unregisterReceiver(logReciever);
+  }
+
+  private void showUserInfo() {
+    if (api.isLogin()) {
+
+      tvName.setText(api.getLoginUserName());
+
+      if (api.getIsAvatar() > 0) {
+        String headPic = api.getUserHeadImageUrl(api.getLoginUserId());
+
+        VolleyHelper.requestImageWithCache(headPic, ivHead, AndroidHelper.getImageDiskCache(),
+            R.mipmap.ic_lancher, R.mipmap.ic_lancher);
+      }
+    } else {
+      tvName.setText(getResources().getString(R.string.gust_user));
+      ivHead.setImageResource(R.mipmap.ic_lancher);
+    }
   }
 
   public void setUp(int fragmentId, DrawerLayout drawerLayout) {
@@ -116,5 +185,27 @@ public class NavigationDrawerFragment extends Fragment {
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+  }
+
+  @Override public void onClick(View v) {
+    switch (v.getId()) {
+      case R.id.userInfo:
+        loginOrLogout();
+        break;
+      case R.id.ll_exit:
+        getActivity().finish();
+        break;
+      default:
+        break;
+    }
+  }
+
+  private void loginOrLogout() {
+    if (api.isLogin()) {
+      ToastHelper.toastShort(getActivity(), "当前登录用户为：" + api.getLoginUserName());
+    } else {
+      getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+    }
+
   }
 }
