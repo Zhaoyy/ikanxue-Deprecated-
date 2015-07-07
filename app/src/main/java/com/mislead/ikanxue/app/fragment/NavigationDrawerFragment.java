@@ -1,8 +1,10 @@
 package com.mislead.ikanxue.app.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -23,13 +25,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.activity.LoginActivity;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
 import com.mislead.ikanxue.app.util.AndroidHelper;
+import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * NavigationDrawerFragment
@@ -202,10 +208,41 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
   private void loginOrLogout() {
     if (api.isLogin()) {
-      ToastHelper.toastShort(getActivity(), "当前登录用户为：" + api.getLoginUserName());
+      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("退出登录")
+          .setMessage("确认要退出当前登录？")
+          .setCancelable(true)
+          .setNegativeButton("退出", new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+              Api.getInstance().logout(new VolleyHelper.ResponseListener<JSONObject>() {
+                @Override public void onErrorResponse(VolleyError volleyError) {
+                  ToastHelper.toastShort(getActivity(), volleyError.toString());
+                }
+
+                @Override public void onResponse(JSONObject jsonObject) {
+                  LogHelper.e(jsonObject.toString());
+                  try {
+                    if (jsonObject.getInt("result") == 0) {
+                      Api.getInstance().clearLoginData();
+                      getActivity().sendBroadcast(
+                          new Intent(MyApplication.LOGIN_STATE_CHANGE_ACTION));
+                      ToastHelper.toastShort(getActivity(), "退出登录成功！");
+                    }
+                  } catch (JSONException e) {
+                    e.printStackTrace();
+                  }
+                }
+              });
+            }
+          })
+          .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+              dialog.dismiss();
+            }
+          });
+
+      builder.show();
     } else {
       getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
     }
-
   }
 }

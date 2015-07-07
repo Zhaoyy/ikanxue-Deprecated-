@@ -55,9 +55,63 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.0"
-        ></LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/drawer_btn_bg"
+        android:orientation="horizontal"
+        >
+
+      <ImageView
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:src="@mipmap/ic_feed"
+          android:layout_marginLeft="28dp"
+          android:layout_marginRight="28dp"
+          android:scaleType="centerCrop"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/feed_back"
+          android:textColor="@color/text_black_2"
+          android:textSize="20sp"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/drawer_btn_bg"
+        android:orientation="horizontal"
+        >
+
+      <ImageView
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:src="@mipmap/ic_about"
+          android:layout_marginLeft="28dp"
+          android:layout_marginRight="28dp"
+          android:scaleType="centerCrop"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/about_us"
+          android:textColor="@color/text_black_2"
+          android:textSize="20sp"
+          />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_exit"
@@ -67,7 +121,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:gravity="center_vertical"
-        android:background="@color/text_black_4"
+        android:background="@drawable/drawer_btn_bg"
         android:orientation="horizontal"
         >
 
