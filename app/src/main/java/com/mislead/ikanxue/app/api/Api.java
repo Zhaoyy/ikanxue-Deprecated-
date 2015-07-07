@@ -294,28 +294,24 @@ public class Api {
     String url = DOMAIN + PATH + "login.php?do=logout&logouthash=" + mToken + "&" + STYLE;
     VolleyHelper.requestJSONObject(Request.Method.GET, url, null, responseListener);
   }
-  //
-  ///**
-  // * 回复主题
-  // *
-  // * @param id
-  // *            主题id
-  // * @param msg
-  // *            回复内容
-  // * @param callback
-  // */
-  //public void quickReply(int id, String msg, final NetClientCallback callback) {
-  //	String url = DOMAIN + PATH + "newreply.php?" + STYLE;
-  //	HttpClientUtil hcu = new HttpClientUtil(url,
-  //			HttpClientUtil.METHOD_POST, callback);
-  //	hcu.addParam("message", msg);
-  //	hcu.addParam("t", id + "");
-  //	hcu.addParam("fromquickreply", "1");
-  //	hcu.addParam("do", "postreply");
-  //	hcu.addParam("securitytoken", mToken);
-  //	hcu.addCookie(this.mCookieStorage.getCookies());
-  //	hcu.asyncConnect();
-  //}
+
+  /**
+   * 回复主题
+   *
+   * @param id 主题id
+   * @param msg 回复内容
+   */
+  public void quickReply(int id, String msg, VolleyHelper.ResponseListener<JSONObject> listener) {
+    String url = DOMAIN + PATH + "newreply.php?" + STYLE;
+    Map<String, String> params = new HashMap<>();
+    params.put("message", msg);
+    params.put("t", id + "");
+    params.put("fromquickreply", "1");
+    params.put("do", "postreply");
+    params.put("securitytoken", mToken);
+    VolleyHelper.requestJSONObjectWithHeaderAndParams(Request.Method.POST, url, null, listener,
+        getCookieHeader(), params);
+  }
   //
   ///**
   // * 发布新主题
@@ -365,82 +361,60 @@ public class Api {
   //	return hcu;
   //}
   //
-  ///**
-  // * 看雪的意见反馈接口
-  // *
-  // * @param name
-  // * @param email
-  // * @param msg
-  // * @param callback
-  // */
-  //public void feedback(String name, String email, String msg,
-  //		final NetClientCallback callback) {
-  //	String url = DOMAIN + PATH + "sendmessage.php?do=docontactus&" + STYLE;
-  //	HttpClientUtil hcu = new HttpClientUtil(url,
-  //			HttpClientUtil.METHOD_POST, callback);
-  //	hcu.addParam("name", name);
-  //	hcu.addParam("email", email);
-  //	hcu.addParam("message", msg);
-  //	hcu.addParam("securitytoken", mToken);
-  //	hcu.addParam("subject", "0");
-  //	hcu.addParam("do", "docontactus");
-  //	hcu.addCookie(this.mCookieStorage.getCookies());
-  //	hcu.asyncConnect();
-  //}
-  //
-  ///**
-  // * 检测新版本
-  // *
-  // * @param callback
-  // */
-  //public void checkUpdate(NetClientCallback callback) {
-  //	String url = DOMAIN + PATH + "mobile/android/appupdate.html";
-  //	new HttpClientUtil(url, HttpClientUtil.METHOD_GET, callback)
-  //			.asyncConnect();
-  //}
-  //
-  ///**
-  // * 检测指定版块下的主题列表是否有更新
-  // *
-  // * @param id
-  // *            版块id
-  // * @param time
-  // *            上次刷新的时间戳
-  // * @param callback
-  // */
-  //public void checkNewPostInForumDisplayPage(int id, long time,
-  //		final NetClientCallback callback) {
-  //	String url = DOMAIN + PATH + "forumdisplay.php?f=" + id
-  //			+ "&getnewpost=" + time + "&" + STYLE;
-  //	HttpClientUtil hcu = new HttpClientUtil(url, HttpClientUtil.METHOD_GET,
-  //			callback);
-  //	if (this.isLogin()) {
-  //		hcu.addCookie(this.mCookieStorage.getCookies());
-  //	}
-  //	hcu.asyncConnect();
-  //}
-  //
-  ///**
-  // * 检测指定主题下的帖子列表是否有更新
-  // *
-  // * @param id
-  // *            主题id
-  // * @param time
-  // *            上次刷新的时间戳
-  // * @param callback
-  // */
-  //public void checkNewPostInShowThreadPage(int id, long time,
-  //		final NetClientCallback callback) {
-  //	String url = DOMAIN + PATH + "showthread.php?t=" + id + "&getnewpost="
-  //			+ time + "&" + STYLE;
-  //	HttpClientUtil hcu = new HttpClientUtil(url, HttpClientUtil.METHOD_GET,
-  //			callback);
-  //	if (this.isLogin()) {
-  //		hcu.addCookie(this.mCookieStorage.getCookies());
-  //	}
-  //	hcu.asyncConnect();
-  //}
-  //
+  /**
+   * 看雪的意见反馈接口
+   *
+   * @param name
+   * @param email
+   * @param msg
+   */
+  public void feedback(String name, String email, String msg,
+      VolleyHelper.ResponseListener<JSONObject> listener) {
+    String url = DOMAIN + PATH + "sendmessage.php?do=docontactus&" + STYLE;
+    Map<String, String> params = new HashMap<>();
+    params.put("name", name);
+    params.put("email", email);
+    params.put("message", msg);
+    params.put("securitytoken", mToken);
+    params.put("subject", "0");
+    params.put("do", "docontactus");
+    VolleyHelper.requestJSONObjectWithHeaderAndParams(Request.Method.POST, url, null, listener,
+        getCookieHeader(), params);
+  }
+
+  /**
+   * 检测新版本
+   */
+  public void checkUpdate(VolleyHelper.ResponseListener<JSONObject> listener) {
+    String url = DOMAIN + PATH + "mobile/android/appupdate.html";
+    VolleyHelper.requestJSONObject(Request.Method.GET, url, null, listener);
+  }
+
+  /**
+   * 检测指定版块下的主题列表是否有更新
+   *
+   * @param id 版块id
+   * @param time 上次刷新的时间戳
+   */
+  public void checkNewPostInForumDisplayPage(int id, long time,
+      VolleyHelper.ResponseListener<JSONObject> listener) {
+    String url = DOMAIN + PATH + "forumdisplay.php?f=" + id + "&getnewpost=" + time + "&" + STYLE;
+    VolleyHelper.requestJSONObjectWithHeaderAndParams(Request.Method.GET, url, null, listener,
+        getCookieHeader(), null);
+  }
+
+  /**
+   * 检测指定主题下的帖子列表是否有更新
+   *
+   * @param id 主题id
+   * @param time 上次刷新的时间戳
+   */
+  public void checkNewPostInShowThreadPage(int id, long time,
+      VolleyHelper.ResponseListener<JSONObject> listener) {
+    String url = DOMAIN + PATH + "showthread.php?t=" + id + "&getnewpost=" + time + "&" + STYLE;
+    VolleyHelper.requestJSONObjectWithHeaderAndParams(Request.Method.GET, url, null, listener,
+        getCookieHeader(), null);
+  }
 
   /**
    * 获取看雪用户头像的url
@@ -492,21 +466,16 @@ public class Api {
     }
     return output;
   }
-  //
-  ///**
-  // * 检测指定用户个人信息列表
-  // *
-  // * @param id
-  // *            用户id
-  // * @param callback
-  // */
-  //public void getUserInfoPage(int id, final NetClientCallback callback) {
-  //	String url = DOMAIN + PATH + "member.php?u=" + id + STYLE;
-  //	HttpClientUtil hcu = new HttpClientUtil(url, HttpClientUtil.METHOD_GET,
-  //			callback);
-  //	if (this.isLogin()) {
-  //		hcu.addCookie(this.mCookieStorage.getCookies());
-  //	}
-  //	hcu.asyncConnect();
-  //}
+
+  /**
+   * 检测指定用户个人信息列表
+   *
+   * @param id
+   *            用户id
+   */
+  public void getUserInfoPage(int id, VolleyHelper.ResponseListener<JSONObject> listener) {
+    String url = DOMAIN + PATH + "member.php?u=" + id + STYLE;
+    VolleyHelper.requestJSONObjectWithHeaderAndParams(Request.Method.GET, url, null, listener,
+        getCookieHeader(), null);
+  }
 }
