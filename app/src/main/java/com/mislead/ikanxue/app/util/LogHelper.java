@@ -9,7 +9,7 @@ import android.util.Log;
  **/
 public class LogHelper {
 
-  private static String TAG = "zhaoyy";
+  private static String TAG = "Mislead";
 
   public static boolean isDebug = true;
 

@@ -1,10 +1,12 @@
 package com.mislead.ikanxue.app.util;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import com.mislead.ikanxue.app.model.ImageDiskCache;
 import java.io.File;
 
@@ -46,6 +48,9 @@ public class AndroidHelper {
     return info == null ? null : info.versionName;
   }
 
+  /**
+   * get app version code
+   */
   public static int getVersionCode(Context context) {
     PackageInfo info = getPackageInfo(context, context.getPackageName());
 
@@ -87,4 +92,10 @@ public class AndroidHelper {
     progressDialog.dismiss();
   }
 
+  public static int dp2px(Activity activity, float dp) {
+    DisplayMetrics metrics = new DisplayMetrics();
+    activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+    return (int) (dp * metrics.density + 0.5f);
+  }
 }

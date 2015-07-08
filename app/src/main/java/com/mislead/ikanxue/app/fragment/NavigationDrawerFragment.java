@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
@@ -59,6 +63,11 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
   private LinearLayout userInfo;
   private LinearLayout llExit;
 
+  private RadioGroup rg;
+  private RadioButton rbtn_new_topic;
+  private RadioButton rbtn_titles;
+  private RadioButton rbtn_news;
+
   private Api api = Api.getInstance();
 
   private BroadcastReceiver logReciever = new BroadcastReceiver() {
@@ -66,6 +75,14 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
       showUserInfo();
     }
   };
+
+  private DrawerMenuListener drawerMenuListener;
+
+  private String title;
+
+  public void setDrawerMenuListener(DrawerMenuListener drawerMenuListener) {
+    this.drawerMenuListener = drawerMenuListener;
+  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -88,6 +105,15 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     userInfo = (LinearLayout) view.findViewById(R.id.userInfo);
     userInfo.setOnClickListener(this);
     view.findViewById(R.id.ll_exit).setOnClickListener(this);
+    view.findViewById(R.id.ll_about).setOnClickListener(this);
+    view.findViewById(R.id.ll_feed_back).setOnClickListener(this);
+
+    rg = (RadioGroup) view.findViewById(R.id.rg);
+    rbtn_new_topic = (RadioButton) view.findViewById(R.id.rbtn_new_topic);
+    rbtn_titles = (RadioButton) view.findViewById(R.id.rbtn_titles);
+    rbtn_news = (RadioButton) view.findViewById(R.id.rbtn_news);
+
+    initRbtn();
 
     showUserInfo();
   }
@@ -102,6 +128,22 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
   @Override public void onDetach() {
     super.onDetach();
     getActivity().unregisterReceiver(logReciever);
+  }
+
+  private void initRbtn() {
+    int px = AndroidHelper.dp2px(getActivity(), 24);
+
+    Drawable drawable = getResources().getDrawable(R.mipmap.ic_content);
+    drawable.setBounds(0, 0, px, px);
+    rbtn_new_topic.setCompoundDrawables(drawable, null, null, null);
+
+    drawable = getResources().getDrawable(R.mipmap.ic_menu);
+    drawable.setBounds(0, 0, px, px);
+    rbtn_titles.setCompoundDrawables(drawable, null, null, null);
+
+    drawable = getResources().getDrawable(R.mipmap.ic_news);
+    drawable.setBounds(0, 0, px, px);
+    rbtn_news.setCompoundDrawables(drawable, null, null, null);
   }
 
   private void showUserInfo() {
@@ -128,7 +170,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
     AppCompatActivity activity = (AppCompatActivity) getActivity();
-    ActionBar actionBar = activity.getSupportActionBar();
+    final ActionBar actionBar = activity.getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(true);
     actionBar.setHomeButtonEnabled(true);
 
@@ -139,6 +181,11 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             if (!isAdded()) {
               return;
             }
+
+            if (!TextUtils.isEmpty(title)) {
+              actionBar.setTitle(title);
+            }
+
             invalidateOptionsMenu();
           }
 
@@ -148,7 +195,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             if (!isAdded()) {
               return;
             }
-
+            title = actionBar.getTitle().toString();
+            actionBar.setTitle(getResources().getString(R.string.app_name));
             invalidateOptionsMenu();
           }
         };
@@ -201,6 +249,18 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
       case R.id.ll_exit:
         getActivity().finish();
         break;
+      case R.id.ll_about:
+
+        if (drawerMenuListener != null) {
+          drawerMenuListener.selectedAt(4);
+        }
+
+        break;
+      case R.id.ll_feed_back:
+        if (drawerMenuListener != null) {
+          drawerMenuListener.selectedAt(3);
+        }
+        break;
       default:
         break;
     }
@@ -244,5 +304,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     } else {
       getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
     }
+  }
+
+  public interface DrawerMenuListener {
+    public void selectedAt(int pos);
   }
 }

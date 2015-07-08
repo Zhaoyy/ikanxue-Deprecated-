@@ -377,7 +377,6 @@ public class Api {
     params.put("message", msg);
     params.put("securitytoken", mToken);
     params.put("subject", "0");
-    params.put("do", "docontactus");
     VolleyHelper.requestJSONObjectWithHeaderAndParams(Request.Method.POST, url, null, listener,
         getCookieHeader(), params);
   }
