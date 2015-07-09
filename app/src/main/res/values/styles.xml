@@ -24,6 +24,7 @@
   </style>
 
   <style name="select_all_on_focus">
+    <item name="android:singleLine">true</item>
     <item name="android:focusable">true</item>
     <item name="android:selectAllOnFocus">true</item>
     <item name="android:focusableInTouchMode">true</item>

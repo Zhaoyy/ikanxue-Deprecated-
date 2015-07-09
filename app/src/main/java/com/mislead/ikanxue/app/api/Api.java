@@ -252,7 +252,7 @@ public class Api {
    * @return 用户名
    */
   public String getLoginUserName() {
-    return this.mPreferences.getString("username", null);
+    return this.mPreferences.getString("username", "");
   }
 
   /**
@@ -273,7 +273,7 @@ public class Api {
    * @return 用户email地址
    */
   public String getEmail() {
-    return this.mPreferences.getString("email", null);
+    return this.mPreferences.getString("email", "");
   }
 
   /**
