@@ -18,7 +18,12 @@ public class FragmentHelper {
 
   private static FragmentManager mFragmentManager;
 
+  private static Fragment currentFragment;
+
   public static void init(FragmentManager fragmentManager) {
+
+    if (mFragmentManager != null) return;
+
     mFragmentManager = fragmentManager;
   }
 
@@ -31,15 +36,25 @@ public class FragmentHelper {
   public static void showFragment(Fragment fragment, int containerID) {
     String tag = getFragmentTag(fragment);
 
+    if (currentFragment != null) {
+
+    }
+
     Fragment fg = mFragmentManager.findFragmentByTag(tag);
 
     if (fg == null) {
       addFragment(fragment, containerID);
+      fg = fragment;
     }
 
     FragmentTransaction transaction = mFragmentManager.beginTransaction();
-    transaction.show(fragment).setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+    transaction.show(fg).setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
     transaction.commit();
+    currentFragment = fg;
+  }
+
+  public static Fragment getCurrentFragment() {
+    return currentFragment;
   }
 
   public static void hideFragment(Fragment fragment) {
@@ -74,7 +89,7 @@ public class FragmentHelper {
     return fg != null;
   }
 
-  private static String getFragmentTag(Fragment fragment) {
+  public static String getFragmentTag(Fragment fragment) {
     return TAG + fragment.getClass().getName();
   }
 }

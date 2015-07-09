@@ -47,63 +47,61 @@
 
   </LinearLayout>
 
-    <RadioGroup
-        android:id="@+id/rg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+  <RadioGroup
+      android:id="@+id/rg"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
 
-        <RadioButton
-            android:id="@+id/rbtn_new_topic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-            android:background="@drawable/rbtn_bg"
-            android:checked="true"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-            android:paddingLeft="28dp"
-            android:button="@null"
-            android:drawablePadding="28dp"
-            android:text="@string/new_topic"
-            android:textColor="@color/text_black_2"
-            android:textSize="20sp"
-            />
-
-        <RadioButton
-            android:id="@+id/rbtn_titles"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/rbtn_bg"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:paddingLeft="28dp"
-            android:button="@null"
-            android:drawablePadding="28dp"
-            android:text="@string/titles"
-            android:textColor="@color/text_black_2"
-            android:textSize="20sp"
-            />
-
-        <RadioButton
-            android:id="@+id/rbtn_news"
+    <RadioButton
+        android:id="@+id/rbtn_new_topic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-            android:background="@drawable/rbtn_bg"
+        android:background="@drawable/rbtn_bg"
+        android:checked="true"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-            android:paddingLeft="28dp"
-            android:button="@null"
-            android:drawablePadding="28dp"
-            android:text="@string/security_news"
-            android:textColor="@color/text_black_2"
-            android:textSize="20sp"
-            />
+        android:paddingLeft="28dp"
+        android:button="@null"
+        android:drawablePadding="28dp"
+        android:text="@string/new_topic"
+        android:textColor="@color/text_black_2"
+        android:textSize="20sp"
+        />
 
-    </RadioGroup>
+    <RadioButton
+        android:id="@+id/rbtn_titles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rbtn_bg"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="28dp"
+        android:button="@null"
+        android:drawablePadding="28dp"
+        android:text="@string/titles"
+        android:textColor="@color/text_black_2"
+        android:textSize="20sp"
+        />
+
+    <RadioButton
+        android:id="@+id/rbtn_news"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rbtn_bg"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="28dp"
+        android:button="@null"
+        android:drawablePadding="28dp"
+        android:text="@string/security_news"
+        android:textColor="@color/text_black_2"
+        android:textSize="20sp"
+        />
 
     <View
         android:layout_width="match_parent"
@@ -111,107 +109,77 @@
         android:background="@color/text_black_4"
         />
 
-    <LinearLayout
-        android:id="@+id/ll_feed_back"
+    <RadioButton
+        android:id="@+id/rbtn_feed_back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:background="@drawable/drawer_btn_bg"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:gravity="center_vertical"
-        android:background="@drawable/drawer_btn_bg"
-        android:orientation="horizontal"
-        >
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@mipmap/ic_feed"
-            android:layout_marginLeft="28dp"
-            android:layout_marginRight="28dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/app_name"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/feed_back"
-            android:textColor="@color/text_black_2"
-            android:textSize="20sp"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_about"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:gravity="center_vertical"
-        android:background="@drawable/drawer_btn_bg"
-        android:orientation="horizontal"
-        >
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@mipmap/ic_about"
-            android:layout_marginLeft="28dp"
-            android:layout_marginRight="28dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/app_name"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/about"
-            android:textColor="@color/text_black_2"
-            android:textSize="20sp"
-            />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.0"
+        android:paddingLeft="28dp"
+        android:button="@null"
+        android:drawablePadding="28dp"
+        android:text="@string/feed_back"
+        android:textColor="@color/text_black_2"
+        android:textSize="20sp"
         />
 
-    <LinearLayout
-        android:id="@+id/ll_exit"
+    <RadioButton
+        android:id="@+id/rbtn_about"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:background="@drawable/drawer_btn_bg"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:gravity="center_vertical"
-        android:background="@drawable/drawer_btn_bg"
-        android:orientation="horizontal"
-        >
+        android:paddingLeft="28dp"
+        android:button="@null"
+        android:drawablePadding="28dp"
+        android:text="@string/about"
+        android:textColor="@color/text_black_2"
+        android:textSize="20sp"
+        />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@mipmap/ic_exit"
-            android:layout_marginLeft="28dp"
-            android:layout_marginRight="28dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/app_name"
-            />
+  </RadioGroup>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/exit"
-            android:textColor="@color/text_black_2"
-            android:textSize="20sp"
-            />
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1.0"
+      />
 
-    </LinearLayout>
+  <LinearLayout
+      android:id="@+id/ll_exit"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:layout_marginBottom="16dp"
+      android:paddingTop="8dp"
+      android:paddingBottom="8dp"
+      android:gravity="center_vertical"
+      android:background="@drawable/drawer_btn_bg"
+      android:orientation="horizontal"
+      >
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@mipmap/ic_exit"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/app_name"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/exit"
+        android:textColor="@color/text_black_2"
+        android:textSize="20sp"
+        />
+
+  </LinearLayout>
 
 </LinearLayout>

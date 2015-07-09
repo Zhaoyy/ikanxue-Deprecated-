@@ -11,13 +11,11 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,10 +32,14 @@ import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.activity.LoginActivity;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
+import com.mislead.ikanxue.app.base.BaseFragment;
+import com.mislead.ikanxue.app.base.Constants;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,7 +50,8 @@ import org.json.JSONObject;
  *         DATE: 2015/7/4
  *         DESC:
  **/
-public class NavigationDrawerFragment extends Fragment implements View.OnClickListener {
+public class NavigationDrawerFragment extends BaseFragment
+    implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
   private static String TAG = "NavigationDrawerFragment";
 
@@ -67,8 +70,12 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
   private RadioButton rbtn_new_topic;
   private RadioButton rbtn_titles;
   private RadioButton rbtn_news;
+  private RadioButton rbtn_feed_back;
+  private RadioButton rbtn_about;
 
   private Api api = Api.getInstance();
+
+  private List<RadioButton> rbtns = new ArrayList<>();
 
   private BroadcastReceiver logReciever = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
@@ -78,7 +85,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
   private DrawerMenuListener drawerMenuListener;
 
-  private String title;
+  private int n = 0;
 
   public void setDrawerMenuListener(DrawerMenuListener drawerMenuListener) {
     this.drawerMenuListener = drawerMenuListener;
@@ -105,13 +112,14 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     userInfo = (LinearLayout) view.findViewById(R.id.userInfo);
     userInfo.setOnClickListener(this);
     view.findViewById(R.id.ll_exit).setOnClickListener(this);
-    view.findViewById(R.id.ll_about).setOnClickListener(this);
-    view.findViewById(R.id.ll_feed_back).setOnClickListener(this);
 
     rg = (RadioGroup) view.findViewById(R.id.rg);
+    rg.setOnCheckedChangeListener(this);
     rbtn_new_topic = (RadioButton) view.findViewById(R.id.rbtn_new_topic);
     rbtn_titles = (RadioButton) view.findViewById(R.id.rbtn_titles);
     rbtn_news = (RadioButton) view.findViewById(R.id.rbtn_news);
+    rbtn_feed_back = (RadioButton) view.findViewById(R.id.rbtn_feed_back);
+    rbtn_about = (RadioButton) view.findViewById(R.id.rbtn_about);
 
     initRbtn();
 
@@ -144,6 +152,22 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     drawable = getResources().getDrawable(R.mipmap.ic_news);
     drawable.setBounds(0, 0, px, px);
     rbtn_news.setCompoundDrawables(drawable, null, null, null);
+
+    drawable = getResources().getDrawable(R.mipmap.ic_feed);
+    drawable.setBounds(0, 0, px, px);
+    rbtn_feed_back.setCompoundDrawables(drawable, null, null, null);
+
+    drawable = getResources().getDrawable(R.mipmap.ic_about);
+    drawable.setBounds(0, 0, px, px);
+    rbtn_about.setCompoundDrawables(drawable, null, null, null);
+
+    for (int i = 0; i < rg.getChildCount(); i++) {
+      View v = rg.getChildAt(i);
+
+      if (v instanceof RadioButton) {
+        rbtns.add((RadioButton) v);
+      }
+    }
   }
 
   private void showUserInfo() {
@@ -182,9 +206,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
               return;
             }
 
-            if (!TextUtils.isEmpty(title)) {
-              actionBar.setTitle(title);
-            }
+            actionBar.setTitle(getResources().getString(Constants.titleIDs[n]));
 
             invalidateOptionsMenu();
           }
@@ -195,7 +217,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             if (!isAdded()) {
               return;
             }
-            title = actionBar.getTitle().toString();
             actionBar.setTitle(getResources().getString(R.string.app_name));
             invalidateOptionsMenu();
           }
@@ -249,18 +270,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
       case R.id.ll_exit:
         getActivity().finish();
         break;
-      case R.id.ll_about:
-
-        if (drawerMenuListener != null) {
-          drawerMenuListener.selectedAt(4);
-        }
-
-        break;
-      case R.id.ll_feed_back:
-        if (drawerMenuListener != null) {
-          drawerMenuListener.selectedAt(3);
-        }
-        break;
       default:
         break;
     }
@@ -303,6 +312,20 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
       builder.show();
     } else {
       getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+    }
+  }
+
+  @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+    for (int i = 0; i < rbtns.size(); i++) {
+      if (rbtns.get(i).getId() == checkedId) {
+        n = i;
+        break;
+      }
+    }
+
+    if (drawerMenuListener != null) {
+      drawerMenuListener.selectedAt(n);
     }
   }
 

@@ -1,12 +1,12 @@
-package com.mislead.ikanxue.app.view;
+package com.mislead.ikanxue.app.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.mislead.ikanxue.app.R;
+import com.mislead.ikanxue.app.base.BaseFragment;
 
 /**
  * AboutFragment
@@ -15,7 +15,7 @@ import com.mislead.ikanxue.app.R;
  *         DATE: 2015/7/8
  *         DESC:
  **/
-public class AboutFragment extends Fragment {
+public class AboutFragment extends BaseFragment {
 
   private static String TAG = "AboutFragment";
 

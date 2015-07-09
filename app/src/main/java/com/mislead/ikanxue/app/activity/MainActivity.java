@@ -11,12 +11,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.application.MyApplication;
+import com.mislead.ikanxue.app.base.Constants;
+import com.mislead.ikanxue.app.fragment.AboutFragment;
+import com.mislead.ikanxue.app.fragment.FeedbackFragment;
 import com.mislead.ikanxue.app.fragment.NavigationDrawerFragment;
+import com.mislead.ikanxue.app.fragment.NewContentFragment;
+import com.mislead.ikanxue.app.fragment.SecurityNewsFragment;
+import com.mislead.ikanxue.app.fragment.TitlesFragment;
 import com.mislead.ikanxue.app.util.FragmentHelper;
 import com.mislead.ikanxue.app.util.ToastHelper;
-import com.mislead.ikanxue.app.view.AboutFragment;
-import com.mislead.ikanxue.app.view.FeedbackFragment;
-import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,11 +36,7 @@ public class MainActivity extends AppCompatActivity {
     }
   };
 
-  private Stack<Fragment> fragments = new Stack<>();
-  private int titleIDs[] = new int[] {
-      R.string.new_topic, R.string.titles, R.string.security_news, R.string.feed_back,
-      R.string.about
-  };
+  //private Stack<Fragment> fragments = new Stack<>();
 
   private NavigationDrawerFragment.DrawerMenuListener listener =
       new NavigationDrawerFragment.DrawerMenuListener() {
@@ -45,9 +44,17 @@ public class MainActivity extends AppCompatActivity {
           drawerLayout.closeDrawers();
           Fragment fragment = new AboutFragment();
           switch (pos) {
+            case 0:
+              fragment = new NewContentFragment();
+              break;
+            case 1:
+              fragment = new TitlesFragment();
+              break;
+            case 2:
+              fragment = new SecurityNewsFragment();
+              break;
             case 3:
               fragment = new FeedbackFragment();
-
               break;
             case 4:
               fragment = new AboutFragment();
@@ -56,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
               break;
           }
 
-          gotoFragment(fragment, getResources().getString(titleIDs[pos]));
+          gotoFragment(fragment, getResources().getString(Constants.titleIDs[pos]));
         }
       };
 
@@ -77,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
 
     FragmentHelper.init(fragmentManager);
 
+    // goto new content fragment firstly
+    gotoFragment(new NewContentFragment(), getResources().getString(Constants.titleIDs[0]));
+
     IntentFilter filter = new IntentFilter(MyApplication.LOGIN_STATE_CHANGE_ACTION);
     registerReceiver(logReciever, filter);
   }
@@ -87,11 +97,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override public void onBackPressed() {
-    if (fragments.size() > 1) {
-      backtoFragment();
-    } else {
-      exitApp();
-    }
+    //if (fragments.size() > 1) {
+    //  backtoFragment();
+    //} else {
+    //  exitApp();
+    //}
+    exitApp();
   }
 
   private long exitTime = 0;
@@ -106,20 +117,25 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void gotoFragment(Fragment fragment, String title) {
+    Fragment fg = FragmentHelper.getCurrentFragment();
 
-    if (!fragments.empty()) {
-      FragmentHelper.hideFragment(fragments.peek());
+    if (fg != null) {
+      String current = FragmentHelper.getFragmentTag(fg);
+      String tag = FragmentHelper.getFragmentTag(fragment);
+
+      if (current.equals(tag)) return;
+      FragmentHelper.hideFragment(fg);
     }
 
-    fragments.push(fragment);
+    //fragments.push(fragment);
     FragmentHelper.showFragment(fragment, R.id.container);
     getSupportActionBar().setTitle(title);
   }
 
-  private void backtoFragment() {
-    Fragment fragment = fragments.pop();
-    FragmentHelper.hideFragment(fragment);
-
-    FragmentHelper.showFragment(fragments.peek(), R.id.container);
-  }
+  //private void backtoFragment() {
+  //  Fragment fragment = fragments.pop();
+  //  FragmentHelper.hideFragment(fragment);
+  //
+  //  FragmentHelper.showFragment(fragments.peek(), R.id.container);
+  //}
 }
