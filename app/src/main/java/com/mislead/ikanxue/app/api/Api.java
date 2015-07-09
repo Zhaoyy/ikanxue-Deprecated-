@@ -3,6 +3,7 @@ package com.mislead.ikanxue.app.api;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.model.CookieStorage;
@@ -213,7 +214,7 @@ public class Api {
 
     //url = Urlhelper.encodeParamsInUrl(url, params);
     LogHelper.e("encodeUrl:" + url);
-    //VolleyHelper.requestStringWithEncodingParams(Request.Method.POST, url, responseListener, params);
+    //VolleyHelper.requestStringWithParams(Request.Method.POST, url, responseListener, params);
     VolleyHelper.requestKanxuePost(url, responseListener, params);
   }
 
@@ -382,14 +383,6 @@ public class Api {
   }
 
   /**
-   * 检测新版本
-   */
-  public void checkUpdate(VolleyHelper.ResponseListener<JSONObject> listener) {
-    String url = DOMAIN + PATH + "mobile/android/appupdate.html";
-    VolleyHelper.requestJSONObject(Request.Method.GET, url, null, listener);
-  }
-
-  /**
    * 检测指定版块下的主题列表是否有更新
    *
    * @param id 版块id
@@ -451,7 +444,7 @@ public class Api {
           ucode /= 10;
         }
 
-        if (tmp == "") {
+        if (tmp.equals("")) {
           tmp = "0";
         }
 
@@ -472,9 +465,22 @@ public class Api {
    * @param id
    *            用户id
    */
-  public void getUserInfoPage(int id, VolleyHelper.ResponseListener<JSONObject> listener) {
+  public void getUserInfoPage(int id, final VolleyHelper.ResponseListener<JSONObject> listener) {
     String url = DOMAIN + PATH + "member.php?u=" + id + STYLE;
-    VolleyHelper.requestJSONObjectWithHeaderAndParams(Request.Method.GET, url, null, listener,
-        getCookieHeader(), null);
+    VolleyHelper.requestStringWithHeadersAndParams(Request.Method.GET, url,
+        new VolleyHelper.ResponseListener<String>() {
+          @Override public void onErrorResponse(VolleyError volleyError) {
+            listener.onErrorResponse(volleyError);
+          }
+
+          @Override public void onResponse(String s) {
+            try {
+              JSONObject object = new JSONObject(s.substring(1, s.length() - 1));
+              listener.onResponse(object);
+            } catch (JSONException e) {
+              listener.onErrorResponse(new ParseError(e));
+            }
+          }
+        }, getCookieHeader(), null);
   }
 }

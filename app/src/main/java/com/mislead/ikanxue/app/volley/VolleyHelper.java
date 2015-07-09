@@ -46,8 +46,14 @@ public class VolleyHelper {
     queue.add(request);
   }
 
-  public static void requestStringWithEncodingParams(int method, String url,
+  public static void requestStringWithParams(int method, String url,
       ResponseListener<String> listener, final Map<String, String> params) {
+    requestStringWithHeadersAndParams(method, url, listener, null, params);
+  }
+
+  public static void requestStringWithHeadersAndParams(int method, String url,
+      ResponseListener<String> listener, final Map<String, String> headers,
+      final Map<String, String> params) {
     StringRequest request = new StringRequest(method, url, listener, listener) {
       @Override protected Map<String, String> getParams() throws AuthFailureError {
         if (params == null) {
@@ -57,8 +63,12 @@ public class VolleyHelper {
         }
       }
 
-      @Override protected String getParamsEncoding() {
-        return super.getParamsEncoding();
+      @Override public Map<String, String> getHeaders() throws AuthFailureError {
+        if (headers == null) {
+          return super.getHeaders();
+        } else {
+          return headers;
+        }
       }
     };
     request.setShouldCache(true);

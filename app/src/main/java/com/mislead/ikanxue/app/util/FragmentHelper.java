@@ -36,10 +36,6 @@ public class FragmentHelper {
   public static void showFragment(Fragment fragment, int containerID) {
     String tag = getFragmentTag(fragment);
 
-    if (currentFragment != null) {
-
-    }
-
     Fragment fg = mFragmentManager.findFragmentByTag(tag);
 
     if (fg == null) {
@@ -91,5 +87,10 @@ public class FragmentHelper {
 
   public static String getFragmentTag(Fragment fragment) {
     return TAG + fragment.getClass().getName();
+  }
+
+  public static void destroy() {
+    mFragmentManager = null;
+    currentFragment = null;
   }
 }

@@ -21,6 +21,8 @@ public class AboutFragment extends BaseFragment {
 
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+
+    title = getResources().getString(R.string.about);
     return inflater.inflate(R.layout.frament_about, null);
   }
 

@@ -30,7 +30,7 @@
           android:layout_marginLeft="16dp"
           android:layout_marginRight="16dp"
           android:scaleType="centerCrop"
-          android:src="@mipmap/ic_lancher"
+          android:src="@mipmap/ic_launcher"
           />
 
 

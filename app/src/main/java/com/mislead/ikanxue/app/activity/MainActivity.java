@@ -11,20 +11,21 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.application.MyApplication;
-import com.mislead.ikanxue.app.base.Constants;
+import com.mislead.ikanxue.app.base.BaseFragment;
 import com.mislead.ikanxue.app.fragment.AboutFragment;
 import com.mislead.ikanxue.app.fragment.FeedbackFragment;
 import com.mislead.ikanxue.app.fragment.NavigationDrawerFragment;
-import com.mislead.ikanxue.app.fragment.NewContentFragment;
+import com.mislead.ikanxue.app.fragment.NewTopicFragment;
 import com.mislead.ikanxue.app.fragment.SecurityNewsFragment;
 import com.mislead.ikanxue.app.fragment.TitlesFragment;
+import com.mislead.ikanxue.app.fragment.UserInfoFragment;
 import com.mislead.ikanxue.app.util.FragmentHelper;
 import com.mislead.ikanxue.app.util.ToastHelper;
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
   private DrawerLayout drawerLayout;
-
 
   private NavigationDrawerFragment navigationDrawerFragment;
 
@@ -36,16 +37,17 @@ public class MainActivity extends AppCompatActivity {
     }
   };
 
-  //private Stack<Fragment> fragments = new Stack<>();
+  private Stack<Fragment> fragments = new Stack<>();
 
   private NavigationDrawerFragment.DrawerMenuListener listener =
       new NavigationDrawerFragment.DrawerMenuListener() {
         @Override public void selectedAt(int pos) {
           drawerLayout.closeDrawers();
-          Fragment fragment = new AboutFragment();
+          BaseFragment fragment = new AboutFragment();
+          boolean dispose = true;
           switch (pos) {
             case 0:
-              fragment = new NewContentFragment();
+              fragment = new NewTopicFragment();
               break;
             case 1:
               fragment = new TitlesFragment();
@@ -59,11 +61,14 @@ public class MainActivity extends AppCompatActivity {
             case 4:
               fragment = new AboutFragment();
               break;
+            case 5:
+              fragment = new UserInfoFragment();
+              dispose = false;
             default:
               break;
           }
 
-          gotoFragment(fragment, getResources().getString(Constants.titleIDs[pos]));
+          gotoFragment(fragment, dispose);
         }
       };
 
@@ -81,11 +86,12 @@ public class MainActivity extends AppCompatActivity {
     navigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
 
     FragmentManager fragmentManager = getSupportFragmentManager();
-
     FragmentHelper.init(fragmentManager);
-
-    // goto new content fragment firstly
-    gotoFragment(new NewContentFragment(), getResources().getString(Constants.titleIDs[0]));
+    if (savedInstanceState == null) {
+      // goto new content fragment firstly
+      NewTopicFragment fragment = new NewTopicFragment();
+      gotoFragment(fragment, true);
+    }
 
     IntentFilter filter = new IntentFilter(MyApplication.LOGIN_STATE_CHANGE_ACTION);
     registerReceiver(logReciever, filter);
@@ -93,16 +99,16 @@ public class MainActivity extends AppCompatActivity {
 
   @Override protected void onDestroy() {
     unregisterReceiver(logReciever);
+    FragmentHelper.destroy();
     super.onDestroy();
   }
 
   @Override public void onBackPressed() {
-    //if (fragments.size() > 1) {
-    //  backtoFragment();
-    //} else {
-    //  exitApp();
-    //}
-    exitApp();
+    if (!fragments.empty()) {
+      backtoFragment(true);
+    } else {
+      exitApp();
+    }
   }
 
   private long exitTime = 0;
@@ -116,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  private void gotoFragment(Fragment fragment, String title) {
+  public void gotoFragment(BaseFragment fragment, boolean dispose) {
     Fragment fg = FragmentHelper.getCurrentFragment();
 
     if (fg != null) {
@@ -125,17 +131,25 @@ public class MainActivity extends AppCompatActivity {
 
       if (current.equals(tag)) return;
       FragmentHelper.hideFragment(fg);
-    }
 
-    //fragments.push(fragment);
+      if (dispose) {
+        FragmentHelper.removeFragment(fg);
+      } else {
+        fragments.push(fg);
+      }
+    }
     FragmentHelper.showFragment(fragment, R.id.container);
-    getSupportActionBar().setTitle(title);
   }
 
-  //private void backtoFragment() {
-  //  Fragment fragment = fragments.pop();
-  //  FragmentHelper.hideFragment(fragment);
-  //
-  //  FragmentHelper.showFragment(fragments.peek(), R.id.container);
-  //}
+  public void backtoFragment(boolean dispose) {
+    Fragment current = FragmentHelper.getCurrentFragment();
+    Fragment fragment = fragments.pop();
+    FragmentHelper.hideFragment(current);
+
+    if (dispose) {
+      FragmentHelper.removeFragment(current);
+    }
+
+    FragmentHelper.showFragment(fragment, R.id.container);
+  }
 }

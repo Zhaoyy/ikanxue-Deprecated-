@@ -1,10 +1,8 @@
 package com.mislead.ikanxue.app.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -27,21 +25,17 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.activity.LoginActivity;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
 import com.mislead.ikanxue.app.base.BaseFragment;
-import com.mislead.ikanxue.app.base.Constants;
 import com.mislead.ikanxue.app.util.AndroidHelper;
-import com.mislead.ikanxue.app.util.LogHelper;
+import com.mislead.ikanxue.app.util.FragmentHelper;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
 import java.util.ArrayList;
 import java.util.List;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * NavigationDrawerFragment
@@ -50,8 +44,7 @@ import org.json.JSONObject;
  *         DATE: 2015/7/4
  *         DESC:
  **/
-public class NavigationDrawerFragment extends BaseFragment
-    implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
+public class NavigationDrawerFragment extends BaseFragment implements View.OnClickListener {
 
   private static String TAG = "NavigationDrawerFragment";
 
@@ -64,7 +57,6 @@ public class NavigationDrawerFragment extends BaseFragment
   private ImageView ivHead;
   private TextView tvName;
   private LinearLayout userInfo;
-  private LinearLayout llExit;
 
   private RadioGroup rg;
   private RadioButton rbtn_new_topic;
@@ -114,7 +106,6 @@ public class NavigationDrawerFragment extends BaseFragment
     view.findViewById(R.id.ll_exit).setOnClickListener(this);
 
     rg = (RadioGroup) view.findViewById(R.id.rg);
-    rg.setOnCheckedChangeListener(this);
     rbtn_new_topic = (RadioButton) view.findViewById(R.id.rbtn_new_topic);
     rbtn_titles = (RadioButton) view.findViewById(R.id.rbtn_titles);
     rbtn_news = (RadioButton) view.findViewById(R.id.rbtn_news);
@@ -166,6 +157,7 @@ public class NavigationDrawerFragment extends BaseFragment
 
       if (v instanceof RadioButton) {
         rbtns.add((RadioButton) v);
+        v.setOnClickListener(this);
       }
     }
   }
@@ -179,11 +171,11 @@ public class NavigationDrawerFragment extends BaseFragment
         String headPic = api.getUserHeadImageUrl(api.getLoginUserId());
 
         VolleyHelper.requestImageWithCache(headPic, ivHead, AndroidHelper.getImageDiskCache(),
-            R.mipmap.ic_lancher, R.mipmap.ic_lancher);
+            R.mipmap.ic_launcher, R.mipmap.ic_launcher);
       }
     } else {
       tvName.setText(getResources().getString(R.string.gust_user));
-      ivHead.setImageResource(R.mipmap.ic_lancher);
+      ivHead.setImageResource(R.mipmap.ic_launcher);
     }
   }
 
@@ -206,7 +198,7 @@ public class NavigationDrawerFragment extends BaseFragment
               return;
             }
 
-            actionBar.setTitle(getResources().getString(Constants.titleIDs[n]));
+            actionBar.setTitle(((BaseFragment) FragmentHelper.getCurrentFragment()).getTitle());
 
             invalidateOptionsMenu();
           }
@@ -270,6 +262,28 @@ public class NavigationDrawerFragment extends BaseFragment
       case R.id.ll_exit:
         getActivity().finish();
         break;
+      case R.id.rbtn_new_topic:
+        itemSelected(0);
+        break;
+      case R.id.rbtn_titles:
+        itemSelected(1);
+        break;
+      case R.id.rbtn_news:
+        itemSelected(2);
+        break;
+      case R.id.rbtn_feed_back:
+
+        if (api.isLogin()) {
+          itemSelected(3);
+        } else {
+          ToastHelper.toastLong(getActivity(), "请先登录再进行操作！");
+          loginOrLogout();
+        }
+
+        break;
+      case R.id.rbtn_about:
+        itemSelected(4);
+        break;
       default:
         break;
     }
@@ -277,59 +291,24 @@ public class NavigationDrawerFragment extends BaseFragment
 
   private void loginOrLogout() {
     if (api.isLogin()) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("退出登录")
-          .setMessage("确认要退出当前登录？")
-          .setCancelable(true)
-          .setNegativeButton("退出", new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
-              Api.getInstance().logout(new VolleyHelper.ResponseListener<JSONObject>() {
-                @Override public void onErrorResponse(VolleyError volleyError) {
-                  ToastHelper.toastShort(getActivity(), volleyError.toString());
-                }
 
-                @Override public void onResponse(JSONObject jsonObject) {
-                  LogHelper.e(jsonObject.toString());
-                  try {
-                    if (jsonObject.getInt("result") == 0) {
-                      Api.getInstance().clearLoginData();
-                      getActivity().sendBroadcast(
-                          new Intent(MyApplication.LOGIN_STATE_CHANGE_ACTION));
-                      ToastHelper.toastShort(getActivity(), "退出登录成功！");
-                    }
-                  } catch (JSONException e) {
-                    e.printStackTrace();
-                  }
-                }
-              });
-            }
-          })
-          .setPositiveButton("取消", new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
-              dialog.dismiss();
-            }
-          });
-
-      builder.show();
+      if (drawerMenuListener != null) {
+        n = 5;
+        drawerMenuListener.selectedAt(n);
+      }
     } else {
       getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
     }
   }
 
-  @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-    for (int i = 0; i < rbtns.size(); i++) {
-      if (rbtns.get(i).getId() == checkedId) {
-        n = i;
-        break;
-      }
-    }
-
+  private void itemSelected(int i) {
+    n = i;
     if (drawerMenuListener != null) {
       drawerMenuListener.selectedAt(n);
     }
   }
 
   public interface DrawerMenuListener {
-    public void selectedAt(int pos);
+    void selectedAt(int pos);
   }
 }

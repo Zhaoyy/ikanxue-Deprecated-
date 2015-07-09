@@ -16,11 +16,16 @@ import com.mislead.ikanxue.app.base.BaseFragment;
  *         DATE: 2015/7/8
  *         DESC:
  **/
-public class NewContentFragment extends BaseFragment {
+public class NewTopicFragment extends BaseFragment {
 
   private static String TAG = "FeedbackFragment";
 
   private TextView tvContent;
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    title = getString(R.string.new_topic);
+  }
 
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
