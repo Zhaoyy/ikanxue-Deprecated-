@@ -14,10 +14,10 @@ import com.mislead.ikanxue.app.application.MyApplication;
 import com.mislead.ikanxue.app.base.BaseFragment;
 import com.mislead.ikanxue.app.fragment.AboutFragment;
 import com.mislead.ikanxue.app.fragment.FeedbackFragment;
+import com.mislead.ikanxue.app.fragment.ForumTitlesFragment;
 import com.mislead.ikanxue.app.fragment.NavigationDrawerFragment;
 import com.mislead.ikanxue.app.fragment.NewTopicFragment;
 import com.mislead.ikanxue.app.fragment.SecurityNewsFragment;
-import com.mislead.ikanxue.app.fragment.TitlesFragment;
 import com.mislead.ikanxue.app.fragment.UserInfoFragment;
 import com.mislead.ikanxue.app.util.FragmentHelper;
 import com.mislead.ikanxue.app.util.ToastHelper;
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
               fragment = new NewTopicFragment();
               break;
             case 1:
-              fragment = new TitlesFragment();
+              fragment = new ForumTitlesFragment();
               break;
             case 2:
               fragment = new SecurityNewsFragment();

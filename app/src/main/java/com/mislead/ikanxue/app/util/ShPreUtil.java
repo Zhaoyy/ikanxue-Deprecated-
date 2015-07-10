@@ -27,8 +27,13 @@ public class ShPreUtil {
     editor = shPre.edit();
   }
 
-  public static void setVal(String key, String val) {
+  public static void setString(String key, String val) {
     editor.putString(key, val);
+    editor.apply();
+  }
+
+  public static void setLong(String key, long val) {
+    editor.putLong(key, val);
     editor.apply();
   }
 
@@ -50,5 +55,9 @@ public class ShPreUtil {
 
   public static int getInt(String key) {
     return getInt(key, 0);
+  }
+
+  public static long getLong(String key, long defVal) {
+    return shPre.getLong(key, defVal);
   }
 }

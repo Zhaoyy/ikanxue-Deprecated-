@@ -35,10 +35,10 @@ public class DailyEnglishUtil {
         Gson gson = new Gson();
         DailyEnglish object = gson.fromJson(s, DailyEnglish.class);
 
-        ShPreUtil.setVal(SH_LAST_DAILY_EN, object.getContent());
-        ShPreUtil.setVal(SH_LAST_DAILY_ZH, object.getNote());
-        ShPreUtil.setVal(SH_LAST_DAILY_PIC_URL, object.getPicture());
-        ShPreUtil.setVal(SH_LAST_DAILY_DATE, object.getDateline());
+        ShPreUtil.setString(SH_LAST_DAILY_EN, object.getContent());
+        ShPreUtil.setString(SH_LAST_DAILY_ZH, object.getNote());
+        ShPreUtil.setString(SH_LAST_DAILY_PIC_URL, object.getPicture());
+        ShPreUtil.setString(SH_LAST_DAILY_DATE, object.getDateline());
         // cache the image
         VolleyHelper.requestAndCacheImage(object.getPicture(), AndroidHelper.getImageDiskCache());
       }

@@ -16,6 +16,9 @@ public class DateHelper {
 	private static final String DAY_BEBIN_F = "yyyy-MM-dd 00:00:00";
 	private static final String DAY_END_F = "yyyy-MM-dd 23:59:59";
 
+  private static final long MILLIS_OF_HOUR = 60 * 60 * 1000;
+  private static final long MILLIS_OF_DAY = 24 * MILLIS_OF_HOUR;
+
 	/**
 	 * 比較兩個日期
 	 * 
@@ -127,4 +130,15 @@ public class DateHelper {
 		SimpleDateFormat sdf = new SimpleDateFormat(formate);
 		return sdf.format(date);
 	}
+
+  /**
+   * 获得两个时间相差的天数（舍尾）
+   */
+  public static int getDiffDays(long time1, long time2) {
+    return (int) ((time1 - time2) / MILLIS_OF_DAY);
+  }
+
+  public static int getDiffDays(Date date1, Date date2) {
+    return getDiffDays(date1.getTime(), date2.getTime());
+  }
 }

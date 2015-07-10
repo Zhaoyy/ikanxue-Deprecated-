@@ -14,8 +14,16 @@ public class ToastHelper {
 
   private static String TAG = "ToastHelper";
 
+  private static Toast toast;
+
   private static void showToast(Context context, String msg, int showTime) {
-    Toast.makeText(context, msg, showTime).show();
+    if (toast == null) {
+      toast = Toast.makeText(context, msg, showTime);
+    } else {
+      toast.setText(msg);
+      toast.setDuration(showTime);
+    }
+    toast.show();
   }
 
   public static void toastLong(Context context, String msg) {

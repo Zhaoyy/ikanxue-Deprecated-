@@ -7,7 +7,6 @@ import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.model.CookieStorage;
-import com.mislead.ikanxue.app.model.KanxueResponse;
 import com.mislead.ikanxue.app.model.ObjStorage;
 import com.mislead.ikanxue.app.net.HttpClientUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
@@ -198,26 +197,6 @@ public class Api {
   /**
    * µÇÂ¼¿´Ñ©
    */
-  public void login(String uname, String passwd,
-      final VolleyHelper.ResponseListener<KanxueResponse> responseListener) {
-    String url = DOMAIN + PATH + "login.php?do=login" + "&" + STYLE;
-    //String url = DOMAIN + PATH + "login.php";
-    Map<String, String> params = new HashMap<>();
-    //params.put("do", "login");
-    //params.put("styleid", "12");
-    params.put("vb_login_username", uname);
-    params.put("do", "login");
-    params.put("cookieuser", "1");
-    params.put("securitytoken", "guest");
-    params.put("vb_login_md5password", SimpleHASH.md5(this.strToEnt(passwd.trim())));
-    params.put("vb_login_md5password_utf", SimpleHASH.md5(passwd.trim()));
-
-    //url = Urlhelper.encodeParamsInUrl(url, params);
-    LogHelper.e("encodeUrl:" + url);
-    //VolleyHelper.requestStringWithParams(Request.Method.POST, url, responseListener, params);
-    VolleyHelper.requestKanxuePost(url, responseListener, params);
-  }
-
   public void login(String uname, String passwd, final HttpClientUtil.NetClientCallback callback) {
     String url = DOMAIN + PATH + "login.php?do=login" + "&" + STYLE;
     HttpClientUtil hcu = new HttpClientUtil(url, HttpClientUtil.METHOD_POST, callback);

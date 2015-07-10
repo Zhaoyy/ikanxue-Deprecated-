@@ -8,11 +8,18 @@
   <TextView
       android:id="@+id/tv_content"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="wrap_content"
       android:text="@string/feed_back"
       android:textColor="@color/text_black_2"
       android:textSize="32sp"
       android:gravity="center"
+      />
+
+  <ExpandableListView
+      android:id="@+id/ex_lv"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:dividerHeight="1dp"
       />
 
 </LinearLayout>
