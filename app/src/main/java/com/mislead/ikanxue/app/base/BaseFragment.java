@@ -16,7 +16,7 @@ public class BaseFragment extends Fragment {
 
   private static String TAG = "BaseFragment";
 
-  protected String title = "";
+  protected String title = "i看雪";
 
   public String getTitle() {
     return title;
@@ -37,9 +37,10 @@ public class BaseFragment extends Fragment {
     mainActivity = (MainActivity) activity;
   }
 
-  @Override public void onStart() {
-    super.onStart();
-    // because onattach has called,so we can set actionbar title here.
-    mainActivity.getSupportActionBar().setTitle(title);
+  @Override public void onHiddenChanged(boolean hidden) {
+    super.onHiddenChanged(hidden);
+    if (!hidden) {
+      mainActivity.getSupportActionBar().setTitle(title);
+    }
   }
 }

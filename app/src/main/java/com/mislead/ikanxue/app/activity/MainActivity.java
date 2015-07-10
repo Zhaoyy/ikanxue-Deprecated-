@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
               break;
             case 3:
               fragment = new FeedbackFragment();
+              dispose = false;
               break;
             case 4:
               fragment = new AboutFragment();
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
   public void backtoFragment(boolean dispose) {
     Fragment current = FragmentHelper.getCurrentFragment();
-    Fragment fragment = fragments.pop();
+    BaseFragment fragment = (BaseFragment) fragments.pop();
     FragmentHelper.hideFragment(current);
 
     if (dispose) {

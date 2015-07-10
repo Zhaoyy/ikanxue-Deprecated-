@@ -15,10 +15,9 @@ import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.base.BaseFragment;
 import com.mislead.ikanxue.app.util.AndroidHelper;
-import com.mislead.ikanxue.app.util.LogHelper;
+import com.mislead.ikanxue.app.util.RegexUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
-import org.json.JSONObject;
 
 /**
  * FeedbackFragment
@@ -36,6 +35,10 @@ public class FeedbackFragment extends BaseFragment {
 
   private Api api;
 
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
 
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -81,22 +84,27 @@ public class FeedbackFragment extends BaseFragment {
       ToastHelper.toastShort(mainActivity, "请输入要提交的意见或者建议！");
       return;
     }
+    String email = getTextOrHint(et_email);
+
+    if (!RegexUtil.checkEmail(email)) {
+      ToastHelper.toastShort(mainActivity, "请输入正确的邮件地址！");
+      return;
+    }
 
     AndroidHelper.showProgressDialog(mainActivity, "正在提交...");
 
     String name = getTextOrHint(et_name);
-    String email = getTextOrHint(et_email);
 
-    api.feedback(name, email, msg, new VolleyHelper.ResponseListener<JSONObject>() {
+    api.feedback(name, email, msg, new VolleyHelper.ResponseListener<String>() {
       @Override public void onErrorResponse(VolleyError volleyError) {
         AndroidHelper.hideProgressDialog();
-        LogHelper.e(volleyError.toString());
         ToastHelper.toastShort(mainActivity, "提交失败！");
       }
 
-      @Override public void onResponse(JSONObject object) {
+      @Override public void onResponse(String object) {
         AndroidHelper.hideProgressDialog();
-        LogHelper.e(object.toString());
+        ToastHelper.toastShort(mainActivity, "提交成功！");
+        mainActivity.backtoFragment(true);
       }
     });
   }

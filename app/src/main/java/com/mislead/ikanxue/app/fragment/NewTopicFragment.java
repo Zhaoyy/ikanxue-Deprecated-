@@ -10,7 +10,7 @@ import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.base.BaseFragment;
 
 /**
- * FeedbackFragment
+ * NewTopicFragment
  *
  * @author Mislead
  *         DATE: 2015/7/8
@@ -18,7 +18,7 @@ import com.mislead.ikanxue.app.base.BaseFragment;
  **/
 public class NewTopicFragment extends BaseFragment {
 
-  private static String TAG = "FeedbackFragment";
+  private static String TAG = "NewTopicFragment";
 
   private TextView tvContent;
 

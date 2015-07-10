@@ -370,7 +370,7 @@ public class Api {
    * @param msg
    */
   public void feedback(String name, String email, String msg,
-      VolleyHelper.ResponseListener<JSONObject> listener) {
+      VolleyHelper.ResponseListener<String> listener) {
     String url = DOMAIN + PATH + "sendmessage.php?do=docontactus&" + STYLE;
     Map<String, String> params = new HashMap<>();
     params.put("name", name);
@@ -378,7 +378,7 @@ public class Api {
     params.put("message", msg);
     params.put("securitytoken", mToken);
     params.put("subject", "0");
-    VolleyHelper.requestJSONObjectWithHeaderAndParams(Request.Method.POST, url, null, listener,
+    VolleyHelper.requestStringWithHeadersAndParams(Request.Method.POST, url, listener,
         getCookieHeader(), params);
   }
 
