@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.volley.VolleyError;
@@ -45,6 +46,12 @@ public class SplashActivity extends Activity {
     tvDailyEn = (TextView) findViewById(R.id.tv_daily_en);
     tvDailyZh = (TextView) findViewById(R.id.tv_daily_zh);
     ivDaily = (ImageView) findViewById(R.id.iv_daily);
+
+    findViewById(R.id.rl_root).setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        tvDailyEn.postDelayed(runnable, 1000);
+      }
+    });
 
     setDailyEnglish();
 

@@ -1,9 +1,14 @@
 package com.mislead.ikanxue.app.base;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.mislead.ikanxue.app.activity.MainActivity;
+import com.mislead.ikanxue.app.application.MyApplication;
 
 /**
  * BaseFragment
@@ -28,6 +33,12 @@ public class BaseFragment extends Fragment {
 
   protected MainActivity mainActivity;
 
+  private BroadcastReceiver logReciever = new BroadcastReceiver() {
+    @Override public void onReceive(Context context, Intent intent) {
+      onLoginOrLogout();
+    }
+  };
+
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
   }
@@ -35,6 +46,14 @@ public class BaseFragment extends Fragment {
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
     mainActivity = (MainActivity) activity;
+    IntentFilter filter = new IntentFilter(MyApplication.LOGIN_STATE_CHANGE_ACTION);
+
+    getActivity().registerReceiver(logReciever, filter);
+  }
+
+  @Override public void onDetach() {
+    super.onDetach();
+    getActivity().unregisterReceiver(logReciever);
   }
 
   @Override public void onHiddenChanged(boolean hidden) {
@@ -42,5 +61,9 @@ public class BaseFragment extends Fragment {
     if (!hidden) {
       mainActivity.getSupportActionBar().setTitle(title);
     }
+  }
+
+  // do someting when user log state changed.
+  protected void onLoginOrLogout() {
   }
 }

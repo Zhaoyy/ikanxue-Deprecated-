@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
       AndroidHelper.hideProgressDialog();
       switch (msg.what) {
         case HttpClientUtil.NET_SUCCESS:
-
+          ToastHelper.toastShort(LoginActivity.this, "登录成功！");
           LoginActivity.this.finish();
           break;
         case HttpClientUtil.NET_TIMEOUT:

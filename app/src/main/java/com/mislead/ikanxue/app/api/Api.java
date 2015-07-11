@@ -3,6 +3,7 @@ package com.mislead.ikanxue.app.api;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -155,7 +156,8 @@ public class Api {
    */
   public void getForumHomePage(final VolleyHelper.ResponseListener<JSONObject> responseListener) {
     String url = DOMAIN + PATH + "index.php?" + STYLE;
-    requestJSONObjectByGet(url, responseListener);
+    VolleyHelper.requestJSONObjectWithHeader(Request.Method.GET, url, null, responseListener,
+        getCookieHeader());
   }
 
   /**
@@ -219,11 +221,17 @@ public class Api {
    */
   public void setLoginUserInfo(String username, int id, int isavatar, String email) {
     if (username == null) return;
+    String lastName = mPreferences.getString("username", "");
     SharedPreferences.Editor editor = this.mPreferences.edit();
+
     editor.putString("username", username);
     editor.putInt("userid", id);
     editor.putInt("isavatar", isavatar);
-    editor.putString("email", email);
+
+    if (!(lastName.equals(username) && TextUtils.isEmpty(email))) {
+      editor.putString("email", email);
+    }
+
     editor.apply();
   }
 
@@ -341,12 +349,9 @@ public class Api {
   //	return hcu;
   //}
   //
+
   /**
    * 看雪的意见反馈接口
-   *
-   * @param name
-   * @param email
-   * @param msg
    */
   public void feedback(String name, String email, String msg,
       VolleyHelper.ResponseListener<String> listener) {
@@ -441,8 +446,7 @@ public class Api {
   /**
    * 检测指定用户个人信息列表
    *
-   * @param id
-   *            用户id
+   * @param id 用户id
    */
   public void getUserInfoPage(int id, final VolleyHelper.ResponseListener<JSONObject> listener) {
     String url = DOMAIN + PATH + "member.php?u=" + id + STYLE;

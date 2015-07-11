@@ -31,9 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
   private BroadcastReceiver logReciever = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
-      if (navigationDrawerFragment.isDrawerOpen()) {
-        drawerLayout.closeDrawers();
-      }
+      closeDrawer();
     }
   };
 
@@ -109,6 +107,12 @@ public class MainActivity extends AppCompatActivity {
       backtoFragment(true);
     } else {
       exitApp();
+    }
+  }
+
+  public void closeDrawer() {
+    if (navigationDrawerFragment.isDrawerOpen()) {
+      drawerLayout.closeDrawers();
     }
   }
 

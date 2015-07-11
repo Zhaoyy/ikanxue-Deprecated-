@@ -76,6 +76,11 @@ public class ForumTitlesFragment extends BaseFragment {
     }
   }
 
+  @Override protected void onLoginOrLogout() {
+    ToastHelper.toastShort(mainActivity, "login:" + Api.getInstance().isLogin());
+    requestFortumTitles();
+  }
+
   private void requestFortumTitles() {
     Api.getInstance().getForumHomePage(new VolleyHelper.ResponseListener<JSONObject>() {
       @Override public void onErrorResponse(VolleyError volleyError) {
@@ -112,8 +117,7 @@ public class ForumTitlesFragment extends BaseFragment {
       @Override public void onItemClick(View view, int position) {
         ToastHelper.toastShort(mainActivity, titles.get(position).getName());
 
-        Api.getInstance()
-            .getForumDisplayPage(titles.get(position).getId(), 1,
+        Api.getInstance().getForumDisplayPage(titles.get(position).getId(), 2,
                 new VolleyHelper.ResponseListener<JSONObject>() {
                   @Override public void onErrorResponse(VolleyError volleyError) {
                     LogHelper.e(volleyError.toString());

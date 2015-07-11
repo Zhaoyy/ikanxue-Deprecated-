@@ -297,6 +297,9 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         drawerMenuListener.selectedAt(n);
       }
     } else {
+
+      mDrawerLayout.closeDrawers();
+
       getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
     }
   }
