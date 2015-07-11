@@ -33,6 +33,12 @@ public class BaseFragment extends Fragment {
 
   protected MainActivity mainActivity;
 
+  protected Bundle data = null;
+
+  public void setData(Bundle d) {
+    data = d;
+  }
+
   private BroadcastReceiver logReciever = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       onLoginOrLogout();

@@ -43,7 +43,7 @@ public class FeedbackFragment extends BaseFragment {
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     title = getString(R.string.feed_back);
-    return inflater.inflate(R.layout.fragment_feed_back, null);
+    return inflater.inflate(R.layout.fragment_feed_back, container, false);
   }
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {

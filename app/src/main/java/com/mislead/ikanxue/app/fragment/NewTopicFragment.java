@@ -29,7 +29,7 @@ public class NewTopicFragment extends BaseFragment {
 
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_feedback, null);
+    return inflater.inflate(R.layout.fragment_feedback, container, false);
   }
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {

@@ -23,7 +23,7 @@ public class AboutFragment extends BaseFragment {
       Bundle savedInstanceState) {
 
     title = getResources().getString(R.string.about);
-    return inflater.inflate(R.layout.frament_about, null);
+    return inflater.inflate(R.layout.frament_about, container, false);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

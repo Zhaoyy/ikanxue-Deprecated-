@@ -49,7 +49,7 @@ public class ForumTitlesFragment extends BaseFragment {
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     title = getString(R.string.titles);
-    return inflater.inflate(R.layout.fragment_forum_titles, null);
+    return inflater.inflate(R.layout.fragment_forum_titles, container, false);
   }
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -115,18 +115,18 @@ public class ForumTitlesFragment extends BaseFragment {
     adapter = new RecyclerViewAdapter();
     adapter.setItemListener(new RecyclerViewAdapter.ItemListener() {
       @Override public void onItemClick(View view, int position) {
-        ToastHelper.toastShort(mainActivity, titles.get(position).getName());
 
-        Api.getInstance().getForumDisplayPage(titles.get(position).getId(), 2,
-                new VolleyHelper.ResponseListener<JSONObject>() {
-                  @Override public void onErrorResponse(VolleyError volleyError) {
-                    LogHelper.e(volleyError.toString());
-                  }
+        String name = titles.get(position).getName();
+        int id = titles.get(position).getId();
 
-                  @Override public void onResponse(JSONObject object) {
-                    LogHelper.e(object.toString());
-                  }
-                });
+        Bundle data = new Bundle();
+        data.putString("title", name);
+        data.putInt("id", id);
+        BaseFragment fragment = new ForumDisplayFragment();
+        fragment.setData(data);
+
+        mainActivity.gotoFragment(fragment, false);
+
       }
     });
     recyclerView.setAdapter(adapter);

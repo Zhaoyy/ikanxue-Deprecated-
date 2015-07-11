@@ -25,7 +25,7 @@ public class SecurityNewsFragment extends BaseFragment {
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     title = getString(R.string.security_news);
-    return inflater.inflate(R.layout.fragment_feedback, null);
+    return inflater.inflate(R.layout.fragment_feedback, container, false);
   }
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {

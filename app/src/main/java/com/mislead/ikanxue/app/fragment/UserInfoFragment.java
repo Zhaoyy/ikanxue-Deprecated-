@@ -46,7 +46,7 @@ public class UserInfoFragment extends BaseFragment {
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     title = getString(R.string.user_info);
-    return inflater.inflate(R.layout.fragment_user_info, null);
+    return inflater.inflate(R.layout.fragment_user_info, container, false);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
