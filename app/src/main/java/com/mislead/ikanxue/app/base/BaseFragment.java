@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.mislead.ikanxue.app.activity.MainActivity;
 import com.mislead.ikanxue.app.application.MyApplication;
+import com.mislead.ikanxue.app.util.LogHelper;
 
 /**
  * BaseFragment
@@ -64,12 +65,19 @@ public class BaseFragment extends Fragment {
 
   @Override public void onHiddenChanged(boolean hidden) {
     super.onHiddenChanged(hidden);
-    if (!hidden) {
-      mainActivity.getSupportActionBar().setTitle(title);
-    }
   }
 
   // do someting when user log state changed.
   protected void onLoginOrLogout() {
+  }
+
+  // refresh view after fragment shown
+  public void onRefresh() {
+    if (mainActivity == null) {
+      LogHelper.e("activity is null");
+    } else {
+      mainActivity.getSupportActionBar().setTitle(title);
+    }
+
   }
 }

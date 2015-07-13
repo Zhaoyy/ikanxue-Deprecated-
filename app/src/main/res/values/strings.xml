@@ -35,4 +35,8 @@
   看雪软件安全网站一直遵循纯技术主题的发展策略，不但在行业中树立了令人尊敬的专业形象，更使一大批专业人士和专家聚集在这里，构建起了一个围绕软件安全主题的活跃的大社区。</string>
   <string name="about_ikanxue">i看雪</string>
   <string name="about_ikanxue_msg">i看雪是个人根据看雪API开发的第三方Android APP。目的是为了学习和交流Android开发技术。\n\n如有任何需要可以邮箱联系我，邮箱地址：867986737@qq.com。本人十分愿意可以利用空闲为看雪尽一份力。</string>
+
+  <string name="up_load_more">上拉加载更多</string>
+  <string name="no_more">暂无更多</string>
+  <string name="loading">正在加载...</string>
 </resources>

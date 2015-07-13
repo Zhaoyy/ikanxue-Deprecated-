@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
               break;
           }
 
-          gotoFragment(fragment, dispose);
+          gotoFragment(fragment, dispose, true);
         }
       };
 
@@ -128,6 +128,10 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void gotoFragment(BaseFragment fragment, boolean dispose) {
+    gotoFragment(fragment, dispose, false);
+  }
+
+  public void gotoFragment(BaseFragment fragment, boolean dispose, boolean clean) {
     Fragment fg = FragmentHelper.getCurrentFragment();
 
     if (fg != null) {
@@ -142,8 +146,18 @@ public class MainActivity extends AppCompatActivity {
       } else {
         fragments.push(fg);
       }
+
+      if (clean) {
+        cleanFragments();
+      }
     }
     FragmentHelper.showFragment(fragment, R.id.container);
+
+    fragment.onRefresh();
+  }
+
+  private void cleanFragments() {
+    fragments.clear();
   }
 
   public void backtoFragment(boolean dispose) {
@@ -156,5 +170,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     FragmentHelper.showFragment(fragment, R.id.container);
+
+    fragment.onRefresh();
   }
 }

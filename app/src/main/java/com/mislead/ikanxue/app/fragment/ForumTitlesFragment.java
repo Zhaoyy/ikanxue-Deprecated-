@@ -188,7 +188,7 @@ public class ForumTitlesFragment extends BaseFragment {
         holder = new GroupHolder(groupView);
       } else {
         View childView = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.item_fortum_title, parent, false);
+            .inflate(R.layout.item_forum_title, parent, false);
 
         holder = new ChildHolder(childView);
       }

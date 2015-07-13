@@ -3,7 +3,6 @@ package com.mislead.ikanxue.app.util;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import com.mislead.ikanxue.app.R;
 
 /**
  * FragmentHelper
@@ -44,8 +43,9 @@ public class FragmentHelper {
     }
 
     FragmentTransaction transaction = mFragmentManager.beginTransaction();
-    transaction.show(fg).setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+    transaction.show(fg);
     transaction.commit();
+    mFragmentManager.executePendingTransactions();
     currentFragment = fg;
   }
 
