@@ -1,5 +1,6 @@
 package com.mislead.ikanxue.app.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -7,6 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,11 +19,13 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mislead.ikanxue.app.R;
+import com.mislead.ikanxue.app.activity.LoginActivity;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.base.BaseFragment;
 import com.mislead.ikanxue.app.model.ForumThreadTitleObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
+import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
 import com.mislead.ikanxue.app.view.MaterialProgressDrawable;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
@@ -56,7 +62,7 @@ public class ForumDisplayFragment extends BaseFragment {
 
   private int footState = 0; // 0 -can load more,1-loading, 2-no more
 
-  private List<ForumThreadTitleObject.ThreadListEntity> threads;
+  private List<ForumThreadTitleObject.ThreadListEntity> threads = new ArrayList<>();
 
   private MaterialProgressDrawable progressDrawable;
 
@@ -78,6 +84,11 @@ public class ForumDisplayFragment extends BaseFragment {
     }
   };
 
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
+
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     titleID = data.getInt("id");
@@ -91,7 +102,7 @@ public class ForumDisplayFragment extends BaseFragment {
     list = (LoadMoreRecyclerView) view.findViewById(R.id.list);
     swipe_refresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
     initView();
-
+    swipe_refresh.setRefreshing(true);
     refresh();
   }
 
@@ -112,6 +123,7 @@ public class ForumDisplayFragment extends BaseFragment {
     footView.setLayoutParams(params);
     ImageView ivProgress = (ImageView) footView.findViewById(R.id.iv_progress);
     progressDrawable = new MaterialProgressDrawable(getActivity(), ivProgress);
+    progressDrawable.setAlpha(255);
     ivProgress.setImageDrawable(progressDrawable);
 
     adapter = new ForumThreadAdapter();
@@ -160,8 +172,24 @@ public class ForumDisplayFragment extends BaseFragment {
   }
 
   private void refresh() {
-    currPage = 1;
-    loadData();
+    // check there is new post or not
+    Api.getInstance()
+        .checkNewPostInForumDisplayPage(titleID, lastRefreshTime,
+            new VolleyHelper.ResponseListener<JSONObject>() {
+              @Override public void onErrorResponse(VolleyError volleyError) {
+                LogHelper.e(volleyError.toString());
+              }
+
+              @Override public void onResponse(JSONObject object) {
+                if (object.has("result")) {
+                  ToastHelper.toastShort(getActivity(), "没有新帖");
+                  swipe_refresh.setRefreshing(false);
+                } else {
+                  currPage = 1;
+                  loadData();
+                }
+              }
+            });
   }
 
   private void loadMore() {
@@ -171,6 +199,7 @@ public class ForumDisplayFragment extends BaseFragment {
   }
 
   private void loadData() {
+
     Api.getInstance()
         .getForumDisplayPage(titleID, currPage, new VolleyHelper.ResponseListener<JSONObject>() {
           @Override public void onErrorResponse(VolleyError volleyError) {
@@ -194,7 +223,7 @@ public class ForumDisplayFragment extends BaseFragment {
     lastRefreshTime = object.getTime();
     pageCount = object.getPagenav();
 
-    if (object.getThreadList().size() > 0) {
+    if (currPage > pageCount || object.getThreadList().size() > 0) {
       if (currPage == 1) {
         threads = object.getThreadList();
       } else {
@@ -210,6 +239,61 @@ public class ForumDisplayFragment extends BaseFragment {
     swipe_refresh.setRefreshing(false);
     adapter.setData(threads);
     adapter.notifyDataSetChanged();
+  }
+
+  private void postOrLogin() {
+    if (Api.getInstance().isLogin()) {
+
+    } else {
+      getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+    }
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_post_refresh, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.action_new_post:
+        postOrLogin();
+        break;
+      case R.id.action_refresh:
+        swipe_refresh.setRefreshing(true);
+        refresh();
+        break;
+      default:
+        break;
+    }
+    return true;
+  }
+
+  @Override protected void onLoginOrLogout() {
+    super.onLoginOrLogout();
+    refresh();
+  }
+
+  @Override public void onRefresh() {
+    super.onRefresh();
+    if (data != null) {
+      // post a new topic
+      int index = getLastStickyIndex();
+    }
+  }
+
+  private int getLastStickyIndex() {
+    for (int i = 0; i < threads.size(); i++) {
+      ForumThreadTitleObject.ThreadListEntity entity = threads.get(i);
+
+      if (entity.getGlobalsticky() == -1 || entity.getSticky() == 1) {
+        continue;
+      }
+
+      return i;
+    }
+
+    return -1;
   }
 
   public class ForumThreadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -28,6 +30,9 @@ public class VolleyHelper {
   private static String TAG = "VolleyHelper";
 
   private static RequestQueue queue = null;
+
+  // set time out limit is 20s, not retry
+  private static RetryPolicy defaultPolicy = new DefaultRetryPolicy(20 * 1000, 1, 1.0f);
 
   public static void init(Context context) {
     queue = Volley.newRequestQueue(context);
@@ -73,6 +78,7 @@ public class VolleyHelper {
     };
     request.setShouldCache(true);
     request.setTag(url);
+    request.setRetryPolicy(defaultPolicy);
     queue.add(request);
   }
 
@@ -93,6 +99,7 @@ public class VolleyHelper {
     };
     request.setShouldCache(true);
     request.setTag(url);
+    request.setRetryPolicy(defaultPolicy);
     queue.add(request);
   }
 
@@ -133,8 +140,7 @@ public class VolleyHelper {
         }
       }
     };
-    //request.setRetryPolicy(new DefaultRetryPolicy(500, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-    //    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    request.setRetryPolicy(defaultPolicy);
     request.setTag(url);
     queue.add(request);
   }
@@ -143,8 +149,7 @@ public class VolleyHelper {
       Map<String, String> params) {
     KanxuePostJSONRequest request = new KanxuePostJSONRequest(url, listener);
     request.setParams(params);
-    //request.setRetryPolicy(new DefaultRetryPolicy(500, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-    //    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    request.setRetryPolicy(defaultPolicy);
     request.setTag(url);
     queue.add(request);
   }
@@ -153,8 +158,7 @@ public class VolleyHelper {
       Map<String, String> params) {
     JsonObjectRequest request =
         new JsonObjectRequest(Request.Method.POST, url, new JSONObject(params), listener, listener);
-    //request.setRetryPolicy(new DefaultRetryPolicy(500, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-    //    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    request.setRetryPolicy(defaultPolicy);
     request.setTag(url);
     queue.add(request);
   }

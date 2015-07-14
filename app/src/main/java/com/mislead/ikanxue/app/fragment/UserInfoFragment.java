@@ -129,7 +129,7 @@ public class UserInfoFragment extends BaseFragment {
             Api.getInstance().clearLoginData();
             getActivity().sendBroadcast(new Intent(MyApplication.LOGIN_STATE_CHANGE_ACTION));
             ToastHelper.toastShort(getActivity(), "退出登录成功！");
-            mainActivity.backtoFragment(true);
+            mainActivity.backToFragment(true);
           }
         } catch (JSONException e) {
           e.printStackTrace();

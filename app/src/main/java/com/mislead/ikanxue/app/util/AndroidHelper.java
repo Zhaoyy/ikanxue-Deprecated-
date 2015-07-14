@@ -98,4 +98,12 @@ public class AndroidHelper {
 
     return (int) (dp * metrics.density + 0.5f);
   }
+
+  public static void sleep(int time) {
+    try {
+      Thread.sleep(time);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
 }

@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override public void onBackPressed() {
     if (!fragments.empty()) {
-      backtoFragment(true);
+      backToFragment(true);
     } else {
       exitApp();
     }
@@ -153,14 +153,18 @@ public class MainActivity extends AppCompatActivity {
     }
     FragmentHelper.showFragment(fragment, R.id.container);
 
-    fragment.onRefresh();
+    fragment.setTitle();
   }
 
   private void cleanFragments() {
     fragments.clear();
   }
 
-  public void backtoFragment(boolean dispose) {
+  public void backToFragment(boolean dispose) {
+    backToFragment(dispose, null);
+  }
+
+  public void backToFragment(boolean dispose, Bundle data) {
     Fragment current = FragmentHelper.getCurrentFragment();
     BaseFragment fragment = (BaseFragment) fragments.pop();
     FragmentHelper.hideFragment(current);
@@ -170,7 +174,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     FragmentHelper.showFragment(fragment, R.id.container);
-
-    fragment.onRefresh();
+    if (data != null) {
+      fragment.setData(data);
+      fragment.onRefresh();
+    }
+    fragment.setTitle();
   }
 }

@@ -104,7 +104,7 @@ public class FeedbackFragment extends BaseFragment {
       @Override public void onResponse(String object) {
         AndroidHelper.hideProgressDialog();
         ToastHelper.toastShort(mainActivity, "提交成功！");
-        mainActivity.backtoFragment(true);
+        mainActivity.backToFragment(true);
       }
     });
   }

@@ -72,12 +72,14 @@ public class BaseFragment extends Fragment {
   }
 
   // refresh view after fragment shown
-  public void onRefresh() {
+  public void setTitle() {
     if (mainActivity == null) {
       LogHelper.e("activity is null");
     } else {
       mainActivity.getSupportActionBar().setTitle(title);
     }
+  }
 
+  public void onRefresh() {
   }
 }
