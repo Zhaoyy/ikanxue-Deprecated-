@@ -13,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,7 +24,7 @@ import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.activity.LoginActivity;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.base.BaseFragment;
-import com.mislead.ikanxue.app.model.ForumThreadTitleObject;
+import com.mislead.ikanxue.app.model.ForumThreadObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.util.ToastHelper;
@@ -35,17 +37,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * ForumDisplayFragment
+ * ThreadDisplayFragment
  *
  * @author Mislead
  *         DATE: 2015/7/11
  *         DESC:
  **/
-public class ForumDisplayFragment extends BaseFragment {
+public class ThreadDisplayFragment extends BaseFragment {
 
-  private static String TAG = "ForumDisplayFragment";
+  private static String TAG = "ThreadDisplayFragment";
 
-  private int titleID;
+  private int threadId;
+  private int open;
+  private int replyCount;
   private int currPage = 1;
 
   private long lastRefreshTime;
@@ -53,6 +57,11 @@ public class ForumDisplayFragment extends BaseFragment {
 
   private LoadMoreRecyclerView list;
   private SwipeRefreshLayout swipe_refresh;
+  private LinearLayout ll_reply;
+
+  private EditText et_reply;
+
+  private ImageButton btn_reply;
 
   private View footView;
 
@@ -62,7 +71,7 @@ public class ForumDisplayFragment extends BaseFragment {
 
   private int footState = 0; // 0 -can load more,1-loading, 2-no more
 
-  private List<ForumThreadTitleObject.ThreadListEntity> threads = new ArrayList<>();
+  private List<ForumThreadObject.PostbitsEntity> threads = new ArrayList<>();
 
   private MaterialProgressDrawable progressDrawable;
 
@@ -75,18 +84,6 @@ public class ForumDisplayFragment extends BaseFragment {
 
   private ItemClickListener listener = new ItemClickListener() {
     @Override public void itemClick(int pos) {
-      int threadId = threads.get(pos).getThreadid();
-      int open = threads.get(pos).getOpen();
-      int replyCount = threads.get(pos).getReplycount();
-      Bundle data = new Bundle();
-      data.putInt("threadId", threadId);
-      data.putInt("open", open);
-      data.putInt("replyCount", replyCount);
-      data.putString("title", title);
-
-      ThreadDisplayFragment fragment = new ThreadDisplayFragment();
-      fragment.setData(data);
-      mainActivity.gotoFragment(fragment, false);
     }
   };
 
@@ -97,16 +94,23 @@ public class ForumDisplayFragment extends BaseFragment {
 
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    titleID = data.getInt("id");
+    threadId = data.getInt("threadId");
+    open = data.getInt("open");
+    replyCount = data.getInt("replyCount");
     title = data.getString("title");
-    return inflater.inflate(R.layout.fragment_forum_threads, container, false);
+    return inflater.inflate(R.layout.fragment_threads_display, container, false);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     list = (LoadMoreRecyclerView) view.findViewById(R.id.list);
     swipe_refresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
+    ll_reply = (LinearLayout) view.findViewById(R.id.ll_reply);
+    et_reply = (EditText) view.findViewById(R.id.et_reply);
+    btn_reply = (ImageButton) view.findViewById(R.id.btn_reply);
     initView();
+
+    // load first
     list.post(runnable);
   }
 
@@ -159,6 +163,18 @@ public class ForumDisplayFragment extends BaseFragment {
         refresh();
       }
     });
+    // thread has closed
+    if (open != 1) {
+      ll_reply.setVisibility(View.GONE);
+    }
+
+    et_reply.setHint(String.format("回复不少于6个字，已有%s个回复", replyCount));
+
+    btn_reply.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+
+      }
+    });
   }
 
   private void changeFootState(int state) {
@@ -178,7 +194,7 @@ public class ForumDisplayFragment extends BaseFragment {
   private void refresh() {
     // check there is new post or not
     Api.getInstance()
-        .checkNewPostInForumDisplayPage(titleID, lastRefreshTime,
+        .checkNewPostInShowThreadPage(threadId, lastRefreshTime,
             new VolleyHelper.ResponseListener<JSONObject>() {
               @Override public void onErrorResponse(VolleyError volleyError) {
                 LogHelper.e(volleyError.toString());
@@ -203,49 +219,50 @@ public class ForumDisplayFragment extends BaseFragment {
   }
 
   private void loadData() {
-
+    LogHelper.e("currPage:" + currPage);
     Api.getInstance()
-        .getForumDisplayPage(titleID, currPage, new VolleyHelper.ResponseListener<JSONObject>() {
-          @Override public void onErrorResponse(VolleyError volleyError) {
-            LogHelper.e(volleyError.toString());
-          }
+        .getForumShowthreadPage(threadId, currPage,
+            new VolleyHelper.ResponseListener<JSONObject>() {
+              @Override public void onErrorResponse(VolleyError volleyError) {
+                LogHelper.e(volleyError.toString());
+              }
 
-          @Override public void onResponse(JSONObject object) {
-            try {
-              parseJSON(object);
-            } catch (JSONException e) {
-              e.printStackTrace();
-            }
-          }
-        });
+              @Override public void onResponse(JSONObject object) {
+                try {
+                  parseJSON(object);
+                } catch (JSONException e) {
+                  e.printStackTrace();
+                }
+              }
+            });
   }
 
   private void parseJSON(JSONObject json) throws JSONException {
     Gson gson = new Gson();
-    ForumThreadTitleObject object = gson.fromJson(json.toString(), ForumThreadTitleObject.class);
+    ForumThreadObject object = gson.fromJson(json.toString(), ForumThreadObject.class);
 
     lastRefreshTime = object.getTime();
     pageCount = object.getPagenav();
 
-    if (currPage < pageCount || object.getThreadList().size() > 0) {
+    if (threads.size() > replyCount) {
+      changeFootState(2);
+    } else {
       if (currPage == 1) {
-        threads = object.getThreadList();
+        threads = object.getPostbits();
       } else {
         // add new thread
-        for (ForumThreadTitleObject.ThreadListEntity entity : object.getThreadList()) {
+        for (ForumThreadObject.PostbitsEntity entity : object.getPostbits()) {
           threads.add(entity);
         }
       }
       changeFootState(0);
-    } else {
-      changeFootState(2);
     }
     swipe_refresh.setRefreshing(false);
     adapter.setData(threads);
     adapter.notifyDataSetChanged();
   }
 
-  private void postOrLogin() {
+  private void replyOrLogin() {
     if (Api.getInstance().isLogin()) {
 
     } else {
@@ -255,14 +272,11 @@ public class ForumDisplayFragment extends BaseFragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_post_refresh, menu);
+    inflater.inflate(R.menu.menu_refresh, menu);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.action_new_post:
-        postOrLogin();
-        break;
       case R.id.action_refresh:
         swipe_refresh.setRefreshing(true);
         refresh();
@@ -278,33 +292,11 @@ public class ForumDisplayFragment extends BaseFragment {
     refresh();
   }
 
-  @Override public void onRefresh() {
-    super.onRefresh();
-    if (data != null) {
-      // post a new topic
-      int index = getLastStickyIndex();
-    }
-  }
-
-  private int getLastStickyIndex() {
-    for (int i = 0; i < threads.size(); i++) {
-      ForumThreadTitleObject.ThreadListEntity entity = threads.get(i);
-
-      if (entity.getGlobalsticky() == -1 || entity.getSticky() == 1) {
-        continue;
-      }
-
-      return i;
-    }
-
-    return -1;
-  }
-
   public class ForumThreadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<ForumThreadTitleObject.ThreadListEntity> data = new ArrayList<>();
+    private List<ForumThreadObject.PostbitsEntity> data = new ArrayList<>();
 
-    public void setData(List<ForumThreadTitleObject.ThreadListEntity> data) {
+    public void setData(List<ForumThreadObject.PostbitsEntity> data) {
       this.data = data;
 
       notifyDataSetChanged();
@@ -313,8 +305,8 @@ public class ForumDisplayFragment extends BaseFragment {
     @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       if (viewType == 0) {
         View view = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.item_forum_thread, parent, false);
-        return new ForumThreadHolder(view);
+            .inflate(R.layout.item_thread_display, parent, false);
+        return new ThreadHolder(view);
       } else {
         return new FootHolder(footView);
       }
@@ -322,37 +314,55 @@ public class ForumDisplayFragment extends BaseFragment {
 
     @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-      if (holder instanceof ForumThreadHolder) {
-        ForumThreadTitleObject.ThreadListEntity entity = data.get(position);
-        ForumThreadHolder forumThreadHolder = (ForumThreadHolder) holder;
+      if (holder instanceof ThreadHolder) {
+        final ForumThreadObject.PostbitsEntity entity = data.get(position);
+        final ThreadHolder forumThreadHolder = (ThreadHolder) holder;
         if (entity.getAvatar() == 0) {
           forumThreadHolder.iv_head.setImageResource(R.mipmap.ic_launcher);
         } else {
-          String headUrl = Api.getInstance().getUserHeadImageUrl(entity.getPostuserid());
+          String headUrl = Api.getInstance().getUserHeadImageUrl(entity.getUserid());
           VolleyHelper.requestImageWithCache(headUrl, forumThreadHolder.iv_head,
               AndroidHelper.getImageDiskCache(), R.mipmap.ic_launcher, R.mipmap.ic_launcher);
         }
 
-        forumThreadHolder.tv_name.setText(Html.fromHtml(entity.getPostusername()));
+        forumThreadHolder.tv_name.setText(Html.fromHtml(entity.getUsername()));
 
-        String tag = "";
-        // 不是新帖版块
-        if (titleID != Api.NEW_FORUM_ID) {
-          if (entity.getGlobalsticky() == Api.GLOBAL_TOP_FORUM) {
-            tag = "<font color=\"red\">[总顶] </font>";
-          } else if (entity.getGlobalsticky() == Api.AREA_TOP_FORUM) {
-            tag = "<font color=\"red\">[区顶] </font>";
-          } else if (entity.getSticky() == Api.TOP_FORUM) {
-            tag = "<font color=\"red\">[置顶] </font>";
-          }
+        forumThreadHolder.tv_time.setText(entity.getPostdate() + " " + entity.getPosttime());
+        forumThreadHolder.tv_num.setText((position + 1) + "#");
+
+        if (position == 0) {
+          forumThreadHolder.tv_title.setVisibility(View.VISIBLE);
+          forumThreadHolder.tv_title.setText(Html.fromHtml(entity.getTitle()));// 直接使用可能会出现乱码
+        } else {
+          forumThreadHolder.tv_title.setVisibility(View.GONE);
         }
 
-        forumThreadHolder.tv_title.setText(
-            Html.fromHtml(tag + entity.getThreadtitle()));// 直接使用可能会出现乱码
-        forumThreadHolder.tv_info.setText(
-            String.format("查看：%1$s  回复：%2$s", entity.getViews(), entity.getReplycount()));
+        forumThreadHolder.tv_msg.setText(Html.fromHtml(entity.getMessage()));
+        if (entity.getThumbnail() == 1) {
+          Api.getInstance()
+              .getForumFullThread(entity.getPostid(), new VolleyHelper.ResponseListener<String>() {
+                    @Override public void onErrorResponse(VolleyError volleyError) {
+                      LogHelper.e(volleyError.toString());
+                    }
 
-        forumThreadHolder.ll_item.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onResponse(String object) {
+                      entity.setThumbnail(0);
+                      entity.setMessage(object);
+                      forumThreadHolder.tv_msg.setText(Html.fromHtml(entity.getMessage()));
+                    }
+                  });
+        }
+
+        if (entity.getThumbnailattachments() != null
+            && entity.getThumbnailattachments().size() > 0
+            && entity.getOtherattachments() != null
+            && entity.getOtherattachments().size() > 0) {
+          forumThreadHolder.ll_attachment.setVisibility(View.VISIBLE);
+        } else {
+          forumThreadHolder.ll_attachment.setVisibility(View.GONE);
+        }
+
+        forumThreadHolder.iv_head.setOnClickListener(new View.OnClickListener() {
           @Override public void onClick(View v) {
             if (listener != null) {
               listener.itemClick(position);
@@ -375,21 +385,31 @@ public class ForumDisplayFragment extends BaseFragment {
     void itemClick(int pos);
   }
 
-  class ForumThreadHolder extends RecyclerView.ViewHolder {
+  class ThreadHolder extends RecyclerView.ViewHolder {
 
-    public ImageView iv_head;
-    public TextView tv_title;
-    public TextView tv_name;
-    public TextView tv_info;
     public LinearLayout ll_item;
+    public ImageView iv_head;
+    public TextView tv_name;
+    public TextView tv_time;
+    public TextView tv_num;
+    public TextView tv_title;
+    public TextView tv_msg;
+    public LinearLayout ll_attachment;
+    public LinearLayout ll_image_attachment;
+    public LinearLayout ll_other_attachment;
 
-    public ForumThreadHolder(View itemView) {
+    public ThreadHolder(View itemView) {
       super(itemView);
       ll_item = (LinearLayout) itemView.findViewById(R.id.ll_item);
       iv_head = (ImageView) itemView.findViewById(R.id.iv_head);
-      tv_title = (TextView) itemView.findViewById(R.id.tv_title);
       tv_name = (TextView) itemView.findViewById(R.id.tv_name);
-      tv_info = (TextView) itemView.findViewById(R.id.tv_info);
+      tv_time = (TextView) itemView.findViewById(R.id.tv_time);
+      tv_num = (TextView) itemView.findViewById(R.id.tv_num);
+      tv_title = (TextView) itemView.findViewById(R.id.tv_title);
+      tv_msg = (TextView) itemView.findViewById(R.id.tv_msg);
+      ll_attachment = (LinearLayout) itemView.findViewById(R.id.ll_attachment);
+      ll_image_attachment = (LinearLayout) itemView.findViewById(R.id.ll_image_attachment);
+      ll_other_attachment = (LinearLayout) itemView.findViewById(R.id.ll_other_attachment);
     }
   }
 

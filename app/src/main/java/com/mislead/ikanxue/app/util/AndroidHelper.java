@@ -22,9 +22,12 @@ public class AndroidHelper {
   private static Context mContext;
   private static File cacheDirPath;
 
+  private static File splashCacheDirPath;
+
   private static ProgressDialog progressDialog;
 
   private static ImageDiskCache imageDiskCache;
+  private static ImageDiskCache splashImageCache;
   private static final int CACHE_SIZE = 10 * 1024 * 1024;// max cache size by byte
 
   public static void init(Context context) {
@@ -36,10 +39,19 @@ public class AndroidHelper {
     }
     imageDiskCache = new ImageDiskCache(cacheDirPath, CACHE_SIZE);
     imageDiskCache.initialize();
+
+    splashCacheDirPath = new File(cacheDirPath, "splash");
+    splashCacheDirPath.mkdirs();
+    splashImageCache = new ImageDiskCache(splashCacheDirPath, CACHE_SIZE);
+    splashImageCache.initialize();
   }
 
   public static ImageDiskCache getImageDiskCache() {
     return imageDiskCache;
+  }
+
+  public static ImageDiskCache getSplashImageCache() {
+    return splashImageCache;
   }
 
   public static String getVersionName(Context context) {

@@ -191,9 +191,9 @@ public class Api {
    * @param id Ìû×Óid
    */
   public void getForumFullThread(int id,
-      final VolleyHelper.ResponseListener<JSONObject> responseListener) {
+      final VolleyHelper.ResponseListener<String> responseListener) {
     String url = DOMAIN + PATH + "showpost.php?" + STYLE + "&p=" + id;
-    requestJSONObjectByGet(url, responseListener);
+    VolleyHelper.requestStringGet(url, responseListener);
   }
 
   /**

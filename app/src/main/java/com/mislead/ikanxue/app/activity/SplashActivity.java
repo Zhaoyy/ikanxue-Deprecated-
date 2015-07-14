@@ -77,7 +77,7 @@ public class SplashActivity extends Activity {
       tvDailyEn.setText(dailyEnglish.getContent());
 
       String key = VolleyHelper.getCacheKey(dailyEnglish.getPicture());
-      Bitmap bitmap = AndroidHelper.getImageDiskCache().getBitmap(key);
+      Bitmap bitmap = AndroidHelper.getSplashImageCache().getBitmap(key);
       if (bitmap != null) {
         ivDaily.setImageBitmap(bitmap);
       } else {

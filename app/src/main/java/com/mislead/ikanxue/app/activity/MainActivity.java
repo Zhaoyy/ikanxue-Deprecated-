@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -127,11 +128,11 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  public void gotoFragment(BaseFragment fragment, boolean dispose) {
+  public void gotoFragment(@NonNull BaseFragment fragment, boolean dispose) {
     gotoFragment(fragment, dispose, false);
   }
 
-  public void gotoFragment(BaseFragment fragment, boolean dispose, boolean clean) {
+  public void gotoFragment(@NonNull BaseFragment fragment, boolean dispose, boolean clean) {
     Fragment fg = FragmentHelper.getCurrentFragment();
 
     if (fg != null) {

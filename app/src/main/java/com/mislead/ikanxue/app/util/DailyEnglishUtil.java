@@ -40,7 +40,7 @@ public class DailyEnglishUtil {
         ShPreUtil.setString(SH_LAST_DAILY_PIC_URL, object.getPicture());
         ShPreUtil.setString(SH_LAST_DAILY_DATE, object.getDateline());
         // cache the image
-        VolleyHelper.requestAndCacheImage(object.getPicture(), AndroidHelper.getImageDiskCache());
+        VolleyHelper.requestAndCacheImage(object.getPicture(), AndroidHelper.getSplashImageCache());
       }
     };
 

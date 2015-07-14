@@ -22,13 +22,11 @@
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_navigation_drawer.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/flow_home_mask.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_post.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_post.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_post.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_refresh.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_refresh.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_refresh.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/quotation_left.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/quotation_right.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/social_send_now.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/social_send_now_dark.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/build.gradle" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
