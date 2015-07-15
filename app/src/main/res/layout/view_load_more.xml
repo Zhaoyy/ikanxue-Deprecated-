@@ -44,7 +44,6 @@
         android:id="@+id/iv_progress"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:scaleType="centerCrop"
         android:layout_marginRight="8dp"
         />
 

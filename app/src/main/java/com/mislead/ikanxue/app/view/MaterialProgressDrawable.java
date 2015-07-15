@@ -54,7 +54,7 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
   private static final float STROKE_WIDTH_LARGE = 3f;
 
   private final int[] COLORS = new int[] {
-      Color.rgb(64, 96, 127)
+      Color.rgb(255, 96, 127)
   };
 
   /**

@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,7 @@ import com.mislead.ikanxue.app.view.MaterialProgressDrawable;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
 import com.mislead.ikanxue.app.volley.VolleyImageGetter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,8 +85,31 @@ public class ThreadDisplayFragment extends BaseFragment {
     }
   };
 
+  private Runnable progressRunable = new Runnable() {
+    @Override public void run() {
+      if (footState == 1) {
+        progressDrawable.start();
+      } else {
+        progressDrawable.stop();
+      }
+    }
+  };
+
   private ItemClickListener listener = new ItemClickListener() {
     @Override public void itemClick(int pos) {
+
+      if (Api.getInstance().isLogin()) {
+        // head clicked, show user info
+
+        UserInfoFragment fragment = new UserInfoFragment();
+        Bundle data = new Bundle();
+        data.putInt("userId", threads.get(pos).getUserid());
+        fragment.setData(data);
+
+        mainActivity.gotoFragment(fragment, false);
+      } else {
+        ToastHelper.toastLong(getActivity(), "登录之后才能查看用户信息！");
+      }
     }
   };
 
@@ -133,6 +158,8 @@ public class ThreadDisplayFragment extends BaseFragment {
     ImageView ivProgress = (ImageView) footView.findViewById(R.id.iv_progress);
     progressDrawable = new MaterialProgressDrawable(getActivity(), ivProgress);
     progressDrawable.setAlpha(255);
+    progressDrawable.setColorSchemeColors(getResources().getColor(R.color.ics_blue_dark));
+    progressDrawable.updateSizes(MaterialProgressDrawable.DEFAULT);
     ivProgress.setImageDrawable(progressDrawable);
 
     adapter = new ForumThreadAdapter();
@@ -173,7 +200,7 @@ public class ThreadDisplayFragment extends BaseFragment {
 
     btn_reply.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-
+        replyOrLogin();
       }
     });
   }
@@ -181,15 +208,11 @@ public class ThreadDisplayFragment extends BaseFragment {
   private void changeFootState(int state) {
     footState = state;
 
-    footView.findViewById(R.id.ll_loading).setVisibility(state == 0 ? View.VISIBLE : View.GONE);
-    footView.findViewById(R.id.tv_load_more).setVisibility(state == 1 ? View.VISIBLE : View.GONE);
+    footView.findViewById(R.id.tv_load_more).setVisibility(state == 0 ? View.VISIBLE : View.GONE);
+    footView.findViewById(R.id.ll_loading).setVisibility(state == 1 ? View.VISIBLE : View.GONE);
     footView.findViewById(R.id.tv_no_more).setVisibility(state == 2 ? View.VISIBLE : View.GONE);
 
-    if (state == 1) {
-      progressDrawable.start();
-    } else {
-      progressDrawable.stop();
-    }
+    footView.findViewById(R.id.iv_progress).post(progressRunable);
   }
 
   private void refresh() {
@@ -219,8 +242,8 @@ public class ThreadDisplayFragment extends BaseFragment {
     loadData();
   }
 
+  // request data from net
   private void loadData() {
-    LogHelper.e("currPage:" + currPage);
     Api.getInstance()
         .getForumShowthreadPage(threadId, currPage,
             new VolleyHelper.ResponseListener<JSONObject>() {
@@ -265,9 +288,87 @@ public class ThreadDisplayFragment extends BaseFragment {
 
   private void replyOrLogin() {
     if (Api.getInstance().isLogin()) {
+      String reply = et_reply.getText().toString();
 
+      if (TextUtils.isEmpty(reply)) {
+        ToastHelper.toastShort(getActivity(), "回复内容不能为空！");
+        return;
+      }
+
+      if (reply.length() < Api.POST_CONTENT_SIZE_MIN) {
+        ToastHelper.toastShort(getActivity(), "回复内容不能少于6个字！");
+        return;
+      }
+
+      Api.getInstance().quickReply(threadId, reply, new VolleyHelper.ResponseListener<String>() {
+        @Override public void onErrorResponse(VolleyError volleyError) {
+          LogHelper.e(volleyError.toString());
+        }
+
+        @Override public void onResponse(String object) {
+          try {
+            JSONObject jsonObject = new JSONObject(object);
+
+            int result = jsonObject.getInt("result");
+
+            switch (result) {
+              case Api.NEW_POST_SUCCESS:
+                ToastHelper.toastLong(getActivity(), R.string.new_post_success);
+                addNewReply(et_reply.getText().toString());
+                et_reply.setText("");
+                break;
+              case Api.NEW_POST_FAIL_WITHIN_THIRTY_SECONDS:
+                ToastHelper.toastLong(getActivity(), R.string.new_post_fail_within_thirty_seconds);
+                return;
+              case Api.NEW_POST_FAIL_WITHIN_FIVE_MINUTES:
+                ToastHelper.toastLong(getActivity(), R.string.new_post_fail_within_five_minutes);
+                return;
+              default:
+                break;
+            }
+          } catch (JSONException e) {
+            e.printStackTrace();
+          }
+        }
+      });
     } else {
       getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+    }
+  }
+
+  /**
+   * add your reply to the last
+   */
+  private void addNewReply(String msg) {
+    ForumThreadObject.PostbitsEntity entity = new ForumThreadObject.PostbitsEntity();
+    // set post info
+    entity.setMessage(msg);
+    entity.setThumbnail(0);
+    entity.setPostid(-1);
+    // set user info
+    entity.setUserid(Api.getInstance().getLoginUserId());
+    entity.setUsername(Api.getInstance().getLoginUserName());
+    entity.setAvatar(Api.getInstance().getIsAvatar());
+    // set post time
+    entity.setPostdate(getString(R.string.today));
+    Calendar calendar = Calendar.getInstance();
+    entity.setPosttime(
+        calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(
+            Calendar.SECOND));
+
+    threads.add(entity);
+    adapter.setData(threads);
+  }
+
+  /**
+   * before load more, remove our new reply
+   */
+  private void removeYourReply() {
+    if (threads.size() <= 0) return;
+    ForumThreadObject.PostbitsEntity entity = threads.get(threads.size() - 1);
+
+    if (entity.getPostid() < 0) {
+      threads.remove(entity);
     }
   }
 

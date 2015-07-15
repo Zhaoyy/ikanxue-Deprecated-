@@ -73,6 +73,16 @@ public class ForumDisplayFragment extends BaseFragment {
     }
   };
 
+  private Runnable progressRunable = new Runnable() {
+    @Override public void run() {
+      if (footState == 1) {
+        progressDrawable.start();
+      } else {
+        progressDrawable.stop();
+      }
+    }
+  };
+
   private ItemClickListener listener = new ItemClickListener() {
     @Override public void itemClick(int pos) {
       int threadId = threads.get(pos).getThreadid();
@@ -164,15 +174,11 @@ public class ForumDisplayFragment extends BaseFragment {
   private void changeFootState(int state) {
     footState = state;
 
-    footView.findViewById(R.id.ll_loading).setVisibility(state == 0 ? View.VISIBLE : View.GONE);
-    footView.findViewById(R.id.tv_load_more).setVisibility(state == 1 ? View.VISIBLE : View.GONE);
+    footView.findViewById(R.id.tv_load_more).setVisibility(state == 0 ? View.VISIBLE : View.GONE);
+    footView.findViewById(R.id.ll_loading).setVisibility(state == 1 ? View.VISIBLE : View.GONE);
     footView.findViewById(R.id.tv_no_more).setVisibility(state == 2 ? View.VISIBLE : View.GONE);
 
-    if (state == 1) {
-      progressDrawable.start();
-    } else {
-      progressDrawable.stop();
-    }
+    footView.findViewById(R.id.iv_progress).post(progressRunable);
   }
 
   private void refresh() {

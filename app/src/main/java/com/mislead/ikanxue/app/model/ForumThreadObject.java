@@ -42,7 +42,7 @@ public class ForumThreadObject {
     return pagenav;
   }
 
-  public class PostbitsEntity {
+  public static class PostbitsEntity {
     private int postid;
     private int thumbnail;  //内容摘要
     private String username;

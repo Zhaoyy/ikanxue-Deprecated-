@@ -289,7 +289,7 @@ public class Api {
    * @param id 主题id
    * @param msg 回复内容
    */
-  public void quickReply(int id, String msg, VolleyHelper.ResponseListener<JSONObject> listener) {
+  public void quickReply(int id, String msg, VolleyHelper.ResponseListener<String> listener) {
     String url = DOMAIN + PATH + "newreply.php?" + STYLE;
     Map<String, String> params = new HashMap<>();
     params.put("message", msg);
@@ -297,7 +297,7 @@ public class Api {
     params.put("fromquickreply", "1");
     params.put("do", "postreply");
     params.put("securitytoken", mToken);
-    VolleyHelper.requestJSONObjectWithHeaderAndParams(Request.Method.POST, url, null, listener,
+    VolleyHelper.requestStringWithHeadersAndParams(Request.Method.POST, url, listener,
         getCookieHeader(), params);
   }
   //

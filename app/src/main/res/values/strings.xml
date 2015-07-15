@@ -41,4 +41,10 @@
   <string name="up_load_more">上拉加载更多</string>
   <string name="no_more">暂无更多</string>
   <string name="loading">正在加载...</string>
+
+  <string name="new_post_success">发帖成功</string>
+  <string name="new_post_fail_within_thirty_seconds">禁止三十秒内连续发帖</string>
+  <string name="new_post_fail_within_five_minutes">禁止五分钟内发相同贴</string>
+
+  <string name="today">今天</string>
 </resources>

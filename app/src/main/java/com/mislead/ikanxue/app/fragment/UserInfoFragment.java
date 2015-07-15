@@ -42,10 +42,12 @@ public class UserInfoFragment extends BaseFragment {
   private TextView btn_logout;
 
   private Api api;
+  private int useId;
 
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     title = getString(R.string.user_info);
+
     return inflater.inflate(R.layout.fragment_user_info, container, false);
   }
 
@@ -65,7 +67,16 @@ public class UserInfoFragment extends BaseFragment {
       }
     });
     api = Api.getInstance();
-    api.getUserInfoPage(api.getLoginUserId(), new VolleyHelper.ResponseListener<JSONObject>() {
+
+    if (data == null || data.getInt("userId") == 0) {
+      btn_logout.setVisibility(View.VISIBLE);
+      useId = api.getLoginUserId();
+    } else {
+      useId = data.getInt("userId");
+      btn_logout.setVisibility(View.GONE);
+    }
+
+    api.getUserInfoPage(useId, new VolleyHelper.ResponseListener<JSONObject>() {
       @Override public void onErrorResponse(VolleyError volleyError) {
         ToastHelper.toastShort(UserInfoFragment.this.getActivity(), "获取用户信息失败！");
       }
@@ -83,7 +94,7 @@ public class UserInfoFragment extends BaseFragment {
   private void showUserInfo(JSONObject object) {
     // show user head pic
     if (api.getIsAvatar() > 0) {
-      String headPic = api.getUserHeadImageUrl(api.getLoginUserId());
+      String headPic = api.getUserHeadImageUrl(useId);
 
       VolleyHelper.requestImageWithCache(headPic, iv_head, AndroidHelper.getImageDiskCache(),
           R.mipmap.ic_launcher, R.mipmap.ic_launcher);
