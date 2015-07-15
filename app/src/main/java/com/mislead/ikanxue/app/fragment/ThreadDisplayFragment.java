@@ -268,19 +268,21 @@ public class ThreadDisplayFragment extends BaseFragment {
     lastRefreshTime = object.getTime();
     pageCount = object.getPagenav();
 
+    if (currPage == 1) {
+      threads = object.getPostbits();
+    } else {
+      // add new thread
+      for (ForumThreadObject.PostbitsEntity entity : object.getPostbits()) {
+        threads.add(entity);
+      }
+    }
+
     if (threads.size() > replyCount) {
       changeFootState(2);
     } else {
-      if (currPage == 1) {
-        threads = object.getPostbits();
-      } else {
-        // add new thread
-        for (ForumThreadObject.PostbitsEntity entity : object.getPostbits()) {
-          threads.add(entity);
-        }
-      }
       changeFootState(0);
     }
+
     swipe_refresh.setRefreshing(false);
     adapter.setData(threads);
     adapter.notifyDataSetChanged();
