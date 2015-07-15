@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
@@ -18,6 +19,7 @@ import com.mislead.ikanxue.app.net.HttpClientUtil;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.util.ToastHelper;
+import com.mislead.ikanxue.app.volley.VolleyHelper;
 import java.util.List;
 import org.apache.http.cookie.Cookie;
 import org.json.JSONException;
@@ -106,6 +108,24 @@ public class LoginActivity extends AppCompatActivity {
                               .setLoginUserInfo(retObj.getString("username"),
                                   retObj.getInt("userid"), retObj.getInt("isavatar"),
                                   retObj.getString("email"));
+
+                          // get user type
+                          Api.getInstance()
+                              .getUserInfoPage(retObj.getInt("userid"),
+                                  new VolleyHelper.ResponseListener<JSONObject>() {
+                                    @Override public void onErrorResponse(VolleyError volleyError) {
+                                      LogHelper.e(volleyError.toString());
+                                    }
+
+                                    @Override public void onResponse(JSONObject object) {
+                                      try {
+                                        Api.getInstance()
+                                            .setLoginUserType(object.getString("usertitle"));
+                                      } catch (JSONException e) {
+                                        e.printStackTrace();
+                                      }
+                                    }
+                                  });
 
                           for (int i = 0; i < cookies.size(); i++) {
                             Cookie cookie = cookies.get(i);

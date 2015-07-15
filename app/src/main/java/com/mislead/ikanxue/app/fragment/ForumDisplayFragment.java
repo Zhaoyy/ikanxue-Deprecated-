@@ -251,8 +251,16 @@ public class ForumDisplayFragment extends BaseFragment {
     adapter.notifyDataSetChanged();
   }
 
-  private void postOrLogin() {
+  private void postNewThreadOrLogin() {
     if (Api.getInstance().isLogin()) {
+      String type = Api.getInstance().getLoginUserType();
+      if (type.equals("临时会员") && (titleID != Api.TEMPORARY_FORUM_ID
+          && titleID != Api.HELP_FORUM_ID)) {
+        ToastHelper.toastShort(getActivity(), R.string.temporary_limit);
+        return;
+      }
+
+      // todo: post a new thread
 
     } else {
       getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
@@ -267,7 +275,7 @@ public class ForumDisplayFragment extends BaseFragment {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.action_new_post:
-        postOrLogin();
+        postNewThreadOrLogin();
         break;
       case R.id.action_refresh:
         swipe_refresh.setRefreshing(true);

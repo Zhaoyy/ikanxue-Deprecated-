@@ -238,6 +238,7 @@ public class ThreadDisplayFragment extends BaseFragment {
 
   private void loadMore() {
     changeFootState(1);
+    removeYourReply();
     currPage++;
     loadData();
   }
@@ -317,6 +318,7 @@ public class ThreadDisplayFragment extends BaseFragment {
               case Api.NEW_POST_SUCCESS:
                 ToastHelper.toastLong(getActivity(), R.string.new_post_success);
                 addNewReply(et_reply.getText().toString());
+                et_reply.setHint(String.format("回复不少于6个字，已有%s个回复", replyCount));
                 et_reply.setText("");
                 break;
               case Api.NEW_POST_FAIL_WITHIN_THIRTY_SECONDS:
@@ -360,6 +362,7 @@ public class ThreadDisplayFragment extends BaseFragment {
 
     threads.add(entity);
     adapter.setData(threads);
+    replyCount++;
   }
 
   /**

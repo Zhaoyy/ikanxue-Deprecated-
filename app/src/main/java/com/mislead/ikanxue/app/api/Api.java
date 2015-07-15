@@ -42,6 +42,7 @@ public class Api {
   public static final int NEW_POST_FAIL_NOT_ENOUGH_KX = 3; // 看雪币不足
 
   // 一些板块的id号
+  public static final int TEMPORARY_FORUM_ID = 131; // 看雪临时会员版块id
   public static final int HELP_FORUM_ID = 20; // 看雪求助问答版块的id
   // public static final int SOFTWARE_DEBUG_FORUM_ID = 4; //软件调试版块的id
   public static final int GET_JOB_FORUM_ID = 47; // 考聘版块id
@@ -264,6 +265,20 @@ public class Api {
   }
 
   /**
+   * 保存当前用户类型
+   * @param type
+   */
+  public void setLoginUserType(String type) {
+    SharedPreferences.Editor editor = this.mPreferences.edit();
+    editor.putString("usertype", type);
+    editor.commit();
+  }
+
+  public String getLoginUserType() {
+    return mPreferences.getString("usertype", "");
+  }
+
+  /**
    * 清除登录用户个人信息
    */
   public void clearLoginData() {
@@ -272,6 +287,7 @@ public class Api {
     editor.remove("username");
     editor.remove("userid");
     editor.remove("isavatar");
+    editor.remove("usertype");
     editor.apply();
   }
 

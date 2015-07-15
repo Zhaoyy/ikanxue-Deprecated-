@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/text_black_5"
+    >
+
+  <EditText
+      android:id="@+id/et_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingLeft="24dp"
+      android:paddingRight="24dp"
+      android:paddingTop="8dp"
+      android:paddingBottom="8dp"
+      android:layout_marginTop="16dp"
+      android:hint="标题"
+      android:background="@color/white"
+      style="@style/select_all_on_focus"
+      />
+
+  <EditText
+      android:id="@+id/et_kx"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingLeft="24dp"
+      android:paddingRight="24dp"
+      android:paddingTop="8dp"
+      android:paddingBottom="8dp"
+      android:layout_marginTop="1dp"
+      android:background="@color/white"
+      android:inputType="number"
+      android:hint="@string/kx_limit"
+      style="@style/select_all_on_focus"
+      />
+
+  <EditText
+      android:id="@+id/et_msg"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1.0"
+      android:layout_marginTop="24dp"
+      android:layout_marginBottom="24dp"
+      android:paddingLeft="24dp"
+      android:paddingRight="24dp"
+      android:paddingTop="8dp"
+      android:paddingBottom="8dp"
+      android:singleLine="false"
+      android:gravity="top|left"
+      android:background="@color/white"
+      android:textColor="@color/text_black_1"
+      android:textSize="@dimen/text_size_big"
+      android:hint="内容"
+      />
+
+</LinearLayout>
