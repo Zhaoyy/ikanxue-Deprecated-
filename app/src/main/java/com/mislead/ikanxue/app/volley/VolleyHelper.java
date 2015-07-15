@@ -225,7 +225,7 @@ public class VolleyHelper {
   /**
    * requestImageWithCacheSimple
    * request a image, cache it,and deal it in listener.
-   * if you don't need deal, use {@link #requestAndCacheImage(String, ImageLoader.ImageCache)}
+   * if you don't need, use {@link #requestAndCacheImage(String, ImageLoader.ImageCache)}
    *
    * @param url request url
    * @param cache image cache
@@ -235,6 +235,26 @@ public class VolleyHelper {
       ImageLoader.ImageListener listener) {
     ImageLoader imageLoader = new ImageLoader(queue, cache);
     imageLoader.get(url, listener);
+  }
+
+  public static void requestImageWithCacheAndHeader(String url, final Map<String, String> headers,
+      ResponseListener<Bitmap> listener) {
+    com.android.volley.toolbox.ImageRequest request =
+        new com.android.volley.toolbox.ImageRequest(url, listener, 0, 0, Bitmap.Config.RGB_565,
+            listener) {
+          @Override public Map<String, String> getHeaders() throws AuthFailureError {
+            if (headers != null) {
+              return headers;
+            } else {
+              return super.getHeaders();
+            }
+          }
+        };
+
+    request.setRetryPolicy(defaultPolicy);
+    request.setTag(url);
+    request.setShouldCache(true);
+    queue.add(request);
   }
 
   /**

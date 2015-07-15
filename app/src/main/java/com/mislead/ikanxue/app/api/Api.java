@@ -89,7 +89,7 @@ public class Api {
     return this.mCookieStorage;
   }
 
-  private Map<String, String> getCookieHeader() {
+  public Map<String, String> getCookieHeader() {
     if (!isLogin()) return null;
     Map<String, String> header = new HashMap<>();
     header.put("Cookie", mCookieStorage.getCookies());

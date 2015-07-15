@@ -31,6 +31,7 @@ import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
 import com.mislead.ikanxue.app.view.MaterialProgressDrawable;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
+import com.mislead.ikanxue.app.volley.VolleyImageGetter;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONException;
@@ -337,29 +338,78 @@ public class ThreadDisplayFragment extends BaseFragment {
           forumThreadHolder.tv_title.setVisibility(View.GONE);
         }
 
-        forumThreadHolder.tv_msg.setText(Html.fromHtml(entity.getMessage()));
+        forumThreadHolder.tv_msg.setText(
+            Html.fromHtml(entity.getMessage(), new VolleyImageGetter(forumThreadHolder.tv_msg),
+                null));
         if (entity.getThumbnail() == 1) {
           Api.getInstance()
               .getForumFullThread(entity.getPostid(), new VolleyHelper.ResponseListener<String>() {
-                    @Override public void onErrorResponse(VolleyError volleyError) {
-                      LogHelper.e(volleyError.toString());
-                    }
+                @Override public void onErrorResponse(VolleyError volleyError) {
+                  LogHelper.e(volleyError.toString());
+                }
 
-                    @Override public void onResponse(String object) {
-                      entity.setThumbnail(0);
-                      entity.setMessage(object);
-                      forumThreadHolder.tv_msg.setText(Html.fromHtml(entity.getMessage()));
-                    }
-                  });
+                @Override public void onResponse(String object) {
+                  entity.setThumbnail(0);
+                  entity.setMessage(object);
+                  forumThreadHolder.tv_msg.setText(Html.fromHtml(entity.getMessage(),
+                      new VolleyImageGetter(forumThreadHolder.tv_msg), null));
+                }
+              });
         }
 
-        if (entity.getThumbnailattachments() != null
-            && entity.getThumbnailattachments().size() > 0
-            && entity.getOtherattachments() != null
-            && entity.getOtherattachments().size() > 0) {
+        if ((entity.getThumbnailattachments() != null
+            && entity.getThumbnailattachments().size() > 0) || (entity.getOtherattachments() != null
+            && entity.getOtherattachments().size() > 0)) {
           forumThreadHolder.ll_attachment.setVisibility(View.VISIBLE);
         } else {
           forumThreadHolder.ll_attachment.setVisibility(View.GONE);
+        }
+
+        LinearLayout.LayoutParams lp =
+            new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(0, 8, 0, 0);
+        // 处理图片附件
+        if (entity.getThumbnailattachments() != null
+            && entity.getThumbnailattachments().size() > 0) {
+          forumThreadHolder.ll_image_attachment.setVisibility(View.VISIBLE);
+          forumThreadHolder.ll_image_attachment.removeAllViews();
+          for (ForumThreadObject.ThumbnailattachmentsEntity attachment : entity.getThumbnailattachments()) {
+
+            if (attachment == null) continue;
+
+            String url = Api.getInstance().getAttachmentImgUrl(attachment.getAttachmentid());
+
+            ImageView imageView = new ImageView(getActivity());
+            imageView.setLayoutParams(lp);
+
+            VolleyHelper.requestImageWithCache(url, imageView, AndroidHelper.getImageDiskCache(),
+                R.mipmap.image_404, R.mipmap.image_404);
+
+            forumThreadHolder.ll_image_attachment.addView(imageView);
+          }
+        } else {
+          forumThreadHolder.ll_image_attachment.setVisibility(View.GONE);
+        }
+
+        //处理其他附件
+        if (entity.getOtherattachments() != null && entity.getOtherattachments().size() > 0) {
+          forumThreadHolder.ll_other_attachment.setVisibility(View.VISIBLE);
+          forumThreadHolder.ll_other_attachment.removeAllViews();
+          for (ForumThreadObject.ThumbnailattachmentsEntity attachment : entity.getOtherattachments()) {
+
+            if (attachment == null) continue;
+
+            TextView textView = new TextView(getActivity());
+            textView.setLayoutParams(lp);
+            textView.setTextColor(getResources().getColor(R.color.ics_blue_dark));
+            textView.setTextSize(14);
+            textView.setText(attachment.getFilename());
+
+            forumThreadHolder.ll_other_attachment.addView(textView);
+          }
+        } else {
+          forumThreadHolder.ll_other_attachment.setVisibility(View.GONE);
         }
 
         forumThreadHolder.iv_head.setOnClickListener(new View.OnClickListener() {

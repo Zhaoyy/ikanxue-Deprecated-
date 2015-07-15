@@ -28,6 +28,7 @@ public class AndroidHelper {
 
   private static ImageDiskCache imageDiskCache;
   private static ImageDiskCache splashImageCache;
+  private static final int IMAGE_CACHE_SIZE = 30 * 1024 * 1024;// max cache size by byte
   private static final int CACHE_SIZE = 10 * 1024 * 1024;// max cache size by byte
 
   public static void init(Context context) {
@@ -37,7 +38,7 @@ public class AndroidHelper {
     } else {
       cacheDirPath = mContext.getCacheDir();
     }
-    imageDiskCache = new ImageDiskCache(cacheDirPath, CACHE_SIZE);
+    imageDiskCache = new ImageDiskCache(cacheDirPath, IMAGE_CACHE_SIZE);
     imageDiskCache.initialize();
 
     splashCacheDirPath = new File(cacheDirPath, "splash");

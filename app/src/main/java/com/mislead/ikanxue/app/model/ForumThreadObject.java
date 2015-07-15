@@ -177,5 +177,21 @@ public class ForumThreadObject {
     public void setAttachmentid(int attachmentid) {
       this.attachmentid = attachmentid;
     }
+
+    public String getFilename() {
+      return filename;
+    }
+
+    public void setFilename(String filename) {
+      this.filename = filename;
+    }
+
+    public int getFilesize() {
+      return filesize;
+    }
+
+    public void setFilesize(int filesize) {
+      this.filesize = filesize;
+    }
   }
 }
