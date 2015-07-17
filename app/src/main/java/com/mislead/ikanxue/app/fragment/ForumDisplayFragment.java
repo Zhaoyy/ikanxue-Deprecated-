@@ -261,7 +261,8 @@ public class ForumDisplayFragment extends BaseFragment {
       }
 
       // todo: post a new thread
-
+      PostNewThreadFragment fragment = new PostNewThreadFragment();
+      mainActivity.gotoFragment(fragment, false);
     } else {
       getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
     }
