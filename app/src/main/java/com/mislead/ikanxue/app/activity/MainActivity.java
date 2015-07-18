@@ -104,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override public void onBackPressed() {
+    BaseFragment fragment = (BaseFragment) FragmentHelper.getCurrentFragment();
+    if (fragment.onBackPressed()) {
+      return;
+    }
     if (!fragments.empty()) {
       backToFragment(true);
     } else {

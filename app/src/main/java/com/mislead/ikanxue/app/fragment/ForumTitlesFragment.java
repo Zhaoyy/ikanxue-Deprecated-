@@ -49,7 +49,7 @@ public class ForumTitlesFragment extends BaseFragment {
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     title = getString(R.string.titles);
-    return inflater.inflate(R.layout.fragment_forum_titles, container, false);
+    return inflater.inflate(R.layout.view_recyclerview, container, false);
   }
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {

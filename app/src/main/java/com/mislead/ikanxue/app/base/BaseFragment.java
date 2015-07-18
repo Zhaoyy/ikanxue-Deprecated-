@@ -82,4 +82,8 @@ public class BaseFragment extends Fragment {
 
   public void onRefresh() {
   }
+
+  public boolean onBackPressed() {
+    return false;
+  }
 }

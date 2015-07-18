@@ -45,7 +45,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
   // 用于格式化日�?,作为日志文件名的�?部分
   private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
-  /** 保证只有�?个CrashHandler实例 */
+  /** 保证只有一个CrashHandler实例 */
   private CrashHandler() {
   }
 
@@ -97,7 +97,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
     new Thread() {
       @Override public void run() {
         Looper.prepare();
-        Toast.makeText(mContext, "很抱�?,程序出现异常,即将�?�?.", Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "很抱歉,程序出现异常,即将退出.", Toast.LENGTH_LONG).show();
         Looper.loop();
       }
     }.start();
