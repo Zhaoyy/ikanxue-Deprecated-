@@ -29,7 +29,7 @@
   <string name="user_info">用户信息</string>
   <string name="about">关于</string>
   <string name="feed_back">反馈问题</string>
-  <string name="new_topic">最新话题</string>
+  <string name="new_topic">查看新帖</string>
   <string name="titles">论坛主题</string>
   <string name="security_news">安全资讯</string>
   <string name="about_kanxue">看雪论坛</string>
@@ -43,8 +43,10 @@
   <string name="loading">正在加载...</string>
 
   <string name="new_post_success">发帖成功</string>
+  <string name="post_new_thread">发帖</string>
   <string name="new_post_fail_within_thirty_seconds">禁止三十秒内连续发帖</string>
   <string name="new_post_fail_within_five_minutes">禁止五分钟内发相同贴</string>
+  <string name="new_post_fail_not_enough_kx">现金不足, 无法发出高于现金数额的悬赏</string>
 
   <string name="temporary_limit">临时会员不能在该板块发帖！</string>
 

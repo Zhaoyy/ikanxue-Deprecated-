@@ -2,7 +2,9 @@ package com.mislead.ikanxue.app.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.GridLayoutManager;
@@ -57,10 +59,27 @@ public class ThreadTypePopup extends PopupWindow {
     recyclerView.setHasFixedSize(true);
 
     recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+
+      private Paint drawPaint;
+
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
           RecyclerView.State state) {
         int margin = AndroidHelper.dp2px((Activity) context, 4);
         outRect.set(margin, margin, margin, margin);
+      }
+
+      @Override public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+        super.onDraw(c, parent, state);
+
+        if (drawPaint == null) {
+          drawPaint = new Paint();
+          drawPaint.setColor(context.getResources().getColor(R.color.gray));
+          drawPaint.setAntiAlias(true);
+          drawPaint.setStyle(Paint.Style.STROKE);
+          drawPaint.setStrokeWidth(AndroidHelper.dp2px((Activity) context, 1));
+        }
+
+        c.drawRect(0, 0, parent.getRight(), parent.getBottom(), drawPaint);
       }
     });
 
@@ -68,7 +87,7 @@ public class ThreadTypePopup extends PopupWindow {
 
     GridAdapter adapter = new GridAdapter(data);
 
-    adapter.setListener(new GridAdapter.OnItemClickListener() {
+    adapter.setListener(new OnItemClickListener() {
       @Override public void itemClicked(int position) {
         if (selectedListener != null) {
           selectedListener.selected(data[position]);
@@ -85,7 +104,7 @@ public class ThreadTypePopup extends PopupWindow {
     void selected(String s);
   }
 
-  static class GridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+  class GridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private String[] ss;
 
@@ -118,6 +137,8 @@ public class ThreadTypePopup extends PopupWindow {
           if (listener != null) {
             listener.itemClicked(position);
           }
+
+          ThreadTypePopup.this.dismiss();
         }
       });
     }
@@ -135,9 +156,9 @@ public class ThreadTypePopup extends PopupWindow {
         textView = (TextView) itemView.findViewById(R.id.textView);
       }
     }
+  }
 
-    public interface OnItemClickListener {
-      void itemClicked(int position);
-    }
+  public interface OnItemClickListener {
+    void itemClicked(int position);
   }
 }

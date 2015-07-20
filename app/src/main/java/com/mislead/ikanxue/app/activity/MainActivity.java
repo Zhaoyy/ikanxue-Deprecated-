@@ -11,14 +11,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import com.mislead.ikanxue.app.R;
+import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
 import com.mislead.ikanxue.app.base.BaseFragment;
 import com.mislead.ikanxue.app.fragment.AboutFragment;
 import com.mislead.ikanxue.app.fragment.FeedbackFragment;
+import com.mislead.ikanxue.app.fragment.ForumDisplayFragment;
 import com.mislead.ikanxue.app.fragment.ForumTitlesFragment;
 import com.mislead.ikanxue.app.fragment.NavigationDrawerFragment;
 import com.mislead.ikanxue.app.fragment.NewTopicFragment;
-import com.mislead.ikanxue.app.fragment.SecurityNewsFragment;
 import com.mislead.ikanxue.app.fragment.UserInfoFragment;
 import com.mislead.ikanxue.app.util.FragmentHelper;
 import com.mislead.ikanxue.app.util.ToastHelper;
@@ -44,15 +45,24 @@ public class MainActivity extends AppCompatActivity {
           drawerLayout.closeDrawers();
           BaseFragment fragment = new AboutFragment();
           boolean dispose = true;
+          Bundle bundle = new Bundle();
           switch (pos) {
             case 0:
-              fragment = new NewTopicFragment();
+              // 查看新帖
+              fragment = new ForumDisplayFragment();
+              bundle.putInt("id", Api.NEW_FORUM_ID);
+              bundle.putString("title", getString(R.string.new_topic));
+              fragment.setData(bundle);
               break;
             case 1:
               fragment = new ForumTitlesFragment();
               break;
             case 2:
-              fragment = new SecurityNewsFragment();
+              // 安全咨询
+              fragment = new ForumDisplayFragment();
+              bundle.putInt("id", Api.SECURITY_FORUM_ID);
+              bundle.putString("title", getString(R.string.security_news));
+              fragment.setData(bundle);
               break;
             case 3:
               fragment = new FeedbackFragment();

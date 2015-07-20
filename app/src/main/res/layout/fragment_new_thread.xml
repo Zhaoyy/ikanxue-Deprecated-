@@ -57,6 +57,7 @@
       />
 
   <LinearLayout
+      android:id="@+id/ll_kx"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
@@ -87,6 +88,7 @@
         android:layout_marginTop="1dp"
         android:background="@color/white"
         android:inputType="number"
+        android:maxLength="3"
         android:hint="@string/kx_limit"
         style="@style/select_all_on_focus"
         android:textColorHint="@color/text_black_3"

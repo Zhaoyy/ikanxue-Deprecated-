@@ -260,8 +260,10 @@ public class ForumDisplayFragment extends BaseFragment {
         return;
       }
 
-      // todo: post a new thread
       PostNewThreadFragment fragment = new PostNewThreadFragment();
+      Bundle data = new Bundle();
+      data.putInt("id", titleID);
+      fragment.setData(data);
       mainActivity.gotoFragment(fragment, false);
     } else {
       getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
@@ -271,6 +273,16 @@ public class ForumDisplayFragment extends BaseFragment {
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_post_refresh, menu);
+  }
+
+  @Override public void onPrepareOptionsMenu(Menu menu) {
+    super.onPrepareOptionsMenu(menu);
+    // 新帖版块不能发帖
+    if (titleID == Api.NEW_FORUM_ID) {
+      MenuItem item = menu.findItem(R.id.action_post);
+
+      if (item != null) item.setVisible(false);
+    }
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -298,6 +310,24 @@ public class ForumDisplayFragment extends BaseFragment {
     if (data != null) {
       // post a new topic
       int index = getLastStickyIndex();
+
+      int threadId = data.getInt("threadid");
+      String subject = data.getString("subject");
+
+      ForumThreadTitleObject.ThreadListEntity entity =
+          new ForumThreadTitleObject.ThreadListEntity();
+      entity.setThreadid(threadId);
+      entity.setThreadtitle(subject);
+      entity.setPostuserid(Api.getInstance().getLoginUserId());
+      entity.setPostusername(Api.getInstance().getLoginUserName());
+      entity.setAvatar(Api.getInstance().getIsAvatar());
+      entity.setReplycount(0);
+      entity.setViews(1);
+
+      threads.add(index, entity);
+
+      adapter.setData(threads);
+
     }
   }
 

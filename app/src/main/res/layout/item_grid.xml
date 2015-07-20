@@ -10,7 +10,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@drawable/grid_item_bg"
-      android:textColor="@color/text_black_1"
+      android:textColor="@drawable/btn_text_black_white"
       android:textSize="@dimen/text_size_normal"
       android:gravity="center"
       />

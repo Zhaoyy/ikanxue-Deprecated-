@@ -46,7 +46,7 @@ public class ForumThreadTitleObject {
     return pagenav;
   }
 
-  public class ThreadListEntity {
+  public static class ThreadListEntity {
     /**
      * avatardateline : 0
      * goodnees : 0

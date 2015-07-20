@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+  <item
+      android:id="@+id/action_post"
+      android:title="@string/submit"
+      android:orderInCategory="100"
+      android:icon="@mipmap/social_send_now"
+      app:showAsAction="always"
+      />
+</menu>

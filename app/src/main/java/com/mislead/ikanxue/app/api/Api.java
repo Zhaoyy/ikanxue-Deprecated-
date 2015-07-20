@@ -18,7 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * ¿´Ñ©¿´È«ÂÛÌ³¿ª·ÅapiÀà
+ * ï¿½ï¿½Ñ©ï¿½ï¿½È«ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½apiï¿½ï¿½
  *
  * @author fanhexin
  */
@@ -26,32 +26,32 @@ public class Api {
   public static final String DOMAIN = "http://bbs.pediy.com";
   public static final String PATH = "/";
   /**
-   * ¿´Ñ©°²×¿¿Í»§¶Ë×¨ÓÃµÄÄ£°åid£¬¿ÉÍ¨¹ýÔÚ¿´Ñ©ÈÎÒ»urlºó¼ÓÈëÄ£°å²ÎÊý²é¿´¸÷½Ó¿Ú·µ»ØÊý¾Ý
+   * ï¿½ï¿½Ñ©ï¿½ï¿½×¿ï¿½Í»ï¿½ï¿½ï¿½×¨ï¿½Ãµï¿½Ä£ï¿½ï¿½idï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½Ú¿ï¿½Ñ©ï¿½ï¿½Ò»urlï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é¿´ï¿½ï¿½ï¿½Ó¿Ú·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
    */
   public static final String STYLE = "styleid=12";
 
-  // µÇÂ¼·µ»Ø×´Ì¬Âë
+  // ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½
   public static final int LOGIN_SUCCESS = 0;
-  public static final int LOGIN_FAIL_LESS_THAN_FIVE = 1; // ÓÃ»§Ãû»òÃÜÂë´íÎó³¢ÊÔ5´ÎÒÔÄÚ
-  public static final int LOGIN_FAIL_MORE_THAN_FIVE = 2; // µÇÂ¼Ê§°Ü´ÎÊý³¬¹ý5´Î,15·ÖÖÓºó²Å¿É¼ÌÐøµÇÂ¼
+  public static final int LOGIN_FAIL_LESS_THAN_FIVE = 1; // ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½5ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  public static final int LOGIN_FAIL_MORE_THAN_FIVE = 2; // ï¿½ï¿½Â¼Ê§ï¿½Ü´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½5ï¿½ï¿½,15ï¿½ï¿½ï¿½Óºï¿½Å¿É¼ï¿½ï¿½ï¿½ï¿½ï¿½Â¼
 
-  // ·¢ÐÂÌù·µ»Ø×´Ì¬Âë
+  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½
   public static final int NEW_POST_SUCCESS = 0;
-  public static final int NEW_POST_FAIL_WITHIN_THIRTY_SECONDS = 1; // ÈýÊ®ÃëÄÚ·¢Á½¸öÌù
-  public static final int NEW_POST_FAIL_WITHIN_FIVE_MINUTES = 2; // 5·ÖÖÓÄÚ·¢ÏàÍ¬ÄÚÈÝ
-  public static final int NEW_POST_FAIL_NOT_ENOUGH_KX = 3; // ¿´Ñ©±Ò²»×ã
+  public static final int NEW_POST_FAIL_WITHIN_THIRTY_SECONDS = 1; // ï¿½ï¿½Ê®ï¿½ï¿½ï¿½Ú·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  public static final int NEW_POST_FAIL_WITHIN_FIVE_MINUTES = 2; // 5ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½
+  public static final int NEW_POST_FAIL_NOT_ENOUGH_KX = 3; // ï¿½ï¿½Ñ©ï¿½Ò²ï¿½ï¿½ï¿½
 
-  // Ò»Ð©°å¿éµÄidºÅ
-  public static final int TEMPORARY_FORUM_ID = 131; // ¿´Ñ©ÁÙÊ±»áÔ±°æ¿éid
-  public static final int HELP_FORUM_ID = 20; // ¿´Ñ©ÇóÖúÎÊ´ð°æ¿éµÄid
-  // public static final int SOFTWARE_DEBUG_FORUM_ID = 4; //Èí¼þµ÷ÊÔ°æ¿éµÄid
-  public static final int GET_JOB_FORUM_ID = 47; // ¿¼Æ¸°æ¿éid
-  public static final int POST_CONTENT_SIZE_MIN = 6; // ·¢Ìû»ò»ØÌûµÄ×îÐ¡³¤¶È
-  public static final int NEW_FORUM_ID = 153; // ÐÂÌù¼¯ºÏ°æ¿éid
-  public static final int LIFE_FORUM_ID = 45; // Éú»î·ÅÐÄÇé°æ¿éid
-  public static final int SECURITY_FORUM_ID = 61; // Éú»î·ÅÐÄÇé°æ¿éid
+  // Ò»Ð©ï¿½ï¿½ï¿½ï¿½idï¿½ï¿½
+  public static final int TEMPORARY_FORUM_ID = 131; // ï¿½ï¿½Ñ©ï¿½ï¿½Ê±ï¿½ï¿½Ô±ï¿½ï¿½ï¿½id
+  public static final int HELP_FORUM_ID = 20; // ï¿½ï¿½Ñ©ï¿½ï¿½ï¿½ï¿½ï¿½Ê´ï¿½ï¿½ï¿½ï¿½id
+  // public static final int SOFTWARE_DEBUG_FORUM_ID = 4; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô°ï¿½ï¿½ï¿½id
+  public static final int GET_JOB_FORUM_ID = 47; // ï¿½ï¿½Æ¸ï¿½ï¿½ï¿½id
+  public static final int POST_CONTENT_SIZE_MIN = 6; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½
+  public static final int NEW_FORUM_ID = 153; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½id
+  public static final int LIFE_FORUM_ID = 45; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½id
+  public static final int SECURITY_FORUM_ID = 61; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½id
 
-  // ¼¸ÖÖÖÃ¶¥ÀàÐÍ
+  // ï¿½ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½
   public static final int GLOBAL_TOP_FORUM = -1;
   public static final int AREA_TOP_FORUM = 116;
   public static final int TOP_FORUM = 1;
@@ -60,7 +60,7 @@ public class Api {
 
   private static Api mInstance = null;
   private String mToken = "guest";
-  // TODO Ê¹·ÃÎÊcookieÊ±±äµÃÏß³Ì°²È«
+  // TODO Ê¹ï¿½ï¿½ï¿½ï¿½cookieÊ±ï¿½ï¿½ï¿½ï¿½ß³Ì°ï¿½È«
   private CookieStorage mCookieStorage = null;
   private SharedPreferences mPreferences = null;
 
@@ -72,9 +72,9 @@ public class Api {
   }
 
   /**
-   * ÉèÖÃcontext£¬³õÊ¼»¯ÉÏÏÂÎÄÏà¹ØµÄÊôÐÔ
+   * ï¿½ï¿½ï¿½ï¿½contextï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
    *
-   * @param con ÒªÉèÖÃµÄ context
+   * @param con Òªï¿½ï¿½ï¿½Ãµï¿½ context
    */
   public void setmCon(Context con) {
     if (con == null) return;
@@ -84,7 +84,7 @@ public class Api {
   }
 
   /**
-   * @return ¿´Ñ©°²È«ÂÛÌ³µÄcookie´æ´¢¹ÜÀíÀà
+   * @return ï¿½ï¿½Ñ©ï¿½ï¿½È«ï¿½ï¿½Ì³ï¿½ï¿½cookieï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
    */
   public CookieStorage getCookieStorage() {
     return this.mCookieStorage;
@@ -114,8 +114,8 @@ public class Api {
   }
 
   /**
-   * »ñÈ¡securitytoken£¬securitytokenÔÚ×öpost²Ù×÷Ê±ÐèÒªÌá½»¡£´¦ÓÚµÇÂ¼×´Ì¬µÃµ½Õý³£token£¬
-   * ·ÇµÇÂ¼×´Ì¬µÃµ½×Ö·û´®guest
+   * ï¿½ï¿½È¡securitytokenï¿½ï¿½securitytokenï¿½ï¿½ï¿½ï¿½postï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Òªï¿½á½»ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½Â¼×´Ì¬ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½tokenï¿½ï¿½
+   * ï¿½Çµï¿½Â¼×´Ì¬ï¿½Ãµï¿½ï¿½Ö·ï¿½ï¿½ï¿½guest
    */
   public void getForumToken() {
     String url = DOMAIN + PATH + "getsecuritytoken.php?" + STYLE;
@@ -138,7 +138,7 @@ public class Api {
   }
 
   /**
-   * securitytokenµÄsetter½Ó¿Ú
+   * securitytokenï¿½ï¿½setterï¿½Ó¿ï¿½
    */
   public void setToken(String token) {
     if (token == null) return;
@@ -146,14 +146,14 @@ public class Api {
   }
 
   /**
-   * @return ´¦ÓÚµÇÂ¼×´Ì¬·µ»Øtrue£¬·´Ö®·µ»Øfalse
+   * @return ï¿½ï¿½ï¿½Úµï¿½Â¼×´Ì¬ï¿½ï¿½ï¿½ï¿½trueï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½false
    */
   public boolean isLogin() {
     return this.mCookieStorage.hasCookie("bbsessionhash");
   }
 
   /**
-   * »ñÈ¡¿´Ñ©µÄ°æ¿éÁÐ±í
+   * ï¿½ï¿½È¡ï¿½ï¿½Ñ©ï¿½Ä°ï¿½ï¿½ï¿½Ð±ï¿½
    */
   public void getForumHomePage(final VolleyHelper.ResponseListener<JSONObject> responseListener) {
     String url = DOMAIN + PATH + "index.php?" + STYLE;
@@ -162,10 +162,10 @@ public class Api {
   }
 
   /**
-   * »ñÈ¡Ö¸¶¨°æ¿éµÄÖ÷ÌâÁÐ±í
+   * ï¿½ï¿½È¡Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
    *
-   * @param id °æ¿éid
-   * @param page °æ¿éÖ÷ÌâÁÐ±íµÄÒ³Âë
+   * @param id ï¿½ï¿½ï¿½id
+   * @param page ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½Ò³ï¿½ï¿½
    */
   public void getForumDisplayPage(int id, int page,
       final VolleyHelper.ResponseListener<JSONObject> responseListener) {
@@ -175,10 +175,10 @@ public class Api {
   }
 
   /**
-   * »ñÈ¡Ö¸¶¨Ö÷ÌâÖÐµÄÌû×ÓÁÐ±í
+   * ï¿½ï¿½È¡Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
    *
-   * @param id Ö÷Ìâid
-   * @param page Ö÷ÌâÌû×ÓÁÐ±íÒ³Âë
+   * @param id ï¿½ï¿½ï¿½ï¿½id
+   * @param page ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½Ò³ï¿½ï¿½
    */
   public void getForumShowthreadPage(int id, int page,
       final VolleyHelper.ResponseListener<JSONObject> responseListener) {
@@ -187,9 +187,9 @@ public class Api {
   }
 
   /**
-   * »ñÈ¡ÍêÕûµÄÌû×ÓÄÚÈÝ¡£Ìû×ÓÄÚÈÝ½Ï³¤Ê±£¬¿´Ñ©Ä¬ÈÏÖ»´«ÊäËõÂÔÄÚÈÝ£¬¿ÉÍ¨¹ý¸Ã½Ó¿Ú»ñÈ¡ÍêÕûÄÚÈÝ¡£
+   * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý½Ï³ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ñ©Ä¬ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½Ã½Ó¿Ú»ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¡ï¿½
    *
-   * @param id Ìû×Óid
+   * @param id ï¿½ï¿½ï¿½ï¿½id
    */
   public void getForumFullThread(int id,
       final VolleyHelper.ResponseListener<String> responseListener) {
@@ -198,7 +198,7 @@ public class Api {
   }
 
   /**
-   * µÇÂ¼¿´Ñ©
+   * ï¿½ï¿½Â¼ï¿½ï¿½Ñ©
    */
   public void login(String uname, String passwd, final HttpClientUtil.NetClientCallback callback) {
     String url = DOMAIN + PATH + "login.php?do=login" + "&" + STYLE;
@@ -213,12 +213,12 @@ public class Api {
   }
 
   /**
-   * ÉèÖÃµÇÂ¼ÓÃ»§µÄ¸öÈËÐÅÏ¢
+   * ï¿½ï¿½ï¿½Ãµï¿½Â¼ï¿½Ã»ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
    *
-   * @param username µÇÂ¼ÓÃ»§ÓÃ»§Ãû
-   * @param id µÇÂ¼ÓÃ»§id
-   * @param isavatar µÇÂ¼ÓÃ»§ÊÇ·ñÓÐÍ·Ïñ
-   * @param email µÇÂ¼ÓÃ»§emailµØÖ·
+   * @param username ï¿½ï¿½Â¼ï¿½Ã»ï¿½ï¿½Ã»ï¿½ï¿½ï¿½
+   * @param id ï¿½ï¿½Â¼ï¿½Ã»ï¿½id
+   * @param isavatar ï¿½ï¿½Â¼ï¿½Ã»ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Í·ï¿½ï¿½
+   * @param email ï¿½ï¿½Â¼ï¿½Ã»ï¿½emailï¿½ï¿½Ö·
    */
   public void setLoginUserInfo(String username, int id, int isavatar, String email) {
     if (username == null) return;
@@ -237,36 +237,35 @@ public class Api {
   }
 
   /**
-   * @return ÓÃ»§Ãû
+   * @return ï¿½Ã»ï¿½ï¿½ï¿½
    */
   public String getLoginUserName() {
     return this.mPreferences.getString("username", "");
   }
 
   /**
-   * @return ÓÃ»§id
+   * @return ï¿½Ã»ï¿½id
    */
   public int getLoginUserId() {
     return this.mPreferences.getInt("userid", -1);
   }
 
   /**
-   * @return ÓÃ»§ÓÐÍ·Ïñ·µ»Øtrue
+   * @return ï¿½Ã»ï¿½ï¿½ï¿½Í·ï¿½ñ·µ»ï¿½true
    */
   public int getIsAvatar() {
     return this.mPreferences.getInt("isavatar", 0);
   }
 
   /**
-   * @return ÓÃ»§emailµØÖ·
+   * @return ï¿½Ã»ï¿½emailï¿½ï¿½Ö·
    */
   public String getEmail() {
     return this.mPreferences.getString("email", "");
   }
 
   /**
-   * ±£´æµ±Ç°ÓÃ»§ÀàÐÍ
-   * @param type
+   * ï¿½ï¿½ï¿½æµ±Ç°ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
    */
   public void setLoginUserType(String type) {
     SharedPreferences.Editor editor = this.mPreferences.edit();
@@ -279,7 +278,7 @@ public class Api {
   }
 
   /**
-   * Çå³ýµÇÂ¼ÓÃ»§¸öÈËÐÅÏ¢
+   * ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
    */
   public void clearLoginData() {
     this.mCookieStorage.clearAll();
@@ -292,7 +291,7 @@ public class Api {
   }
 
   /**
-   * µÇ³ö
+   * ï¿½Ç³ï¿½
    */
   public void logout(final VolleyHelper.ResponseListener<JSONObject> responseListener) {
     String url = DOMAIN + PATH + "login.php?do=logout&logouthash=" + mToken + "&" + STYLE;
@@ -300,10 +299,10 @@ public class Api {
   }
 
   /**
-   * »Ø¸´Ö÷Ìâ
+   * ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½
    *
-   * @param id Ö÷Ìâid
-   * @param msg »Ø¸´ÄÚÈÝ
+   * @param id ï¿½ï¿½ï¿½ï¿½id
+   * @param msg ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½
    */
   public void quickReply(int id, String msg, VolleyHelper.ResponseListener<String> listener) {
     String url = DOMAIN + PATH + "newreply.php?" + STYLE;
@@ -316,58 +315,35 @@ public class Api {
     VolleyHelper.requestStringWithHeadersAndParams(Request.Method.POST, url, listener,
         getCookieHeader(), params);
   }
-  //
-  ///**
-  // * ·¢²¼ÐÂÖ÷Ìâ
-  // *
-  // * @param id
-  // *            °æ¿éid
-  // * @param subject
-  // *            Ö÷Ìâ±êÌâ
-  // * @param msg
-  // *            Ö÷ÌâÄÚÈÝ
-  // * @param callback
-  // */
-  //public void newThread(int id, String subject, String msg,
-  //		final NetClientCallback callback) {
-  //	getNormalNewThread(id, subject, msg, callback).asyncConnect();
-  //}
-  //
-  ///**
-  // * ·¢²¼´øÓÐÐüÉÍkx±ÒµÄÐÂÖ÷Ìâ
-  // *
-  // * @param id
-  // * @param subject
-  // * @param kxReward
-  // *            ÐüÉÍkx±ÒÊýÖµ
-  // * @param msg
-  // * @param callback
-  // */
-  //public void newThread(int id, String subject, String kxReward, String msg,
-  //		final NetClientCallback callback) {
-  //	HttpClientUtil hcu = getNormalNewThread(id, subject, msg, callback);
-  //	hcu.addParam("offer_Price", kxReward);
-  //	hcu.asyncConnect();
-  //}
-  //
-  //private HttpClientUtil getNormalNewThread(int id, String subject,
-  //		String msg, final NetClientCallback callback) {
-  //	String url = DOMAIN + PATH + "newthread.php?do=postthread" + "&f=" + id
-  //			+ "&" + STYLE;
-  //	HttpClientUtil hcu = new HttpClientUtil(url,
-  //			HttpClientUtil.METHOD_POST, callback);
-  //	hcu.addParam("subject", subject);
-  //	hcu.addParam("message", msg);
-  //	hcu.addParam("securitytoken", mToken);
-  //	hcu.addParam("f", "" + id);
-  //	hcu.addParam("do", "postthread");
-  //	hcu.addCookie(this.mCookieStorage.getCookies());
-  //	return hcu;
-  //}
-  //
 
   /**
-   * ¿´Ñ©µÄÒâ¼û·´À¡½Ó¿Ú
+   * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kxï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+   */
+  public void newThreadWithoutReward(int id, String subject, String msg,
+      VolleyHelper.ResponseListener<String> responseListener) {
+    newThread(id, subject, msg, null, responseListener);
+  }
+
+  public void newThread(int id, String subject, String msg, String kxReward,
+      VolleyHelper.ResponseListener<String> responseListener) {
+    String url = DOMAIN + PATH + "newthread.php?do=postthread" + "&f=" + id + "&" + STYLE;
+    Map<String, String> params = new HashMap<>();
+    params.put("subject", subject);
+    params.put("message", msg);
+    params.put("securitytoken", mToken);
+    params.put("f", id + "");
+
+    if (kxReward != null) {
+      params.put("offer_Price", kxReward);
+    }
+
+    params.put("do", "postthread");
+    VolleyHelper.requestStringWithHeadersAndParams(Request.Method.POST, url, responseListener,
+        getCookieHeader(), params);
+  }
+
+  /**
+   * ï¿½ï¿½Ñ©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
    */
   public void feedback(String name, String email, String msg,
       VolleyHelper.ResponseListener<String> listener) {
@@ -383,10 +359,10 @@ public class Api {
   }
 
   /**
-   * ¼ì²âÖ¸¶¨°æ¿éÏÂµÄÖ÷ÌâÁÐ±íÊÇ·ñÓÐ¸üÐÂ
+   * ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½Ç·ï¿½ï¿½Ð¸ï¿½ï¿½ï¿½
    *
-   * @param id °æ¿éid
-   * @param time ÉÏ´ÎË¢ÐÂµÄÊ±¼ä´Á
+   * @param id ï¿½ï¿½ï¿½id
+   * @param time ï¿½Ï´ï¿½Ë¢ï¿½Âµï¿½Ê±ï¿½ï¿½ï¿½
    */
   public void checkNewPostInForumDisplayPage(int id, long time,
       VolleyHelper.ResponseListener<JSONObject> listener) {
@@ -396,10 +372,10 @@ public class Api {
   }
 
   /**
-   * ¼ì²âÖ¸¶¨Ö÷ÌâÏÂµÄÌû×ÓÁÐ±íÊÇ·ñÓÐ¸üÐÂ
+   * ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½Ç·ï¿½ï¿½Ð¸ï¿½ï¿½ï¿½
    *
-   * @param id Ö÷Ìâid
-   * @param time ÉÏ´ÎË¢ÐÂµÄÊ±¼ä´Á
+   * @param id ï¿½ï¿½ï¿½ï¿½id
+   * @param time ï¿½Ï´ï¿½Ë¢ï¿½Âµï¿½Ê±ï¿½ï¿½ï¿½
    */
   public void checkNewPostInShowThreadPage(int id, long time,
       VolleyHelper.ResponseListener<JSONObject> listener) {
@@ -409,27 +385,27 @@ public class Api {
   }
 
   /**
-   * »ñÈ¡¿´Ñ©ÓÃ»§Í·ÏñµÄurl
+   * ï¿½ï¿½È¡ï¿½ï¿½Ñ©ï¿½Ã»ï¿½Í·ï¿½ï¿½ï¿½url
    *
-   * @param userId ÓÃ»§id
+   * @param userId ï¿½Ã»ï¿½id
    */
   public String getUserHeadImageUrl(int userId) {
     return DOMAIN + PATH + "image.php?u=" + userId;
   }
 
   /**
-   * »ñÈ¡¿´Ñ©Ìû×ÓÖÐ¸½¼þÍ¼Æ¬µÄurl
+   * ï¿½ï¿½È¡ï¿½ï¿½Ñ©ï¿½ï¿½ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½url
    *
-   * @param id ¸½¼þid
+   * @param id ï¿½ï¿½ï¿½ï¿½id
    */
   public String getAttachmentImgUrl(int id) {
     return DOMAIN + PATH + "attachment.php?attachmentid=" + id + "&thumb=1&" + STYLE;
   }
 
   /**
-   * µÇÂ¼Ç°ÓÃ»§ÃÜÂëÔ¤´¦Àí
+   * ï¿½ï¿½Â¼Ç°ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½
    *
-   * @param input È¥µôÊ×Î»¿Õ¸ñµÄÓÃ»§ÃÜÂë
+   * @param input È¥ï¿½ï¿½ï¿½ï¿½Î»ï¿½Õ¸ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
    */
   private String strToEnt(String input) {
     String output = "";
@@ -460,9 +436,9 @@ public class Api {
   }
 
   /**
-   * ¼ì²âÖ¸¶¨ÓÃ»§¸öÈËÐÅÏ¢ÁÐ±í
+   * ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Ð±ï¿½
    *
-   * @param id ÓÃ»§id
+   * @param id ï¿½Ã»ï¿½id
    */
   public void getUserInfoPage(int id, final VolleyHelper.ResponseListener<JSONObject> listener) {
     String url = DOMAIN + PATH + "member.php?u=" + id + STYLE;
