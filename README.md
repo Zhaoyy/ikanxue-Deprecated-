@@ -35,5 +35,6 @@ i看雪是个人根据看雪API开发的第三方Android APP。目的是为了�
 
 
 *参考资源*
-[看雪API](http://bbs.pediy.com/showthread.php?t=163280)
-[看雪APP](https://github.com/kanxue-team/kanxue-android-app)
+
+- [看雪API](http://bbs.pediy.com/showthread.php?t=163280)
+- [看雪APP](https://github.com/kanxue-team/kanxue-android-app)
