@@ -19,7 +19,6 @@ import com.mislead.ikanxue.app.fragment.FeedbackFragment;
 import com.mislead.ikanxue.app.fragment.ForumDisplayFragment;
 import com.mislead.ikanxue.app.fragment.ForumTitlesFragment;
 import com.mislead.ikanxue.app.fragment.NavigationDrawerFragment;
-import com.mislead.ikanxue.app.fragment.NewTopicFragment;
 import com.mislead.ikanxue.app.fragment.UserInfoFragment;
 import com.mislead.ikanxue.app.util.FragmentHelper;
 import com.mislead.ikanxue.app.util.ToastHelper;
@@ -74,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             case 5:
               fragment = new UserInfoFragment();
               dispose = false;
+              break;
             default:
               break;
           }
@@ -99,7 +99,11 @@ public class MainActivity extends AppCompatActivity {
     FragmentHelper.init(fragmentManager);
     if (savedInstanceState == null) {
       // goto new content fragment firstly
-      NewTopicFragment fragment = new NewTopicFragment();
+      Bundle bundle = new Bundle();
+      ForumDisplayFragment fragment = new ForumDisplayFragment();
+      bundle.putInt("id", Api.NEW_FORUM_ID);
+      bundle.putString("title", getString(R.string.new_topic));
+      fragment.setData(bundle);
       gotoFragment(fragment, true);
     }
 
