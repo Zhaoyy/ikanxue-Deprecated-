@@ -35,7 +35,7 @@ public class VolleyHelper {
   private static RetryPolicy defaultPolicy = new DefaultRetryPolicy(20 * 1000, 1, 1.0f);
 
   public static void init(Context context) {
-    queue = Volley.newRequestQueue(context);
+    queue = Volley.newRequestQueue(context, new MyHurlStack());
   }
 
   /**

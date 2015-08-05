@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
               break;
           }
 
-          gotoFragment(fragment, dispose, true);
+          gotoFragment(fragment, dispose, dispose);
         }
       };
 
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override public void onBackPressed() {
     BaseFragment fragment = (BaseFragment) FragmentHelper.getCurrentFragment();
-    if (fragment.onBackPressed()) {
+    if (fragment != null && fragment.onBackPressed()) {
       return;
     }
     if (!fragments.empty()) {

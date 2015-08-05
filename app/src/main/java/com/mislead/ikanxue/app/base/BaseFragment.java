@@ -48,6 +48,9 @@ public class BaseFragment extends Fragment {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    if (data == null && savedInstanceState != null) {
+      data = savedInstanceState.getBundle("data");
+    }
   }
 
   @Override public void onAttach(Activity activity) {
@@ -56,6 +59,11 @@ public class BaseFragment extends Fragment {
     IntentFilter filter = new IntentFilter(MyApplication.LOGIN_STATE_CHANGE_ACTION);
 
     getActivity().registerReceiver(logReciever, filter);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putBundle("data", data);
   }
 
   @Override public void onDetach() {

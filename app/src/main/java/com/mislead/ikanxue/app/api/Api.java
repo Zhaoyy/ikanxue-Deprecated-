@@ -8,6 +8,7 @@ import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.model.CookieStorage;
+import com.mislead.ikanxue.app.model.KanxueResponse;
 import com.mislead.ikanxue.app.model.ObjStorage;
 import com.mislead.ikanxue.app.net.HttpClientUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
@@ -210,6 +211,22 @@ public class Api {
     hcu.addParam("vb_login_md5password", SimpleHASH.md5(this.strToEnt(passwd.trim())));
     hcu.addParam("vb_login_md5password_utf", SimpleHASH.md5(passwd.trim()));
     hcu.asyncConnect();
+  }
+
+  /**
+   * 用户登录
+   */
+  public void login(String uname, String passwd,
+      VolleyHelper.ResponseListener<KanxueResponse> listener) {
+    String url = DOMAIN + PATH + "login.php?do=login" + "&" + STYLE;
+    Map<String, String> params = new HashMap<>();
+    params.put("vb_login_username", uname);
+    params.put("do", "login");
+    params.put("cookieuser", "1");
+    params.put("securitytoken", "guest");
+    params.put("vb_login_md5password", SimpleHASH.md5(this.strToEnt(passwd.trim())));
+    params.put("vb_login_md5password_utf", SimpleHASH.md5(passwd.trim()));
+    VolleyHelper.requestKanxuePost(url, listener, params);
   }
 
   /**

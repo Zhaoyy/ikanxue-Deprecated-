@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
@@ -40,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
   private EditText etPwd;
 
   private Button btnLogin;
+  private static final int ERROR = 404;
 
   private Handler mHandler = new Handler() {
     @Override public void handleMessage(Message msg) {
@@ -55,6 +55,11 @@ public class LoginActivity extends AppCompatActivity {
           break;
         case HttpClientUtil.NET_FAILED:
           ToastHelper.toastShort(LoginActivity.this, "网络连接失败，请检查您的网络状态！");
+          break;
+        case ERROR:
+          ToastHelper.toastShort(LoginActivity.this, msg.obj.toString());
+          break;
+        default:
           break;
       }
     }
@@ -87,17 +92,21 @@ public class LoginActivity extends AppCompatActivity {
                           retObj = new JSONObject(response);
                           final int ret = retObj.getInt("result");
                           if (ret != Api.LOGIN_SUCCESS) {
+                            Message message = mHandler.obtainMessage();
                             switch (ret) {
                               case Api.LOGIN_FAIL_LESS_THAN_FIVE:
                                 String alertText =
                                     "用户名或者密码错误,还有" + (Api.ALLOW_LOGIN_USERNAME_OR_PASSWD_ERROR_NUM
                                         - retObj.getInt("strikes")) + "尝试机会";
-                                Toast.makeText(LoginActivity.this, alertText, Toast.LENGTH_SHORT)
-                                    .show();
+                                message.what = ERROR;
+                                message.obj = alertText;
+                                mHandler.sendMessage(message);
                                 break;
                               case Api.LOGIN_FAIL_MORE_THAN_FIVE:
-                                Toast.makeText(LoginActivity.this,
-                                    R.string.login_fail_more_than_five, Toast.LENGTH_SHORT).show();
+                                message.what = ERROR;
+                                message.obj =
+                                    getResources().getString(R.string.login_fail_more_than_five);
+                                mHandler.sendMessage(message);
                                 break;
                             }
                             return;
@@ -127,8 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                   });
 
-                          for (int i = 0; i < cookies.size(); i++) {
-                            Cookie cookie = cookies.get(i);
+                          for (Cookie cookie : cookies) {
                             Api.getInstance()
                                 .getCookieStorage()
                                 .addCookie(cookie.getName(), cookie.getValue());
