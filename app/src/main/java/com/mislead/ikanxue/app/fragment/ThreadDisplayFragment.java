@@ -444,9 +444,7 @@ public class ThreadDisplayFragment extends BaseFragment {
           forumThreadHolder.tv_title.setVisibility(View.GONE);
         }
 
-        forumThreadHolder.tv_msg.setText(
-            Html.fromHtml(entity.getMessage(), new VolleyImageGetter(forumThreadHolder.tv_msg),
-                null));
+
         if (entity.getThumbnail() == 1) {
           Api.getInstance()
               .getForumFullThread(entity.getPostid(), new VolleyHelper.ResponseListener<String>() {
@@ -461,6 +459,10 @@ public class ThreadDisplayFragment extends BaseFragment {
                       new VolleyImageGetter(forumThreadHolder.tv_msg), null));
                 }
               });
+        } else {
+          forumThreadHolder.tv_msg.setText(
+              Html.fromHtml(entity.getMessage(), new VolleyImageGetter(forumThreadHolder.tv_msg),
+                  null));
         }
 
         if ((entity.getThumbnailattachments() != null
