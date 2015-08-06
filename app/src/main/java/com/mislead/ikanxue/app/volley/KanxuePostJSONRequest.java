@@ -7,12 +7,15 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.mislead.ikanxue.app.model.KanxueResponse;
-import com.mislead.ikanxue.app.util.LogHelper;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.cookie.BasicClientCookie;
 
 /**
  * KanxuePostJSONRequest
@@ -29,11 +32,10 @@ public class KanxuePostJSONRequest extends Request<KanxueResponse> {
 
   private Map<String, String> headers = new HashMap<>();
 
-  private String mHeader;
   private String cookieFromResponse;
 
   //使用正则表达式从reponse的头中提取cookie内容的子串
-  private static final Pattern pattern = Pattern.compile("Set-Cookie.*?;");
+  private static final Pattern pattern = Pattern.compile("Set-Cookie\\d*");
 
   private VolleyHelper.ResponseListener<KanxueResponse> listener;
 
@@ -67,16 +69,21 @@ public class KanxuePostJSONRequest extends Request<KanxueResponse> {
           new String(networkResponse.data, HttpHeaderParser.parseCharset(networkResponse.headers));
 
       response.setJsonString(jsonString);
-      // get cookie
-      mHeader = networkResponse.headers.toString();
-
-      Matcher matcher = pattern.matcher(mHeader);
-      if (matcher.find()) {
-        cookieFromResponse = matcher.group();
-        cookieFromResponse = cookieFromResponse.substring(11, cookieFromResponse.length() - 1);
-
-        LogHelper.e("cookie:" + cookieFromResponse);
+      // get all cookie
+      List<Cookie> cookies = new ArrayList<>();
+      for (String key : networkResponse.headers.keySet()) {
+        Matcher matcher = pattern.matcher(key);
+        if (matcher.find()) {
+          cookieFromResponse = networkResponse.headers.get(key);
+          cookieFromResponse = cookieFromResponse.substring(0, cookieFromResponse.indexOf(";"));
+          String keyValue[] = cookieFromResponse.split("=", -1);
+          Cookie cookie = new BasicClientCookie(keyValue[0], keyValue[1]);
+          cookies.add(cookie);
+        }
       }
+
+      response.setCookies(cookies);
+
       return Response.success(response, HttpHeaderParser.parseCacheHeaders(networkResponse));
     } catch (UnsupportedEncodingException e) {
       return Response.error(new ParseError(e));

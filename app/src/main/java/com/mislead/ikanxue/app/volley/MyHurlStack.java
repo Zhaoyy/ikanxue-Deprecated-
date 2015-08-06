@@ -80,10 +80,19 @@ public class MyHurlStack implements HttpStack {
       for (Object o : connection.getHeaderFields().entrySet()) {
         Entry header = (Entry) o;
         if (header.getKey() != null) {
-          List headerList = (List) header.getValue();
-          for (Object aHeaderList : headerList) {
-            BasicHeader h = new BasicHeader((String) header.getKey(), (String) aHeaderList);
-            response.addHeader(h);
+          if (header.getKey().equals("Set-Cookie")) {
+            List headerList = (List) header.getValue();
+            for (int i = 0; i < headerList.size(); i++) {
+              BasicHeader h =
+                  new BasicHeader((String) header.getKey() + i, (String) headerList.get(i));
+              response.addHeader(h);
+            }
+          } else {
+            List headerList = (List) header.getValue();
+            for (Object aHeaderList : headerList) {
+              BasicHeader h = new BasicHeader((String) header.getKey(), (String) aHeaderList);
+              response.addHeader(h);
+            }
           }
         }
       }
