@@ -72,7 +72,45 @@ public class CircleImageView extends ImageView {
     setUp();
   }
 
-  private Bitmap getBitmap(Drawable drawable) {
+  public void setBorderWidth(int width) {
+    borederWidth = width;
+    setUp();
+  }
+
+  public void setBorderColor(int color) {
+    borderColor = color;
+    setUp();
+  }
+
+  @Override public void setImageBitmap(Bitmap bm) {
+    super.setImageBitmap(bm);
+    bitmap = bm;
+    setUp();
+  }
+
+  @Override public void setImageResource(int resId) {
+    super.setImageResource(resId);
+    bitmap = getBitmapFromDrawable(getDrawable());
+    setUp();
+  }
+
+  @Override public void setImageDrawable(Drawable drawable) {
+    super.setImageDrawable(drawable);
+    bitmap = getBitmapFromDrawable(getDrawable());
+    setUp();
+  }
+
+  @Override protected void onDraw(Canvas canvas) {
+    super.onDraw(canvas);
+    if (getDrawable() == null) return;
+    canvas.drawCircle(getWidth() / 2, getHeight() / 2, bitmapRadius, bitmapPaint);
+
+    if (borederWidth > 0) {
+      canvas.drawCircle(getWidth() / 2, getHeight() / 2, borderRadius, borderPaint);
+    }
+  }
+
+  private Bitmap getBitmapFromDrawable(Drawable drawable) {
 
     if (drawable == null) return null;
 
@@ -96,7 +134,7 @@ public class CircleImageView extends ImageView {
   }
 
   private void setUp() {
-    if (already) return;
+    //if (already) return;
 
     if (bitmap == null) return;
 
