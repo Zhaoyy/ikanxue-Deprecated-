@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_item"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -13,13 +14,14 @@
     android:layout_marginRight="8dp"
     >
 
-  <ImageView
+  <com.mislead.circleimageview.lib.CircleImageView
       android:id="@+id/iv_head"
       android:layout_width="40dp"
       android:layout_height="40dp"
       android:scaleType="centerCrop"
       android:layout_margin="4dp"
       android:src="@mipmap/ic_launcher"
+      app:border_width="1dp"
       />
 
   <RelativeLayout

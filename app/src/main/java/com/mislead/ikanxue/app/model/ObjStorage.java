@@ -25,7 +25,6 @@ public class ObjStorage {
       oos = new ObjectOutputStream(baos);
       oos.writeObject(obj);
     } catch (IOException e) {
-      // TODO 自动生成的 catch 块
       e.printStackTrace();
       return;
     }
@@ -46,15 +45,12 @@ public class ObjStorage {
       ois = new ObjectInputStream(bais);
       ret = ois.readObject();
     } catch (StreamCorruptedException e) {
-      // TODO 自动生成的 catch 块
       e.printStackTrace();
       return null;
     } catch (IOException e) {
-      // TODO 自动生成的 catch 块
       e.printStackTrace();
       return null;
     } catch (ClassNotFoundException e) {
-      // TODO 自动生成的 catch 块
       e.printStackTrace();
       return null;
     }

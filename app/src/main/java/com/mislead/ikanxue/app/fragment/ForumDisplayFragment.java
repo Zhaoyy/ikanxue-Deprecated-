@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.mislead.circleimageview.lib.CircleImageView;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.activity.LoginActivity;
 import com.mislead.ikanxue.app.api.Api;
@@ -422,7 +423,7 @@ public class ForumDisplayFragment extends BaseFragment {
 
   class ForumThreadHolder extends RecyclerView.ViewHolder {
 
-    public ImageView iv_head;
+    public CircleImageView iv_head;
     public TextView tv_title;
     public TextView tv_name;
     public TextView tv_info;
@@ -431,7 +432,7 @@ public class ForumDisplayFragment extends BaseFragment {
     public ForumThreadHolder(View itemView) {
       super(itemView);
       ll_item = (LinearLayout) itemView.findViewById(R.id.ll_item);
-      iv_head = (ImageView) itemView.findViewById(R.id.iv_head);
+      iv_head = (CircleImageView) itemView.findViewById(R.id.iv_head);
       tv_title = (TextView) itemView.findViewById(R.id.tv_title);
       tv_name = (TextView) itemView.findViewById(R.id.tv_name);
       tv_info = (TextView) itemView.findViewById(R.id.tv_info);

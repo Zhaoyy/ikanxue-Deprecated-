@@ -34,11 +34,9 @@ public class SimpleHASH {
       if (md == null) return null;
       md.update(input.getBytes("iso-8859-1"), 0, input.length());
     } catch (NoSuchAlgorithmException e) {
-      // TODO 自动生成的 catch 块
       e.printStackTrace();
       return null;
     } catch (UnsupportedEncodingException e) {
-      // TODO 自动生成的 catch 块
       e.printStackTrace();
       return null;
     }

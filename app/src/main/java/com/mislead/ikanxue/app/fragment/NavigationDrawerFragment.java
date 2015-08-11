@@ -20,11 +20,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import com.mislead.circleimageview.lib.CircleImageView;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.activity.LoginActivity;
 import com.mislead.ikanxue.app.api.Api;
@@ -54,7 +54,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
   private View mFragmentContainerView;
 
-  private ImageView ivHead;
+  private CircleImageView ivHead;
   private TextView tvName;
   private LinearLayout userInfo;
 
@@ -98,7 +98,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    ivHead = (ImageView) view.findViewById(R.id.circleIcon);
+    ivHead = (CircleImageView) view.findViewById(R.id.circleIcon);
     tvName = (TextView) view.findViewById(R.id.name);
 
     userInfo = (LinearLayout) view.findViewById(R.id.userInfo);

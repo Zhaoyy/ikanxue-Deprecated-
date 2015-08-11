@@ -9,9 +9,9 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.volley.VolleyError;
+import com.mislead.circleimageview.lib.CircleImageView;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
@@ -33,7 +33,7 @@ public class UserInfoFragment extends BaseFragment {
 
   private static String TAG = "UserInfoFragment";
 
-  private ImageView iv_head;
+  private CircleImageView iv_head;
   private TextView tv_name;
   private TextView tv_type;
   private TextView tv_money;
@@ -54,7 +54,7 @@ public class UserInfoFragment extends BaseFragment {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    iv_head = (ImageView) view.findViewById(R.id.iv_head);
+    iv_head = (CircleImageView) view.findViewById(R.id.iv_head);
     tv_name = (TextView) view.findViewById(R.id.tv_name);
     tv_type = (TextView) view.findViewById(R.id.tv_type);
     tv_money = (TextView) view.findViewById(R.id.tv_money);

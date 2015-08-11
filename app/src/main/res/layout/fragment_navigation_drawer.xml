@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f8ffffff"
@@ -23,7 +24,7 @@
         android:gravity="center_vertical"
         >
 
-      <ImageView
+      <com.mislead.circleimageview.lib.CircleImageView
           android:id="@+id/circleIcon"
           android:layout_width="48dp"
           android:layout_height="48dp"
@@ -31,6 +32,7 @@
           android:layout_marginRight="16dp"
           android:scaleType="centerCrop"
           android:src="@mipmap/ic_launcher"
+          app:border_width="1dp"
           />
 
 

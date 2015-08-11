@@ -14,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ImageView;
 
 /**
@@ -68,7 +69,7 @@ public class CircleImageView extends ImageView {
         a.getDimensionPixelSize(R.styleable.CircleImageView_border_width, DEFAULT_BORDER_WIDTH);
     borderColor = a.getColor(R.styleable.CircleImageView_border_color, DEFAULT_BORDER_COLOR);
     a.recycle();
-
+    Log.e(TAG, "borderWidth:" + borederWidth);
     setUp();
   }
 
@@ -79,6 +80,7 @@ public class CircleImageView extends ImageView {
 
   public void setBorderColor(int color) {
     borderColor = color;
+    borderPaint.setColor(color);
     setUp();
   }
 
@@ -101,13 +103,24 @@ public class CircleImageView extends ImageView {
   }
 
   @Override protected void onDraw(Canvas canvas) {
-    super.onDraw(canvas);
-    if (getDrawable() == null) return;
-    canvas.drawCircle(getWidth() / 2, getHeight() / 2, bitmapRadius, bitmapPaint);
+    //super.onDraw(canvas);
 
     if (borederWidth > 0) {
       canvas.drawCircle(getWidth() / 2, getHeight() / 2, borderRadius, borderPaint);
     }
+    if (getDrawable() == null) return;
+    Log.e(TAG, "onDraw");
+    canvas.drawCircle(getWidth() / 2, getHeight() / 2, bitmapRadius, bitmapPaint);
+
+  }
+
+  @Override protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    super.onSizeChanged(w, h, oldw, oldh);
+    setUp();
+  }
+
+  @Override protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    super.onLayout(changed, left, top, right, bottom);
   }
 
   private Bitmap getBitmapFromDrawable(Drawable drawable) {
@@ -134,9 +147,19 @@ public class CircleImageView extends ImageView {
   }
 
   private void setUp() {
-    //if (already) return;
-
     if (bitmap == null) return;
+    Log.e(TAG, "setup");
+    //if (already) return;
+    if (bitmapPaint == null) {
+      bitmapPaint = new Paint();
+    }
+
+    if (borderPaint == null) {
+      borderPaint = new Paint();
+    }
+    if (shaderMatrix == null) {
+      shaderMatrix = new Matrix();
+    }
 
     bitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
 
@@ -144,20 +167,19 @@ public class CircleImageView extends ImageView {
     bitmapPaint.setShader(bitmapShader);
 
     borderPaint.setAntiAlias(true);
-    borderPaint.setStyle(Paint.Style.STROKE);
+    borderPaint.setStyle(Paint.Style.FILL_AND_STROKE);
     borderPaint.setColor(borderColor);
-    borderPaint.setStrokeWidth(borederWidth);
 
     bitmapWidth = bitmap.getWidth();
     bitmapHeight = bitmap.getHeight();
 
-    borderRect = new RectF(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
-        getHeight() - getPaddingBottom());
-    borderRadius = (int) Math.min(borderRect.width() / 2, borderRect.height() / 2);
+    borderRect = new RectF(getPaddingLeft() + 1, getPaddingTop() + 1,
+        getMeasuredWidth() - getPaddingRight() - 1, getMeasuredHeight() - getPaddingBottom() - 1);
+    borderRadius = Math.min((int) borderRect.width() / 2, (int) borderRect.height() / 2);
 
     bitmapRect = new RectF(getPaddingLeft() + borederWidth, getPaddingTop() + borederWidth,
         borderRect.width() - borederWidth, borderRect.height() - borederWidth);
-    bitmapRadius = (int) Math.min(bitmapRect.width() / 2, bitmapRect.height() / 2);
+    bitmapRadius = Math.min((int) bitmapRect.width() / 2, (int) bitmapRect.height() / 2);
 
     getShaderMatrix();
 
@@ -166,22 +188,18 @@ public class CircleImageView extends ImageView {
 
   private void getShaderMatrix() {
     float scall = 0;
-    float dx = 0;
-    float dy = 0;
 
     shaderMatrix.set(null);
 
     // 尽可能多显示图片
     if (bitmapWidth * bitmapRect.height() > bitmapHeight * bitmapRect.width()) {
       scall = bitmapRect.height() / (float) bitmapHeight;
-      dx = (bitmapWidth - bitmapRect.width()) * 0.5f;
     } else {
       scall = bitmapRect.width() / (float) bitmapWidth;
-      dy = (bitmapHeight - bitmapRect.height()) * 0.5f;
     }
 
     shaderMatrix.setScale(scall, scall);
-    shaderMatrix.postTranslate(dx + borederWidth, dy + borederWidth);
+    shaderMatrix.postTranslate(borederWidth, borederWidth);
 
     bitmapShader.setLocalMatrix(shaderMatrix);
   }
