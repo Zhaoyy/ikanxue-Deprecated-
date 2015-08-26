@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f8ffffff"
+    android:background="?attr/main_bg_color"
     android:orientation="vertical"
     tools:context=".NavigationDrawerFragment"
     >
@@ -69,7 +69,7 @@
         android:button="@null"
         android:drawablePadding="28dp"
         android:text="@string/new_topic"
-        android:textColor="@color/text_black_2"
+        android:textColor="?attr/text_color_2"
         android:textSize="20sp"
         />
 
@@ -85,7 +85,7 @@
         android:button="@null"
         android:drawablePadding="28dp"
         android:text="@string/titles"
-        android:textColor="@color/text_black_2"
+        android:textColor="?attr/text_color_2"
         android:textSize="20sp"
         />
 
@@ -101,14 +101,14 @@
         android:button="@null"
         android:drawablePadding="28dp"
         android:text="@string/security_news"
-        android:textColor="@color/text_black_2"
+        android:textColor="?attr/text_color_2"
         android:textSize="20sp"
         />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/text_black_4"
+        android:background="?attr/text_color_4"
         />
 
     <RadioButton
@@ -139,7 +139,7 @@
         android:button="@null"
         android:drawablePadding="28dp"
         android:text="@string/about"
-        android:textColor="@color/text_black_2"
+        android:textColor="?attr/text_color_2"
         android:textSize="20sp"
         />
 
@@ -178,7 +178,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/exit"
-        android:textColor="@color/text_black_2"
+        android:textColor="?attr/text_color_2"
         android:textSize="20sp"
         />
 

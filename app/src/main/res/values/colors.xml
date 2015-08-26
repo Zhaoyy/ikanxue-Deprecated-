@@ -7,13 +7,19 @@
   <color name="text_black_4">#1F000000</color>
   <color name="text_black_5">#08000000</color>
 
+  <color name="text_black_1_dark">#DFFFFFFF</color>
+  <color name="text_black_2_dark">#8AFFFFFF</color>
+  <color name="text_black_3_dark">#43FFFFFF</color>
+  <color name="text_black_4_dark">#1FFFFFFF</color>
+  <color name="text_black_5_dark">#08FFFFFF</color>
+
   <color name="app_main_color">#14E715</color>
   <color name="orange">#FF9800</color>
   <color name="orange_dark">#Ef6C00</color>
   <color name="orange_light">#FFB74D</color>
 
   <color name="flow_item_selected">#fff3f4f5</color>
-
+  <color name="main_bg_dark">#ff2a518c</color>
   <color name="item_header_color">#E2E7EE</color>
   <color name="tab_color_bg">#E0E0E0</color>
   <color name="white">#FFFFFF</color>

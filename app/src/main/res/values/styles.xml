@@ -16,6 +16,26 @@
     <item name="android:windowAnimationStyle">@style/SplashAnimStyle</item>
   </style>
 
+  <style name="Theme_Light"
+      parent="MainActivityTheme">
+    <item name="main_bg_color">@color/white</item>
+    <item name="text_color_1">@color/text_black_1</item>
+    <item name="text_color_2">@color/text_black_2</item>
+    <item name="text_color_3">@color/text_black_3</item>
+    <item name="text_color_4">@color/text_black_4</item>
+    <item name="text_color_5">@color/text_black_5</item>
+  </style>
+
+  <style name="Theme_Dark"
+      parent="MainActivityTheme">
+    <item name="main_bg_color">@color/title_header_color</item>
+    <item name="text_color_1">@color/text_black_1_dark</item>
+    <item name="text_color_2">@color/text_black_2_dark</item>
+    <item name="text_color_3">@color/text_black_3_dark</item>
+    <item name="text_color_4">@color/text_black_4_dark</item>
+    <item name="text_color_5">@color/text_black_5_dark</item>
+  </style>
+
   <style name="SplashAnimStyle">
     <item name="android:windowShowAnimation">@anim/abc_fade_in</item>
     <item name="android:windowEnterAnimation">@anim/abc_fade_in</item>

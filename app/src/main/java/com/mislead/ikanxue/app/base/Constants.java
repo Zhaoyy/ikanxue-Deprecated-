@@ -19,4 +19,6 @@ public class Constants {
   public static final String LAST_REFRESH_FORTUM_TITLE = "last_refresh_fortum_title";
 
   public static final String CACHE_FORTUM_TITLE = "cache_fortum_title";
+
+  public static final String THEME_ID = "theme_id";
 }

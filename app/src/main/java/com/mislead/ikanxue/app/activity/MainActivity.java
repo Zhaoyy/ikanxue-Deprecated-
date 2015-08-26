@@ -14,6 +14,7 @@ import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
 import com.mislead.ikanxue.app.base.BaseFragment;
+import com.mislead.ikanxue.app.base.Constants;
 import com.mislead.ikanxue.app.fragment.AboutFragment;
 import com.mislead.ikanxue.app.fragment.FeedbackFragment;
 import com.mislead.ikanxue.app.fragment.ForumDisplayFragment;
@@ -21,6 +22,7 @@ import com.mislead.ikanxue.app.fragment.ForumTitlesFragment;
 import com.mislead.ikanxue.app.fragment.NavigationDrawerFragment;
 import com.mislead.ikanxue.app.fragment.UserInfoFragment;
 import com.mislead.ikanxue.app.util.FragmentHelper;
+import com.mislead.ikanxue.app.util.ShPreUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import java.util.Stack;
 
@@ -84,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    int theme_id = ShPreUtil.getInt(Constants.THEME_ID, R.style.Theme_Dark);
+
+    setTheme(theme_id);
     setContentView(R.layout.activity_main);
 
     drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);

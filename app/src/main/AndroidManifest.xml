@@ -33,7 +33,6 @@
     <activity
         android:name="com.mislead.ikanxue.app.activity.MainActivity"
         android:screenOrientation="portrait"
-        android:theme="@style/MainActivityTheme"
         />
     <activity
         android:name=".activity.LoginActivity"

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <attr name="main_bg_color"
+      format="reference|color"/>
+  <attr name="text_color_1"
+      format="reference|color"/>
+  <attr name="text_color_2"
+      format="reference|color"/>
+  <attr name="text_color_3"
+      format="reference|color"/>
+  <attr name="text_color_4"
+      format="reference|color"/>
+  <attr name="text_color_5"
+      format="reference|color"/>
+</resources>
