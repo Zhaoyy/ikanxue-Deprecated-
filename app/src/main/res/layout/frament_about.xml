@@ -3,13 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="none"
+    android:id="@+id/sl_root"
     >
   <LinearLayout
-      android:id="@+id/ll_root"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      android:background="?attr/main_bg_color"
       >
 
     <TextView

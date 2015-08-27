@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.base.BaseFragment;
@@ -22,7 +22,7 @@ public class AboutFragment extends BaseFragment {
 
   private static String TAG = "AboutFragment";
 
-  private LinearLayout ll_root;
+  private ScrollView sl_root;
   private TextView tv_title1;
   private TextView tv_content1;
   private TextView tv_title2;
@@ -39,7 +39,7 @@ public class AboutFragment extends BaseFragment {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    ll_root = (LinearLayout) view.findViewById(R.id.ll_root);
+    sl_root = (ScrollView) view.findViewById(R.id.sl_root);
     tv_title1 = (TextView) view.findViewById(R.id.tv_title1);
     tv_content1 = (TextView) view.findViewById(R.id.tv_content1);
     tv_title2 = (TextView) view.findViewById(R.id.tv_title2);
@@ -52,7 +52,7 @@ public class AboutFragment extends BaseFragment {
         ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.second_main_bg_color);
 
     if (bgColor != 0) {
-      ll_root.setBackgroundColor(bgColor);
+      sl_root.setBackgroundColor(bgColor);
     }
 
     int textColor1 =
