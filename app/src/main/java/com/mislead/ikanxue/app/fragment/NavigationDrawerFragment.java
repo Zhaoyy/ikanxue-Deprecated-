@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -30,8 +31,11 @@ import com.mislead.ikanxue.app.activity.LoginActivity;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
 import com.mislead.ikanxue.app.base.BaseFragment;
+import com.mislead.ikanxue.app.base.Constants;
 import com.mislead.ikanxue.app.util.AndroidHelper;
+import com.mislead.ikanxue.app.util.ChangeThemeUtil;
 import com.mislead.ikanxue.app.util.FragmentHelper;
+import com.mislead.ikanxue.app.util.ShPreUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
 import java.util.ArrayList;
@@ -53,9 +57,11 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
   private DrawerLayout mDrawerLayout;
 
   private View mFragmentContainerView;
-
+  private LinearLayout ll_root;
   private CircleImageView ivHead;
   private TextView tvName;
+  private ImageView ivTheme;
+  private TextView tvTheme;
   private LinearLayout userInfo;
 
   private RadioGroup rg;
@@ -100,10 +106,15 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
     ivHead = (CircleImageView) view.findViewById(R.id.circleIcon);
     tvName = (TextView) view.findViewById(R.id.name);
+    ivTheme = (ImageView) view.findViewById(R.id.iv_theme);
+    tvTheme = (TextView) view.findViewById(R.id.tv_theme);
+
+    ll_root = (LinearLayout) view.findViewById(R.id.ll_root);
 
     userInfo = (LinearLayout) view.findViewById(R.id.userInfo);
     userInfo.setOnClickListener(this);
     view.findViewById(R.id.ll_exit).setOnClickListener(this);
+    view.findViewById(R.id.ll_change_theme).setOnClickListener(this);
 
     rg = (RadioGroup) view.findViewById(R.id.rg);
     rbtn_new_topic = (RadioButton) view.findViewById(R.id.rbtn_new_topic);
@@ -113,6 +124,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     rbtn_about = (RadioButton) view.findViewById(R.id.rbtn_about);
 
     initRbtn();
+    initThemeButton();
 
     showUserInfo();
   }
@@ -160,6 +172,12 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         v.setOnClickListener(this);
       }
     }
+  }
+
+  private void initThemeButton() {
+    int themeId = ShPreUtil.getInt(Constants.THEME_ID, R.style.Theme_Dark);
+    ivTheme.setImageResource(themeId == R.style.Theme_Light ? R.mipmap.ic_dark : R.mipmap.ic_light);
+    tvTheme.setText(themeId == R.style.Theme_Light ? R.string.dark_theme : R.string.light_theme);
   }
 
   private void showUserInfo() {
@@ -284,8 +302,36 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
       case R.id.rbtn_about:
         itemSelected(4);
         break;
+      case R.id.ll_change_theme:
+        sendChangeTheme();
+        break;
       default:
         break;
+    }
+  }
+
+  private void sendChangeTheme() {
+    int themeId = ShPreUtil.getInt(Constants.THEME_ID, R.style.Theme_Dark);
+    ShPreUtil.setInt(Constants.THEME_ID,
+        themeId == R.style.Theme_Light ? R.style.Theme_Dark : R.style.Theme_Light);
+    themeId = themeId == R.style.Theme_Light ? R.style.Theme_Dark : R.style.Theme_Light;
+    getActivity().setTheme(themeId);
+    getActivity().sendBroadcast(new Intent(MyApplication.THEME_CHANGE_ACTION));
+  }
+
+  @Override protected void changeTheme() {
+    initThemeButton();
+    int bgColor = ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.main_bg_color);
+
+    if (bgColor != 0) {
+      ll_root.setBackgroundColor(bgColor);
+    }
+
+    int textColor =
+        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.text_color_2);
+
+    if (textColor != 0) {
+      ChangeThemeUtil.ChangeViewTextColor(ll_root, textColor);
     }
   }
 

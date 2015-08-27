@@ -55,6 +55,9 @@
 
   <string name="kx_limit">10 - 100 Kx</string>
 
+  <string name="dark_theme">夜间模式</string>
+  <string name="light_theme">日间模式</string>
+
   <string-array name="topic_list">
     <item>【求助】</item>
     <item>【原创】</item>

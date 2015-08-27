@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.volley.VolleyError;
@@ -25,10 +24,10 @@ import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.base.BaseFragment;
 import com.mislead.ikanxue.app.model.ForumThreadTitleObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
+import com.mislead.ikanxue.app.util.ChangeThemeUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
-import com.mislead.ikanxue.app.view.MaterialProgressDrawable;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,7 @@ public class ForumDisplayFragment extends BaseFragment {
   private LoadMoreRecyclerView list;
   private SwipeRefreshLayout swipe_refresh;
 
-  private View footView;
+  private LinearLayout ll_root;
 
   private ForumThreadAdapter adapter;
 
@@ -65,22 +64,10 @@ public class ForumDisplayFragment extends BaseFragment {
 
   private List<ForumThreadTitleObject.ThreadListEntity> threads = new ArrayList<>();
 
-  private MaterialProgressDrawable progressDrawable;
-
   private Runnable runnable = new Runnable() {
     @Override public void run() {
       swipe_refresh.setRefreshing(true);
       refresh();
-    }
-  };
-
-  private Runnable progressRunable = new Runnable() {
-    @Override public void run() {
-      if (footState == 1) {
-        progressDrawable.start();
-      } else {
-        progressDrawable.stop();
-      }
     }
   };
 
@@ -117,6 +104,7 @@ public class ForumDisplayFragment extends BaseFragment {
     super.onViewCreated(view, savedInstanceState);
     list = (LoadMoreRecyclerView) view.findViewById(R.id.list);
     swipe_refresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
+    ll_root = (LinearLayout) view.findViewById(R.id.ll_root);
     initView();
     list.post(runnable);
   }
@@ -126,20 +114,9 @@ public class ForumDisplayFragment extends BaseFragment {
     final LinearLayoutManager manager = new LinearLayoutManager(getActivity());
     manager.setOrientation(LinearLayoutManager.VERTICAL);
     list.setLayoutManager(manager);
-
+    list.initFootView();
     // to improve performance
     list.setHasFixedSize(true);
-
-    // add foot view
-    footView = LayoutInflater.from(getActivity()).inflate(R.layout.view_load_more, null);
-    LinearLayout.LayoutParams params =
-        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT);
-    footView.setLayoutParams(params);
-    ImageView ivProgress = (ImageView) footView.findViewById(R.id.iv_progress);
-    progressDrawable = new MaterialProgressDrawable(getActivity(), ivProgress);
-    progressDrawable.setAlpha(255);
-    ivProgress.setImageDrawable(progressDrawable);
 
     adapter = new ForumThreadAdapter();
     list.setAdapter(adapter);
@@ -172,16 +149,6 @@ public class ForumDisplayFragment extends BaseFragment {
     });
   }
 
-  private void changeFootState(int state) {
-    footState = state;
-
-    footView.findViewById(R.id.tv_load_more).setVisibility(state == 0 ? View.VISIBLE : View.GONE);
-    footView.findViewById(R.id.ll_loading).setVisibility(state == 1 ? View.VISIBLE : View.GONE);
-    footView.findViewById(R.id.tv_no_more).setVisibility(state == 2 ? View.VISIBLE : View.GONE);
-
-    footView.findViewById(R.id.iv_progress).post(progressRunable);
-  }
-
   private void refresh() {
     // check there is new post or not
     Api.getInstance()
@@ -204,7 +171,7 @@ public class ForumDisplayFragment extends BaseFragment {
   }
 
   private void loadMore() {
-    changeFootState(1);
+    list.changeFootState(1);
     currPage++;
     loadData();
   }
@@ -243,9 +210,9 @@ public class ForumDisplayFragment extends BaseFragment {
           threads.add(entity);
         }
       }
-      changeFootState(0);
+      list.changeFootState(0);
     } else {
-      changeFootState(2);
+      list.changeFootState(2);
     }
     swipe_refresh.setRefreshing(false);
     adapter.setData(threads);
@@ -332,6 +299,26 @@ public class ForumDisplayFragment extends BaseFragment {
     }
   }
 
+  @Override protected void changeTheme() {
+    list.clear();
+    list.getLayoutManager().removeAllViews();
+    adapter.notifyDataSetChanged();
+
+    int bgColor =
+        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.second_main_bg_color);
+
+    if (bgColor != 0) {
+      ll_root.setBackgroundColor(bgColor);
+    }
+
+    int textColor =
+        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.text_color_2);
+
+    if (textColor != 0) {
+      list.changetFootTextColor(textColor);
+    }
+  }
+
   private int getLastStickyIndex() {
     for (int i = 0; i < threads.size(); i++) {
       ForumThreadTitleObject.ThreadListEntity entity = threads.get(i);
@@ -362,7 +349,7 @@ public class ForumDisplayFragment extends BaseFragment {
             .inflate(R.layout.item_forum_thread, parent, false);
         return new ForumThreadHolder(view);
       } else {
-        return new FootHolder(footView);
+        return new FootHolder(list.getFootView());
       }
     }
 

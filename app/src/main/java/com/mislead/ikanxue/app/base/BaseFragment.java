@@ -40,9 +40,14 @@ public class BaseFragment extends Fragment {
     data = d;
   }
 
-  private BroadcastReceiver logReciever = new BroadcastReceiver() {
+  private BroadcastReceiver logReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       onLoginOrLogout();
+    }
+  };
+  private BroadcastReceiver themeReceiver = new BroadcastReceiver() {
+    @Override public void onReceive(Context context, Intent intent) {
+      changeTheme();
     }
   };
 
@@ -56,9 +61,11 @@ public class BaseFragment extends Fragment {
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
     mainActivity = (MainActivity) activity;
-    IntentFilter filter = new IntentFilter(MyApplication.LOGIN_STATE_CHANGE_ACTION);
+    IntentFilter logFilter = new IntentFilter(MyApplication.LOGIN_STATE_CHANGE_ACTION);
+    IntentFilter themeFilter = new IntentFilter(MyApplication.THEME_CHANGE_ACTION);
 
-    getActivity().registerReceiver(logReciever, filter);
+    getActivity().registerReceiver(logReceiver, logFilter);
+    getActivity().registerReceiver(themeReceiver, themeFilter);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -68,7 +75,8 @@ public class BaseFragment extends Fragment {
 
   @Override public void onDetach() {
     super.onDetach();
-    getActivity().unregisterReceiver(logReciever);
+    getActivity().unregisterReceiver(logReceiver);
+    getActivity().unregisterReceiver(themeReceiver);
   }
 
   @Override public void onHiddenChanged(boolean hidden) {
@@ -77,6 +85,10 @@ public class BaseFragment extends Fragment {
 
   // do someting when user log state changed.
   protected void onLoginOrLogout() {
+  }
+
+  // change theme
+  protected void changeTheme() {
   }
 
   // refresh view after fragment shown

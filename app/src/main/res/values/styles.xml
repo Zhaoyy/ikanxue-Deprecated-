@@ -19,6 +19,7 @@
   <style name="Theme_Light"
       parent="MainActivityTheme">
     <item name="main_bg_color">@color/white</item>
+    <item name="second_main_bg_color">@color/text_black_5</item>
     <item name="text_color_1">@color/text_black_1</item>
     <item name="text_color_2">@color/text_black_2</item>
     <item name="text_color_3">@color/text_black_3</item>
@@ -29,6 +30,7 @@
   <style name="Theme_Dark"
       parent="MainActivityTheme">
     <item name="main_bg_color">@color/title_header_color</item>
+    <item name="second_main_bg_color">@color/title_header_color_dark</item>
     <item name="text_color_1">@color/text_black_1_dark</item>
     <item name="text_color_2">@color/text_black_2_dark</item>
     <item name="text_color_3">@color/text_black_3_dark</item>

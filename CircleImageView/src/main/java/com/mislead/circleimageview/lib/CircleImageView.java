@@ -14,7 +14,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ImageView;
 
 /**
@@ -69,7 +68,7 @@ public class CircleImageView extends ImageView {
         a.getDimensionPixelSize(R.styleable.CircleImageView_border_width, DEFAULT_BORDER_WIDTH);
     borderColor = a.getColor(R.styleable.CircleImageView_border_color, DEFAULT_BORDER_COLOR);
     a.recycle();
-    Log.e(TAG, "borderWidth:" + borederWidth);
+    //Log.e(TAG, "borderWidth:" + borederWidth);
     setUp();
   }
 
@@ -109,7 +108,7 @@ public class CircleImageView extends ImageView {
       canvas.drawCircle(getWidth() / 2, getHeight() / 2, borderRadius, borderPaint);
     }
     if (getDrawable() == null) return;
-    Log.e(TAG, "onDraw");
+    //Log.e(TAG, "onDraw");
     canvas.drawCircle(getWidth() / 2, getHeight() / 2, bitmapRadius, bitmapPaint);
 
   }
@@ -148,7 +147,7 @@ public class CircleImageView extends ImageView {
 
   private void setUp() {
     if (bitmap == null) return;
-    Log.e(TAG, "setup");
+    //Log.e(TAG, "setup");
     //if (already) return;
     if (bitmapPaint == null) {
       bitmapPaint = new Paint();

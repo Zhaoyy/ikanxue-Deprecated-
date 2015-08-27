@@ -14,10 +14,12 @@ import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
+import com.mislead.ikanxue.app.base.Constants;
 import com.mislead.ikanxue.app.model.KanxueResponse;
 import com.mislead.ikanxue.app.net.HttpClientUtil;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
+import com.mislead.ikanxue.app.util.ShPreUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
 import org.apache.http.cookie.Cookie;
@@ -67,7 +69,8 @@ public class LoginActivity extends AppCompatActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    int themeId = ShPreUtil.getInt(Constants.THEME_ID, R.style.Theme_Dark);
+    setTheme(themeId);
     setContentView(R.layout.activity_login);
 
     initActionbar(getSupportActionBar());
@@ -80,76 +83,6 @@ public class LoginActivity extends AppCompatActivity {
                                   @Override public void onClick(View v) {
                                     if (check()) {
                                       AndroidHelper.showProgressDialog(LoginActivity.this);
-                                      //
-                                      //Api.getInstance()
-                                      //    .login(etName.getText().toString(), etPwd.getText().toString(),
-                                      //        new HttpClientUtil.NetClientCallback() {
-                                      //          @Override
-                                      //          public void execute(int status, String response, List<Cookie> cookies) {
-                                      //            if (status == HttpClientUtil.NET_SUCCESS) {
-                                      //              final JSONObject retObj;
-                                      //              LogHelper.e(response);
-                                      //              try {
-                                      //                retObj = new JSONObject(response);
-                                      //                final int ret = retObj.getInt("result");
-                                      //                if (ret != Api.LOGIN_SUCCESS) {
-                                      //                  Message message = mHandler.obtainMessage();
-                                      //                  switch (ret) {
-                                      //                    case Api.LOGIN_FAIL_LESS_THAN_FIVE:
-                                      //                      String alertText =
-                                      //                          "用户名或者密码错误,还有" + (Api.ALLOW_LOGIN_USERNAME_OR_PASSWD_ERROR_NUM
-                                      //                              - retObj.getInt("strikes")) + "尝试机会";
-                                      //                      message.what = ERROR;
-                                      //                      message.obj = alertText;
-                                      //                      mHandler.sendMessage(message);
-                                      //                      break;
-                                      //                    case Api.LOGIN_FAIL_MORE_THAN_FIVE:
-                                      //                      message.what = ERROR;
-                                      //                      message.obj =
-                                      //                          getResources().getString(R.string.login_fail_more_than_five);
-                                      //                      mHandler.sendMessage(message);
-                                      //                      break;
-                                      //                  }
-                                      //                  return;
-                                      //                }
-                                      //                String token = retObj.getString("securitytoken");
-                                      //                Api.getInstance().setToken(token);
-                                      //                Api.getInstance()
-                                      //                    .setLoginUserInfo(retObj.getString("username"),
-                                      //                        retObj.getInt("userid"), retObj.getInt("isavatar"),
-                                      //                        retObj.getString("email"));
-                                      //                for (Cookie cookie : cookies) {
-                                      //                  Api.getInstance()
-                                      //                      .getCookieStorage()
-                                      //                      .addCookie(cookie.getName(), cookie.getValue());
-                                      //                }
-                                      //                // get user type
-                                      //                Api.getInstance()
-                                      //                    .getUserInfoPage(retObj.getInt("userid"),
-                                      //                        new VolleyHelper.ResponseListener<JSONObject>() {
-                                      //                          @Override public void onErrorResponse(VolleyError volleyError) {
-                                      //                            LogHelper.e(volleyError.toString());
-                                      //                          }
-                                      //
-                                      //                          @Override public void onResponse(JSONObject object) {
-                                      //                            try {
-                                      //                              Api.getInstance()
-                                      //                                  .setLoginUserType(object.getString("usertitle"));
-                                      //                            } catch (JSONException e) {
-                                      //                              e.printStackTrace();
-                                      //                            }
-                                      //                          }
-                                      //                        });
-                                      //
-                                      //                LoginActivity.this.sendBroadcast(
-                                      //                    new Intent(MyApplication.LOGIN_STATE_CHANGE_ACTION));
-                                      //              } catch (JSONException e) {
-                                      //                e.printStackTrace();
-                                      //              }
-                                      //            }
-                                      //            mHandler.sendEmptyMessage(status);
-                                      //          }
-                                      //        });
                                       Api.getInstance()
                                           .login(etName.getText().toString(),
                                               etPwd.getText().toString(),

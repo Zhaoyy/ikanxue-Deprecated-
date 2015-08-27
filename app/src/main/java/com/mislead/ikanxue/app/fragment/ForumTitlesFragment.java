@@ -15,10 +15,12 @@ import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.base.BaseFragment;
 import com.mislead.ikanxue.app.base.Constants;
 import com.mislead.ikanxue.app.model.ForumTitleObject;
+import com.mislead.ikanxue.app.util.ChangeThemeUtil;
 import com.mislead.ikanxue.app.util.DateHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.util.ShPreUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
+import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
 import com.mislead.ikanxue.app.view.RecyclerLinearItemDecoration;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
 import java.util.ArrayList;
@@ -38,11 +40,12 @@ public class ForumTitlesFragment extends BaseFragment {
 
   private static String TAG = "FeedbackFragment";
 
-  private RecyclerView recyclerView;
+  private LoadMoreRecyclerView recyclerView;
 
   private List<ForumTitleObject> titles = new ArrayList<>();
 
   private RecyclerViewAdapter adapter;
+  private LinearLayout ll_root;
 
   private long now;
 
@@ -55,7 +58,8 @@ public class ForumTitlesFragment extends BaseFragment {
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+    recyclerView = (LoadMoreRecyclerView) view.findViewById(R.id.recyclerView);
+    ll_root = (LinearLayout) view.findViewById(R.id.ll_root);
 
     initView();
 
@@ -161,6 +165,19 @@ public class ForumTitlesFragment extends BaseFragment {
 
     adapter.setData(titles);
     adapter.notifyDataSetChanged();
+  }
+
+  @Override protected void changeTheme() {
+    recyclerView.clear();
+    recyclerView.getLayoutManager().removeAllViews();
+    adapter.notifyDataSetChanged();
+
+    int bgColor =
+        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.second_main_bg_color);
+
+    if (bgColor != 0) {
+      ll_root.setBackgroundColor(bgColor);
+    }
   }
 
   public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

@@ -37,6 +37,11 @@ public class ShPreUtil {
     editor.apply();
   }
 
+  public static void setInt(String key, int val) {
+    editor.putInt(key, val);
+    editor.apply();
+  }
+
   public static void remove(String key) {
     editor.remove(key);
   }
