@@ -16,4 +16,7 @@
       format="reference|color"/>
   <attr name="text_color_5"
       format="reference|color"/>
+
+  <attr name="item_bg"
+      format="reference"/>
 </resources>

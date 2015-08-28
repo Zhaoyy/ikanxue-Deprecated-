@@ -25,6 +25,7 @@
     <item name="text_color_3">@color/text_black_3</item>
     <item name="text_color_4">@color/text_black_4</item>
     <item name="text_color_5">@color/text_black_5</item>
+    <item name="item_bg">@drawable/btn_bg_white</item>
   </style>
 
   <style name="Theme_Dark"
@@ -36,6 +37,7 @@
     <item name="text_color_3">@color/text_black_3_dark</item>
     <item name="text_color_4">@color/text_black_4_dark</item>
     <item name="text_color_5">@color/text_black_5_dark</item>
+    <item name="item_bg">@drawable/btn_bg_white_dark</item>
   </style>
 
   <style name="SplashAnimStyle">

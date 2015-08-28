@@ -9,7 +9,7 @@
     android:paddingRight="24dp"
     android:minHeight="40dp"
     android:paddingTop="8dp"
-    android:background="@drawable/btn_bg_white"
+    android:background="?attr/item_bg"
     android:paddingBottom="8dp"
     >
 
@@ -25,7 +25,7 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="1.0"
-      android:textColor="@color/text_black_1"
+      android:textColor="?attr/text_color_1"
       android:textSize="@dimen/text_size_normal"
 
       />

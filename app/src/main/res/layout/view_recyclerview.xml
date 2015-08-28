@@ -4,6 +4,7 @@
     android:id="@+id/ll_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/second_main_bg_color"
     >
   <com.mislead.ikanxue.app.view.LoadMoreRecyclerView
       android:id="@+id/recyclerView"

@@ -331,7 +331,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.text_color_2);
 
     if (textColor != 0) {
-      ChangeThemeUtil.ChangeViewTextColor(ll_root, textColor);
+      ChangeThemeUtil.ChangeViewTextColor(ll_root, textColor, R.id.name);
     }
   }
 

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_root"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/second_main_bg_color"
     >
 
   <android.support.v4.widget.SwipeRefreshLayout
@@ -34,7 +36,7 @@
       android:paddingRight="8dp"
       android:paddingTop="4dp"
       android:paddingBottom="4dp"
-      android:background="@color/white"
+      android:background="?attr/main_bg_color"
       >
 
     <EditText
@@ -45,9 +47,9 @@
         android:inputType="text"
         style="@style/select_all_on_focus"
         android:singleLine="false"
-        android:textColor="@color/text_black_1"
+        android:textColor="?attr/text_color_1"
         android:textSize="@dimen/text_size_normal"
-        android:textColorHint="@color/text_black_3"
+        android:textColorHint="?attr/text_color_3"
         />
 
     <ImageButton

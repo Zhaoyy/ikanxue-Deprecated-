@@ -10,11 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.base.BaseFragment;
 import com.mislead.ikanxue.app.util.AndroidHelper;
+import com.mislead.ikanxue.app.util.ChangeThemeUtil;
 import com.mislead.ikanxue.app.util.RegexUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
@@ -29,6 +31,8 @@ import com.mislead.ikanxue.app.volley.VolleyHelper;
 public class FeedbackFragment extends BaseFragment {
 
   private static String TAG = "FeedbackFragment";
+  private LinearLayout ll_root;
+  private LinearLayout ll_title;
   private EditText et_name;
   private EditText et_email;
   private EditText et_msg;
@@ -48,6 +52,9 @@ public class FeedbackFragment extends BaseFragment {
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
+    ll_root = (LinearLayout) view.findViewById(R.id.ll_root);
+    ll_title = (LinearLayout) view.findViewById(R.id.ll_title);
     et_name = (EditText) view.findViewById(R.id.et_name);
     et_email = (EditText) view.findViewById(R.id.et_email);
     et_msg = (EditText) view.findViewById(R.id.et_msg);
@@ -107,6 +114,37 @@ public class FeedbackFragment extends BaseFragment {
         mainActivity.backToFragment(true);
       }
     });
+  }
+
+  @Override protected void changeTheme() {
+    super.changeTheme();
+    int bgColor =
+        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.second_main_bg_color);
+
+    if (bgColor != 0) {
+      ll_root.setBackgroundColor(bgColor);
+    }
+
+    bgColor = ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.main_bg_color);
+
+    if (bgColor != 0) {
+      ll_title.setBackgroundColor(bgColor);
+      et_msg.setBackgroundColor(bgColor);
+    }
+
+    int textColor =
+        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.text_color_1);
+
+    if (textColor != 0) {
+      ChangeThemeUtil.ChangeViewTextColor(ll_root, textColor);
+    }
+
+    int hintColor =
+        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.text_color_2);
+
+    if (hintColor != 0) {
+      ChangeThemeUtil.ChangeETHintColor(ll_root, hintColor);
+    }
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

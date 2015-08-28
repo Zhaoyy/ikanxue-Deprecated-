@@ -28,6 +28,7 @@ import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.base.BaseFragment;
 import com.mislead.ikanxue.app.model.ForumThreadObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
+import com.mislead.ikanxue.app.util.ChangeThemeUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
@@ -62,6 +63,7 @@ public class ThreadDisplayFragment extends BaseFragment {
   private LoadMoreRecyclerView list;
   private SwipeRefreshLayout swipe_refresh;
   private LinearLayout ll_reply;
+  private LinearLayout ll_root;
 
   private EditText et_reply;
 
@@ -135,6 +137,7 @@ public class ThreadDisplayFragment extends BaseFragment {
     ll_reply = (LinearLayout) view.findViewById(R.id.ll_reply);
     et_reply = (EditText) view.findViewById(R.id.et_reply);
     btn_reply = (ImageButton) view.findViewById(R.id.btn_reply);
+    ll_root = (LinearLayout) view.findViewById(R.id.ll_root);
     initView();
 
     // load first
@@ -378,6 +381,45 @@ public class ThreadDisplayFragment extends BaseFragment {
     }
   }
 
+  @Override protected void changeTheme() {
+    list.clear();
+    list.getLayoutManager().removeAllViews();
+    adapter.notifyDataSetChanged();
+
+    int bgColor =
+        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.second_main_bg_color);
+
+    if (bgColor != 0) {
+      ll_root.setBackgroundColor(bgColor);
+    }
+
+    bgColor = ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.main_bg_color);
+
+    if (bgColor != 0) {
+      ll_reply.setBackgroundColor(bgColor);
+    }
+
+    int textColor =
+        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.text_color_2);
+
+    if (textColor != 0) {
+      list.changetFootTextColor(textColor);
+    }
+
+    textColor = ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.text_color_1);
+
+    if (textColor != 0) {
+      et_reply.setTextColor(textColor);
+    }
+
+    int hintColor =
+        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.text_color_3);
+
+    if (hintColor != 0) {
+      ChangeThemeUtil.ChangeETHintColor(et_reply, hintColor);
+    }
+  }
+
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_refresh, menu);
@@ -444,7 +486,6 @@ public class ThreadDisplayFragment extends BaseFragment {
         } else {
           forumThreadHolder.tv_title.setVisibility(View.GONE);
         }
-
 
         if (entity.getThumbnail() == 1) {
           Api.getInstance()
