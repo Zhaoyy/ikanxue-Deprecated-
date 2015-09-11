@@ -17,10 +17,10 @@ public class DailyEnglishUtil {
 
   private static final String DAILY_URL = "http://open.iciba.com/dsapi";
 
-  private static final String SH_LAST_DAILY_EN = "last_daily_en";
-  private static final String SH_LAST_DAILY_ZH = "last_daily_zh";
+  public static final String SH_LAST_DAILY_EN = "last_daily_en";
+  public static final String SH_LAST_DAILY_ZH = "last_daily_zh";
   public static final String SH_LAST_DAILY_PIC_URL = "last_daily_pic_url";
-  private static final String SH_LAST_DAILY_DATE = "last_daily_date";
+  public static final String SH_LAST_DAILY_DATE = "last_daily_date";
 
   private VolleyHelper.ResponseListener<String> listener = null;
 
@@ -34,13 +34,19 @@ public class DailyEnglishUtil {
 
         Gson gson = new Gson();
         DailyEnglish object = gson.fromJson(s, DailyEnglish.class);
+        // if can not get iciba daily, try to get youdao daily
+        if (object != null) {
 
-        ShPreUtil.setString(SH_LAST_DAILY_EN, object.getContent());
-        ShPreUtil.setString(SH_LAST_DAILY_ZH, object.getNote());
-        ShPreUtil.setString(SH_LAST_DAILY_PIC_URL, object.getPicture());
-        ShPreUtil.setString(SH_LAST_DAILY_DATE, object.getDateline());
-        // cache the image
-        VolleyHelper.requestAndCacheImage(object.getPicture(), AndroidHelper.getSplashImageCache());
+          ShPreUtil.setString(SH_LAST_DAILY_EN, object.getContent());
+          ShPreUtil.setString(SH_LAST_DAILY_ZH, object.getNote());
+          ShPreUtil.setString(SH_LAST_DAILY_PIC_URL, object.getPicture());
+          ShPreUtil.setString(SH_LAST_DAILY_DATE, object.getDateline());
+          // cache the image
+          VolleyHelper.requestAndCacheImage(object.getPicture(),
+              AndroidHelper.getSplashImageCache());
+        } else {
+          new YoudaoDaily().getTodayDaily();
+        }
       }
     };
 
