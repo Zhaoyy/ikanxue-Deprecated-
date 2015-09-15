@@ -18,8 +18,8 @@ import com.mislead.ikanxue.app.model.ForumTitleObject;
 import com.mislead.ikanxue.app.util.ChangeThemeUtil;
 import com.mislead.ikanxue.app.util.DateHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
+import com.mislead.ikanxue.app.util.RemoveNullInList;
 import com.mislead.ikanxue.app.util.ShPreUtil;
-import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
 import com.mislead.ikanxue.app.view.RecyclerLinearItemDecoration;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
@@ -81,7 +81,6 @@ public class ForumTitlesFragment extends BaseFragment {
   }
 
   @Override protected void onLoginOrLogout() {
-    ToastHelper.toastShort(mainActivity, "login:" + Api.getInstance().isLogin());
     requestFortumTitles();
   }
 
@@ -162,7 +161,7 @@ public class ForumTitlesFragment extends BaseFragment {
         titles.add(child);
       }
     }
-
+    new RemoveNullInList<ForumTitleObject>().removeNull(titles);
     adapter.setData(titles);
     adapter.notifyDataSetChanged();
   }

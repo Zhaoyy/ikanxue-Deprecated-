@@ -30,6 +30,7 @@ import com.mislead.ikanxue.app.model.ForumThreadObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.ChangeThemeUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
+import com.mislead.ikanxue.app.util.RemoveNullInList;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
 import com.mislead.ikanxue.app.view.MaterialProgressDrawable;
@@ -287,7 +288,7 @@ public class ThreadDisplayFragment extends BaseFragment {
     } else {
       changeFootState(0);
     }
-
+    new RemoveNullInList<ForumThreadObject.PostbitsEntity>().removeNull(threads);
     swipe_refresh.setRefreshing(false);
     adapter.setData(threads);
     adapter.notifyDataSetChanged();

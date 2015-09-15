@@ -26,6 +26,7 @@ import com.mislead.ikanxue.app.model.ForumThreadTitleObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.ChangeThemeUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
+import com.mislead.ikanxue.app.util.RemoveNullInList;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
@@ -214,6 +215,7 @@ public class ForumDisplayFragment extends BaseFragment {
     } else {
       list.changeFootState(2);
     }
+    new RemoveNullInList<ForumThreadTitleObject.ThreadListEntity>().removeNull(threads);
     swipe_refresh.setRefreshing(false);
     adapter.setData(threads);
     adapter.notifyDataSetChanged();
