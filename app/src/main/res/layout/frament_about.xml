@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="none"
+    android:background="?attr/second_main_bg_color"
     android:id="@+id/sl_root"
     >
   <LinearLayout
