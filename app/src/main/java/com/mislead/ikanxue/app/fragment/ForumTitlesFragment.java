@@ -219,7 +219,7 @@ public class ForumTitlesFragment extends BaseFragment {
         groupHolder.textView.setText(data.get(position).getName());
       } else {
         ChildHolder childHolder = (ChildHolder) holder;
-        childHolder.textView.setHint(data.get(position).getName());
+        childHolder.textView.setText(data.get(position).getName());
         childHolder.ll_item.setOnClickListener(new View.OnClickListener() {
           @Override public void onClick(View v) {
             if (itemListener != null) {
