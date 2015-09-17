@@ -1,13 +1,16 @@
 package com.mislead.ikanxue.app.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -498,14 +501,11 @@ public class ThreadDisplayFragment extends BaseFragment {
                 @Override public void onResponse(String object) {
                   entity.setThumbnail(0);
                   entity.setMessage(object);
-                  forumThreadHolder.tv_msg.setText(Html.fromHtml(entity.getMessage(),
-                      new VolleyImageGetter(forumThreadHolder.tv_msg), null));
+                  setHtmlText(forumThreadHolder.tv_msg, entity.getMessage());
                 }
               });
         } else {
-          forumThreadHolder.tv_msg.setText(
-              Html.fromHtml(entity.getMessage(), new VolleyImageGetter(forumThreadHolder.tv_msg),
-                  null));
+          setHtmlText(forumThreadHolder.tv_msg, entity.getMessage());
         }
 
         if ((entity.getThumbnailattachments() != null
@@ -573,6 +573,13 @@ public class ThreadDisplayFragment extends BaseFragment {
       }
     }
 
+    private void setHtmlText(final TextView textView, final String htmlStr) {
+      final VolleyImageGetter imageGetter = VolleyImageGetter.from(textView);
+      final HtmlTextWatcher watcher = new HtmlTextWatcher(textView, imageGetter, htmlStr);
+      textView.addTextChangedListener(watcher);
+      textView.setText(Html.fromHtml(htmlStr, imageGetter, null));
+    }
+
     @Override public int getItemCount() {
       return data.size() + 1;
     }
@@ -618,6 +625,61 @@ public class ThreadDisplayFragment extends BaseFragment {
 
     public FootHolder(View itemView) {
       super(itemView);
+    }
+  }
+
+  class HtmlTextWatcher implements TextWatcher {
+
+    private TextView textView;
+    private VolleyImageGetter imageGetter;
+    private String htmlStr;
+    private int finishCount = 0;
+    private int taskCount = 0;
+
+    public HtmlTextWatcher(TextView textView, VolleyImageGetter imageGetter, String htmlStr) {
+      this.textView = textView;
+      this.imageGetter = imageGetter;
+      this.htmlStr = htmlStr;
+      finishCount = 0;
+    }
+
+    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override public void afterTextChanged(final Editable s) {
+
+      taskCount = imageGetter.getUrls().size();
+      for (final String url : imageGetter.getUrls()) {
+        LogHelper.e(url);
+        VolleyHelper.requestImageWithCacheAndHeader(url, Api.getInstance().getCookieHeader(),
+            new VolleyHelper.ResponseListener<Bitmap>() {
+              @Override public void onErrorResponse(VolleyError volleyError) {
+                commitTask();
+              }
+
+              @Override public void onResponse(Bitmap bitmap) {
+                final String key = VolleyHelper.getCacheKey(url);
+                // request success, cache bitmap and relayout textView
+                if (bitmap != null) {
+                  AndroidHelper.getImageDiskCache().putBitmap(key, bitmap);
+                }
+                commitTask();
+              }
+            });
+      }
+    }
+
+    private void commitTask() {
+      finishCount++;
+      if (finishCount == taskCount) {
+        textView.removeTextChangedListener(this);
+        textView.setText(Html.fromHtml(htmlStr, imageGetter, null));
+      }
     }
   }
 }

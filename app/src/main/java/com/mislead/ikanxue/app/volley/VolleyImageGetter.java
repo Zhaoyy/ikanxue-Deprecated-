@@ -7,9 +7,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
-import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.util.AndroidHelper;
+import com.mislead.ikanxue.app.util.LogHelper;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * VolleyImageGetter
@@ -27,10 +28,19 @@ public class VolleyImageGetter implements Html.ImageGetter {
 
   private TextView textView;
   private Drawable drawable;
+  private List<String> urls = new ArrayList<>();
 
-  public VolleyImageGetter(TextView textView) {
+  public List<String> getUrls() {
+    return urls;
+  }
+
+  public static VolleyImageGetter from(TextView textView) {
+    return new VolleyImageGetter(textView);
+  }
+
+  private VolleyImageGetter(TextView textView) {
     this.textView = textView;
-
+    urls.clear();
     minHeight = getFountHeight(textView.getTextSize());
   }
 
@@ -42,28 +52,19 @@ public class VolleyImageGetter implements Html.ImageGetter {
   }
 
   @Override public Drawable getDrawable(String source) {
-
+    LogHelper.e(source);
     // get the cache key, find bitmap in cache.
     final String key = VolleyHelper.getCacheKey(source);
 
     Bitmap bitmap = AndroidHelper.getImageDiskCache().getBitmap(key);
+    LogHelper.e("bitmap found:" + (bitmap != null));
     // if not found, request with url
     if (bitmap == null) {
-      VolleyHelper.requestImageWithCacheAndHeader(source, Api.getInstance().getCookieHeader(),
-          new VolleyHelper.ResponseListener<Bitmap>() {
-            @Override public void onErrorResponse(VolleyError volleyError) {
 
-            }
+      if (!urls.contains(source)) {
+        urls.add(source);
+      }
 
-            @Override public void onResponse(Bitmap bitmap) {
-
-              // request success, cache bitmap and relayout textView
-              if (bitmap != null) {
-                AndroidHelper.getImageDiskCache().putBitmap(key, bitmap);
-                textView.requestLayout();
-              }
-            }
-          });
     } else {
       drawable = new BitmapDrawable(Resources.getSystem(), bitmap);
       drawable.setBounds(0, 0, bitmap.getWidth() < minHeight ? minHeight : bitmap.getWidth(),
