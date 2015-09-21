@@ -31,10 +31,9 @@ i看雪是个人根据看雪API开发的第三方Android APP。目的是为了�
 
 >2015-07-20添加
 
--查看新帖功能，发新帖功能和安全咨询功能，
+- 查看新帖功能，发新帖功能和安全咨询功能，
 
 
 *参考资源*
 
 - [看雪API](http://bbs.pediy.com/showthread.php?t=163280)
-- [看雪APP](https://github.com/kanxue-team/kanxue-android-app)
