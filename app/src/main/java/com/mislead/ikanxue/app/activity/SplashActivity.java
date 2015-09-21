@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.mislead.ikanxue.app.R;
-import com.mislead.ikanxue.app.model.DailyEnglish;
+import com.mislead.ikanxue.app.model.DailyEnglishObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.DailyEnglishUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
@@ -64,19 +64,19 @@ public class SplashActivity extends Activity {
 
   private void setDailyEnglish() {
 
-    DailyEnglish dailyEnglish = new DailyEnglishUtil().prepareListener().GetDailyEnglish();
+    DailyEnglishObject dailyEnglishObject = new DailyEnglishUtil().GetDailyEnglish();
 
-    if (dailyEnglish == null) {
+    if (dailyEnglishObject == null) {
       String content = getResources().getString(R.string.default_daily_en);
       tvDailyEn.setText(content);
       String note = getResources().getString(R.string.default_daily_zh);
       tvDailyZh.setText(note);
       ivDaily.setImageResource(R.mipmap.daily);
     } else {
-      tvDailyZh.setText(dailyEnglish.getNote());
-      tvDailyEn.setText(dailyEnglish.getContent());
+      tvDailyZh.setText(dailyEnglishObject.getNote());
+      tvDailyEn.setText(dailyEnglishObject.getContent());
 
-      String key = VolleyHelper.getCacheKey(dailyEnglish.getPicture());
+      String key = VolleyHelper.getCacheKey(dailyEnglishObject.getPicture());
       Bitmap bitmap = AndroidHelper.getSplashImageCache().getBitmap(key);
       if (bitmap != null) {
         ivDaily.setImageBitmap(bitmap);

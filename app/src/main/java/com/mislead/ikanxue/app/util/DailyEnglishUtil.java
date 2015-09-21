@@ -1,8 +1,7 @@
 package com.mislead.ikanxue.app.util;
 
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
-import com.mislead.ikanxue.app.model.DailyEnglish;
+import com.mislead.ikanxue.app.model.DailyEnglishObject;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
 import java.util.Date;
 
@@ -10,12 +9,13 @@ import java.util.Date;
  * DailyEnglishUtil
  * AUTHOR:Zhaoyy  2015/6/27
  * DESC:
+ *      2015/9/21:原接口失效，所以只能扒网页了#_#
  **/
 public class DailyEnglishUtil {
 
   private static String TAG = "DailyEnglishUtil";
 
-  private static final String DAILY_URL = "http://open.iciba.com/dsapi";
+  private static final String DAILY_URL = "http://news.iciba.com/dailysentence";
 
   public static final String SH_LAST_DAILY_EN = "last_daily_en";
   public static final String SH_LAST_DAILY_ZH = "last_daily_zh";
@@ -32,8 +32,7 @@ public class DailyEnglishUtil {
 
       @Override public void onResponse(String s) {
 
-        Gson gson = new Gson();
-        DailyEnglish object = gson.fromJson(s, DailyEnglish.class);
+        DailyEnglishObject object = new DailyEnglish().getDailyEnglish(s);
         // if can not get iciba daily, try to get youdao daily
         if (object != null) {
 
@@ -53,27 +52,27 @@ public class DailyEnglishUtil {
     return this;
   }
 
-  public DailyEnglish GetDailyEnglish() {
+  public DailyEnglishObject GetDailyEnglish() {
 
     String today = DateHelper.formateDateString(new Date());
     // just request, if haven't request today
     if (!today.equals(ShPreUtil.getString(SH_LAST_DAILY_DATE))) {
       getDailyEnglishFromNet();
     }
-    //LogHelper.e(SH_LAST_DAILY_EN + ShPreUtil.getString(SH_LAST_DAILY_EN));
     if (ShPreUtil.getString(SH_LAST_DAILY_EN).isEmpty()) {
       return null;
     } else {
-      DailyEnglish dailyEnglish = new DailyEnglish();
-      dailyEnglish.setContent(ShPreUtil.getString(SH_LAST_DAILY_EN));
-      dailyEnglish.setNote(ShPreUtil.getString(SH_LAST_DAILY_ZH));
-      dailyEnglish.setPicture(ShPreUtil.getString(SH_LAST_DAILY_PIC_URL));
+      DailyEnglishObject dailyEnglishObject = new DailyEnglishObject();
+      dailyEnglishObject.setContent(ShPreUtil.getString(SH_LAST_DAILY_EN));
+      dailyEnglishObject.setNote(ShPreUtil.getString(SH_LAST_DAILY_ZH));
+      dailyEnglishObject.setPicture(ShPreUtil.getString(SH_LAST_DAILY_PIC_URL));
 
-      return dailyEnglish;
+      return dailyEnglishObject;
     }
   }
 
   private void getDailyEnglishFromNet() {
-    VolleyHelper.requestStringGet(DAILY_URL, listener);
+    prepareListener();
+    VolleyHelper.requestStringGet(DailyEnglish.ENG_API, listener);
   }
 }

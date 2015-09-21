@@ -7,9 +7,9 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/api/Api.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/api/SimpleHASH.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/CookieStorage.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/DailyEnglish.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/DailyEnglishObject.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/ObjStorage.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/YoudaoDailyObject.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/YoudaoDailyObject.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/net/HttpClientUtil.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/util/AndroidHelper.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/util/BitmapHelper.java" charset="UTF-8" />

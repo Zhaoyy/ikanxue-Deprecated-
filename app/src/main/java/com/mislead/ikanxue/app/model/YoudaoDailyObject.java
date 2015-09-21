@@ -9,14 +9,6 @@ public class YoudaoDailyObject {
 
   private static String TAG = "YoudaoDailyObject";
 
-  /**
-   * date : 2015-06-11
-   * image : http://oimagec1.ydstatic.com/image?product=dict-treasury&id=271547039372573761&w=766&h=500
-   * rel :
-   * type : EXAMPLE
-   * sen : Things work out the way they&#39;re meant to.
-   * trans : 万物皆循其道-【此岸°守望草】译
-   */
   private String date;
   private String image;
   private String rel;

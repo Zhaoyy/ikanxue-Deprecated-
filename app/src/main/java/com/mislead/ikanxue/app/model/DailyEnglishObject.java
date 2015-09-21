@@ -7,7 +7,7 @@ import java.util.List;
  * AUTHOR:Zhaoyy  2015/6/27
  * DESC:
  **/
-public class DailyEnglish {
+public class DailyEnglishObject {
 
   private static String TAG = "DailyEnglish";
 
