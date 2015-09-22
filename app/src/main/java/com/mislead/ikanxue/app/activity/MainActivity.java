@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
@@ -29,6 +30,7 @@ import java.util.Stack;
 public class MainActivity extends AppCompatActivity {
 
   private DrawerLayout drawerLayout;
+  private Toolbar toolbar;
 
   private NavigationDrawerFragment navigationDrawerFragment;
 
@@ -91,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
 
     setTheme(theme_id);
     setContentView(R.layout.activity_main);
+
+    toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+    setSupportActionBar(toolbar);
 
     drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
     navigationDrawerFragment =

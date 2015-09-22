@@ -54,7 +54,6 @@ public class DailyEnglish {
         if (linkTag.getParent().getText().contains("class=\"cn\"")) {
           object.setNote(linkTag.getChildrenHTML());
         }
-        LogHelper.e(linkTag.getChildrenHTML());
       }
       String today = DateHelper.formateDateString(new Date());
       object.setPicture(String.format(PIC_URL, today));

@@ -7,13 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.model.DailyEnglishObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.DailyEnglishUtil;
-import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
 
 /**
@@ -84,26 +81,7 @@ public class SplashActivity extends Activity {
         ivDaily.setImageResource(R.mipmap.daily);
       }
 
-      //VolleyHelper.requestImageWithCacheSimple(dailyEnglish.getPicture(),
-      //    AndroidHelper.getImageDiskCache(), new FadeInImageListener());
     }
   }
 
-  class FadeInImageListener implements ImageLoader.ImageListener {
-
-    @Override public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
-      Bitmap bitmap = imageContainer.getBitmap();
-      LogHelper.e("onResponse : " + b);
-      if (bitmap != null) {
-        ivDaily.setImageBitmap(bitmap);
-      } else {
-        ivDaily.setImageResource(R.mipmap.daily);
-      }
-    }
-
-    @Override public void onErrorResponse(VolleyError volleyError) {
-      LogHelper.e("onErrorResponse");
-      ivDaily.setImageResource(R.mipmap.daily);
-    }
-  }
 }

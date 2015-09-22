@@ -46,7 +46,6 @@ public class ForumDisplayFragment extends BaseFragment {
 
   private static String TAG = "ForumDisplayFragment";
 
-  private int titleID;
   private int currPage = 1;
 
   private long lastRefreshTime;
@@ -96,7 +95,6 @@ public class ForumDisplayFragment extends BaseFragment {
 
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    titleID = data.getInt("id");
     title = data.getString("title");
     return inflater.inflate(R.layout.fragment_forum_threads, container, false);
   }

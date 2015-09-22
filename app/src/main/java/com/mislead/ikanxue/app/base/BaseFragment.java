@@ -22,6 +22,8 @@ public class BaseFragment extends Fragment {
 
   private static String TAG = "BaseFragment";
 
+  public int titleID;
+
   protected String title = "i看雪";
 
   public String getTitle() {
@@ -38,6 +40,7 @@ public class BaseFragment extends Fragment {
 
   public void setData(Bundle d) {
     data = d;
+    titleID = data.getInt("id");
   }
 
   private BroadcastReceiver logReceiver = new BroadcastReceiver() {

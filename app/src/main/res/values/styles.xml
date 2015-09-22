@@ -2,17 +2,19 @@
 
   <!-- Base application theme. -->
   <style name="AppTheme"
-      parent="Theme.AppCompat.Light.DarkActionBar">
+      parent="Theme.AppCompat.Light.NoActionBar">
+
     <!-- Customize your theme here. -->
+    <item name="android:textColorPrimary">@android:color/white</item>
   </style>
 
   <style name="SplashTheme"
-      parent="Theme.AppCompat.Light.NoActionBar">
+      parent="AppTheme">
     <item name="android:windowAnimationStyle">@style/SplashAnimStyle</item>
   </style>
 
   <style name="MainActivityTheme"
-      parent="Theme.AppCompat.Light.DarkActionBar">
+      parent="AppTheme">
     <item name="android:windowAnimationStyle">@style/SplashAnimStyle</item>
   </style>
 

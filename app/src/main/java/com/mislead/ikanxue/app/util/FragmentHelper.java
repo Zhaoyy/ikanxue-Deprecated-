@@ -3,6 +3,7 @@ package com.mislead.ikanxue.app.util;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import com.mislead.ikanxue.app.base.BaseFragment;
 
 /**
  * FragmentHelper
@@ -86,7 +87,11 @@ public class FragmentHelper {
   }
 
   public static String getFragmentTag(Fragment fragment) {
-    return TAG + fragment.getClass().getName();
+    if (fragment instanceof BaseFragment) {
+      return TAG + fragment.getClass().getName() + ((BaseFragment) fragment).titleID;
+    } else {
+      return TAG + fragment.getClass().getName();
+    }
   }
 
   public static void destroy() {
