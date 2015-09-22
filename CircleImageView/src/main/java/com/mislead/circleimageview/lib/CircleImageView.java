@@ -50,10 +50,6 @@ public class CircleImageView extends ImageView {
   private BitmapShader bitmapShader;
   private Matrix shaderMatrix = new Matrix();
 
-  public CircleImageView(Context context) {
-    super(context);
-  }
-
   public CircleImageView(Context context, AttributeSet attrs) {
     this(context, attrs, 0);
   }

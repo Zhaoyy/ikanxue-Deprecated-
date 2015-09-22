@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <!-- theme attributes -->
+
   <attr name="second_main_bg_color"
       format="reference|color"/>
 
@@ -19,4 +21,14 @@
 
   <attr name="item_bg"
       format="reference"/>
+
+
+  <!-- AutoSizeTextView attributes -->
+
+  <declare-styleable name="AutoSizeTextView">
+    <attr name="max_lines"
+        format="integer"/>
+    <attr name="min_text_size"
+        format="dimension|reference"/>
+  </declare-styleable>
 </resources>

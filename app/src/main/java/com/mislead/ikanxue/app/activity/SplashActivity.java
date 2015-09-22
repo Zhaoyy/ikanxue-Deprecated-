@@ -6,11 +6,11 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.model.DailyEnglishObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.DailyEnglishUtil;
+import com.mislead.ikanxue.app.view.AutoSizeTextView;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
 
 /**
@@ -21,8 +21,8 @@ import com.mislead.ikanxue.app.volley.VolleyHelper;
 public class SplashActivity extends Activity {
 
   private static String TAG = "SplashActivity";
-  private TextView tvDailyEn;
-  private TextView tvDailyZh;
+  private AutoSizeTextView tvDailyEn;
+  private AutoSizeTextView tvDailyZh;
   private ImageView ivDaily;
 
   private boolean hasPost = false;
@@ -40,8 +40,8 @@ public class SplashActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_splash);
 
-    tvDailyEn = (TextView) findViewById(R.id.tv_daily_en);
-    tvDailyZh = (TextView) findViewById(R.id.tv_daily_zh);
+    tvDailyEn = (AutoSizeTextView) findViewById(R.id.tv_daily_en);
+    tvDailyZh = (AutoSizeTextView) findViewById(R.id.tv_daily_zh);
     ivDaily = (ImageView) findViewById(R.id.iv_daily);
 
     findViewById(R.id.rl_root).setOnClickListener(new View.OnClickListener() {
