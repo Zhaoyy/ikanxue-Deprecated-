@@ -168,7 +168,7 @@ public class ForumThreadObject {
   public class ThumbnailattachmentsEntity {
     private int attachmentid;
     private String filename;
-    private int filesize;
+    private String filesize;
 
     public int getAttachmentid() {
       return attachmentid;
@@ -186,11 +186,11 @@ public class ForumThreadObject {
       this.filename = filename;
     }
 
-    public int getFilesize() {
+    public String getFilesize() {
       return filesize;
     }
 
-    public void setFilesize(int filesize) {
+    public void setFilesize(String filesize) {
       this.filesize = filesize;
     }
   }

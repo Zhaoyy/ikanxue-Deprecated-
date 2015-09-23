@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.TextView;
 import com.mislead.ikanxue.app.R;
-import com.mislead.ikanxue.app.util.LogHelper;
 
 /**
  * AutoSizeTextView
@@ -21,7 +20,7 @@ import com.mislead.ikanxue.app.util.LogHelper;
  * TextView that can fit lines limit by resizing text size.
  * Extra fields:
  * {@link #mMaxLines}: max lines limit({@link #getMaxLines()} only support
- * above API level 16, so we need a extra one.
+ * until API level 16, so we need a extra field.
  * {@link #mMinTextSize}: min textSize allowed.
  */
 public class AutoSizeTextView extends TextView {
@@ -62,14 +61,6 @@ public class AutoSizeTextView extends TextView {
   private void init() {
     testPaint = new Paint();
     mMaxTextSize = getTextSize();
-    LogHelper.e(
-        "max line:" + mMaxLines + " min size:" + mMinTextSize + " max size:" + mMaxTextSize);
-  }
-
-  @Override
-  protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
-    super.onTextChanged(text, start, lengthBefore, lengthAfter);
-    //resize2FitLines(text.toString(), getWidth());
   }
 
   @Override protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -92,10 +83,7 @@ public class AutoSizeTextView extends TextView {
         && mMaxTextSize > mMinTextSize) {
       mMaxTextSize--;
       testPaint.setTextSize(mMaxTextSize);
-      LogHelper.e("min:" + mMaxTextSize);
     }
-    LogHelper.e(
-        "max line:" + mMaxLines + " min size:" + mMinTextSize + " max size:" + mMaxTextSize);
     setTextSize(TypedValue.COMPLEX_UNIT_PX, mMaxTextSize);
   }
 }
