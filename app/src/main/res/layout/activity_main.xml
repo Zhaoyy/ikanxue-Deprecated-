@@ -29,7 +29,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:minHeight="?attr/actionBarSize"
-          android:background="@color/title_header_color_dark"
+          android:background="@color/main_bg_dark"
           app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
           />
 

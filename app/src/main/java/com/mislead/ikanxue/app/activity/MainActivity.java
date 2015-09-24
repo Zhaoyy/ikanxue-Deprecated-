@@ -8,23 +8,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
 import com.mislead.ikanxue.app.base.BaseFragment;
 import com.mislead.ikanxue.app.base.Constants;
+import com.mislead.ikanxue.app.base.ToolbarActivity;
 import com.mislead.ikanxue.app.fragment.ForumDisplayFragment;
 import com.mislead.ikanxue.app.util.FragmentHelper;
 import com.mislead.ikanxue.app.util.ShPreUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import java.util.Stack;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ToolbarActivity {
 
   //private DrawerLayout drawerLayout;
-  private Toolbar toolbar;
 
   //private NavigationDrawerFragment navigationDrawerFragment;
 
@@ -87,10 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
     setTheme(theme_id);
     setContentView(R.layout.activity_main);
-
-    toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-    setSupportActionBar(toolbar);
 
     //drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
     //navigationDrawerFragment =

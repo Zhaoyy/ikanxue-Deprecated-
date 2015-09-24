@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/actionBarSize"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    >
+
+  <Button
+      android:id="@+id/btn_left"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:minWidth="72dp"
+      android:minHeight="?attr/actionBarSize"
+      android:background="@null"
+      android:textColor="@color/text_black_1_dark"
+      android:textSize="@dimen/text_size_normal"
+      android:text="登录"
+      />
+
+  <ImageButton
+      android:id="@+id/ibtn_left"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:minWidth="72dp"
+      android:minHeight="?attr/actionBarSize"
+      android:background="@null"
+      android:textColor="@color/text_black_1_dark"
+      android:visibility="gone"
+      />
+
+  <TextView
+      android:id="@+id/tv_title"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1.0"
+      android:textColor="@color/text_black_1_dark"
+      android:textSize="@dimen/text_size_big"
+      android:gravity="center"
+      android:text="@string/app_name"
+      android:singleLine="true"
+      />
+
+  <ImageButton
+      android:id="@+id/ibtn_right"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:minWidth="72dp"
+      android:minHeight="?attr/actionBarSize"
+      android:background="@null"
+      android:textColor="@color/text_black_1_dark"
+      android:visibility="invisible"
+      />
+
+</LinearLayout>
