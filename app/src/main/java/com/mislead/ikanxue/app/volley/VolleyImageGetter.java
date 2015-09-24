@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.widget.TextView;
 import com.mislead.ikanxue.app.util.AndroidHelper;
-import com.mislead.ikanxue.app.util.LogHelper;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,12 +51,10 @@ public class VolleyImageGetter implements Html.ImageGetter {
   }
 
   @Override public Drawable getDrawable(String source) {
-    LogHelper.e(source);
     // get the cache key, find bitmap in cache.
     final String key = VolleyHelper.getCacheKey(source);
 
     Bitmap bitmap = AndroidHelper.getImageDiskCache().getBitmap(key);
-    LogHelper.e("bitmap found:" + (bitmap != null));
     // if not found, request with url
     if (bitmap == null) {
 

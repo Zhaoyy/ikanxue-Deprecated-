@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import com.mislead.ikanxue.app.R;
@@ -16,12 +15,7 @@ import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
 import com.mislead.ikanxue.app.base.BaseFragment;
 import com.mislead.ikanxue.app.base.Constants;
-import com.mislead.ikanxue.app.fragment.AboutFragment;
-import com.mislead.ikanxue.app.fragment.FeedbackFragment;
 import com.mislead.ikanxue.app.fragment.ForumDisplayFragment;
-import com.mislead.ikanxue.app.fragment.ForumTitlesFragment;
-import com.mislead.ikanxue.app.fragment.NavigationDrawerFragment;
-import com.mislead.ikanxue.app.fragment.UserInfoFragment;
 import com.mislead.ikanxue.app.util.FragmentHelper;
 import com.mislead.ikanxue.app.util.ShPreUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
@@ -29,10 +23,10 @@ import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
-  private DrawerLayout drawerLayout;
+  //private DrawerLayout drawerLayout;
   private Toolbar toolbar;
 
-  private NavigationDrawerFragment navigationDrawerFragment;
+  //private NavigationDrawerFragment navigationDrawerFragment;
 
   private BroadcastReceiver logReciever = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
@@ -42,49 +36,49 @@ public class MainActivity extends AppCompatActivity {
 
   private Stack<Fragment> fragments = new Stack<>();
 
-  private NavigationDrawerFragment.DrawerMenuListener listener =
-      new NavigationDrawerFragment.DrawerMenuListener() {
-        @Override public void selectedAt(int pos) {
-          drawerLayout.closeDrawers();
-          BaseFragment fragment = new AboutFragment();
-          boolean dispose = true;
-          Bundle bundle = new Bundle();
-          switch (pos) {
-            case 0:
-              // 查看新帖
-              fragment = new ForumDisplayFragment();
-              bundle.putInt("id", Api.NEW_FORUM_ID);
-              bundle.putString("title", getString(R.string.new_topic));
-              fragment.setData(bundle);
-              break;
-            case 1:
-              fragment = new ForumTitlesFragment();
-              break;
-            case 2:
-              // 安全咨询
-              fragment = new ForumDisplayFragment();
-              bundle.putInt("id", Api.SECURITY_FORUM_ID);
-              bundle.putString("title", getString(R.string.security_news));
-              fragment.setData(bundle);
-              break;
-            case 3:
-              fragment = new FeedbackFragment();
-              dispose = false;
-              break;
-            case 4:
-              fragment = new AboutFragment();
-              break;
-            case 5:
-              fragment = new UserInfoFragment();
-              dispose = false;
-              break;
-            default:
-              break;
-          }
-
-          gotoFragment(fragment, dispose, dispose);
-        }
-      };
+  //private NavigationDrawerFragment.DrawerMenuListener listener =
+  //    new NavigationDrawerFragment.DrawerMenuListener() {
+  //      @Override public void selectedAt(int pos) {
+  //        drawerLayout.closeDrawers();
+  //        BaseFragment fragment = new AboutFragment();
+  //        boolean dispose = true;
+  //        Bundle bundle = new Bundle();
+  //        switch (pos) {
+  //          case 0:
+  //            // 查看新帖
+  //            fragment = new ForumDisplayFragment();
+  //            bundle.putInt("id", Api.NEW_FORUM_ID);
+  //            bundle.putString("title", getString(R.string.new_topic));
+  //            fragment.setData(bundle);
+  //            break;
+  //          case 1:
+  //            fragment = new ForumTitlesFragment();
+  //            break;
+  //          case 2:
+  //            // 安全咨询
+  //            fragment = new ForumDisplayFragment();
+  //            bundle.putInt("id", Api.SECURITY_FORUM_ID);
+  //            bundle.putString("title", getString(R.string.security_news));
+  //            fragment.setData(bundle);
+  //            break;
+  //          case 3:
+  //            fragment = new FeedbackFragment();
+  //            dispose = false;
+  //            break;
+  //          case 4:
+  //            fragment = new AboutFragment();
+  //            break;
+  //          case 5:
+  //            fragment = new UserInfoFragment();
+  //            dispose = false;
+  //            break;
+  //          default:
+  //            break;
+  //        }
+  //
+  //        gotoFragment(fragment, dispose, dispose);
+  //      }
+  //    };
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -98,14 +92,14 @@ public class MainActivity extends AppCompatActivity {
 
     setSupportActionBar(toolbar);
 
-    drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-    navigationDrawerFragment =
-        (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(
-            R.id.navigation_drawer);
-
-    navigationDrawerFragment.setDrawerMenuListener(listener);
-
-    navigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
+    //drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+    //navigationDrawerFragment =
+    //    (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(
+    //        R.id.navigation_drawer);
+    //
+    //navigationDrawerFragment.setDrawerMenuListener(listener);
+    //
+    //navigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
 
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentHelper.init(fragmentManager);
@@ -142,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void closeDrawer() {
-    if (navigationDrawerFragment.isDrawerOpen()) {
-      drawerLayout.closeDrawers();
-    }
+    //if (navigationDrawerFragment.isDrawerOpen()) {
+    //  drawerLayout.closeDrawers();
+    //}
   }
 
   private long exitTime = 0;

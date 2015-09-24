@@ -4,7 +4,6 @@
     android:id="@+id/ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/main_bg_color"
     android:orientation="vertical"
     tools:context=".NavigationDrawerFragment"
     >
@@ -13,7 +12,6 @@
       android:layout_width="match_parent"
       android:layout_height="100dp"
       android:orientation="vertical"
-      android:background="@color/title_header_color"
       android:gravity="bottom"
       >
     <LinearLayout

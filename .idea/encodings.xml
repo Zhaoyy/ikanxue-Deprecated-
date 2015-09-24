@@ -6,21 +6,29 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/activity/SplashActivity.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/api/Api.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/api/SimpleHASH.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/base/SwipeBackActivity.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/CookieStorage.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/DailyEnglishObject.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/ObjStorage.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/model/YoudaoDailyObject.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/net/HttpClientUtil.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/util/AndroidHelper.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/util/AnimationHelper.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/util/BitmapHelper.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/util/CrashHandler.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/util/DailyEnglishUtil.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/util/LogHelper.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/util/ShPreUtil.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/view/SwipeBackLayout.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/mislead/ikanxue/app/volley/VolleyHelper.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/anim/base_slide_remain.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/anim/base_slide_right_in.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/anim/base_slide_right_out.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/dict_flow_item_hint_selector.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/drawer_shadow.9.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/base.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_navigation_drawer.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/bg_home.jpg" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/flow_home_mask.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_dark.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_exit.png" charset="GBK" />
