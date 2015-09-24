@@ -3,7 +3,9 @@ package com.mislead.ikanxue.app.util;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Process;
+import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.model.DailyEnglishObject;
+import com.mislead.ikanxue.app.volley.VolleyHelper;
 import java.util.Date;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
@@ -19,6 +21,7 @@ import org.htmlparser.visitors.HtmlPage;
  * @author Mislead
  *         DATE: 2015/9/21
  *         DESC:
+ *          2015/9/21:原接口失效，所以只能扒网页了#_#
  **/
 public class DailyEnglish {
 
@@ -30,6 +33,36 @@ public class DailyEnglish {
   private HandlerThread handlerThread =
       new HandlerThread("back_handler", Process.THREAD_PRIORITY_BACKGROUND);
   private Handler backHandle;
+
+  private VolleyHelper.ResponseListener<String> listener = null;
+
+  public DailyEnglish prepareListener() {
+    listener = new VolleyHelper.ResponseListener<String>() {
+      @Override public void onErrorResponse(VolleyError volleyError) {
+        LogHelper.e(volleyError.getMessage());
+      }
+
+      @Override public void onResponse(String s) {
+
+        DailyEnglishObject object = getDailyEnglish(s);
+        // if can not get iciba daily, try to get youdao daily
+        if (object != null) {
+
+          ShPreUtil.setString(DailyEnglishUtil.SH_LAST_DAILY_EN, object.getContent());
+          ShPreUtil.setString(DailyEnglishUtil.SH_LAST_DAILY_ZH, object.getNote());
+          ShPreUtil.setString(DailyEnglishUtil.SH_LAST_DAILY_PIC_URL, object.getPicture());
+          ShPreUtil.setString(DailyEnglishUtil.SH_LAST_DAILY_DATE, object.getDateline());
+          // cache the image
+          VolleyHelper.requestAndCacheImage(object.getPicture(),
+              AndroidHelper.getSplashImageCache());
+        } else {
+          new YoudaoDaily().getTodayDaily();
+        }
+      }
+    };
+
+    return this;
+  }
 
   public DailyEnglishObject getDailyEnglish(String s) {
     DailyEnglishObject object = new DailyEnglishObject();
@@ -64,5 +97,10 @@ public class DailyEnglish {
       e.printStackTrace();
       return null;
     }
+  }
+
+  public void getTodayDaily() {
+    prepareListener();
+    VolleyHelper.requestStringGet(DailyEnglish.ENG_API, listener);
   }
 }

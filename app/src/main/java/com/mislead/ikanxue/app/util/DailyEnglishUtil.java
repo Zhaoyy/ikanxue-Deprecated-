@@ -1,6 +1,7 @@
 package com.mislead.ikanxue.app.util;
 
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.mislead.ikanxue.app.model.DailyEnglishObject;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
 import java.util.Date;
@@ -9,13 +10,12 @@ import java.util.Date;
  * DailyEnglishUtil
  * AUTHOR:Zhaoyy  2015/6/27
  * DESC:
- *      2015/9/21:原接口失效，所以只能扒网页了#_#
  **/
 public class DailyEnglishUtil {
 
   private static String TAG = "DailyEnglishUtil";
 
-  private static final String DAILY_URL = "http://news.iciba.com/dailysentence";
+  private static final String DAILY_URL = "http://open.iciba.com/dsapi";
 
   public static final String SH_LAST_DAILY_EN = "last_daily_en";
   public static final String SH_LAST_DAILY_ZH = "last_daily_zh";
@@ -31,8 +31,8 @@ public class DailyEnglishUtil {
       }
 
       @Override public void onResponse(String s) {
-
-        DailyEnglishObject object = new DailyEnglish().getDailyEnglish(s);
+        Gson gson = new Gson();
+        DailyEnglishObject object = gson.fromJson(s, DailyEnglishObject.class);
         // if can not get iciba daily, try to get youdao daily
         if (object != null) {
 
@@ -44,7 +44,7 @@ public class DailyEnglishUtil {
           VolleyHelper.requestAndCacheImage(object.getPicture(),
               AndroidHelper.getSplashImageCache());
         } else {
-          new YoudaoDaily().getTodayDaily();
+          new DailyEnglish().getTodayDaily();
         }
       }
     };
@@ -73,6 +73,6 @@ public class DailyEnglishUtil {
 
   private void getDailyEnglishFromNet() {
     prepareListener();
-    VolleyHelper.requestStringGet(DailyEnglish.ENG_API, listener);
+    VolleyHelper.requestStringGet(DAILY_URL, listener);
   }
 }
