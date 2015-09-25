@@ -41,6 +41,10 @@ public class LoadMoreRecyclerView extends RecyclerView {
     }
   };
 
+  public int getFootState() {
+    return footState;
+  }
+
   public LoadMoreRecyclerView(Context context) {
     super(context);
     this.context = context;

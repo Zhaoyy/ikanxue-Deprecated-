@@ -1,16 +1,12 @@
-package com.mislead.ikanxue.app.fragment;
+package com.mislead.ikanxue.app.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -19,14 +15,15 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mislead.circleimageview.lib.CircleImageView;
 import com.mislead.ikanxue.app.R;
-import com.mislead.ikanxue.app.activity.LoginActivity;
 import com.mislead.ikanxue.app.api.Api;
-import com.mislead.ikanxue.app.base.BaseFragment;
+import com.mislead.ikanxue.app.base.Constants;
+import com.mislead.ikanxue.app.base.SwipeBackActivity;
+import com.mislead.ikanxue.app.fragment.PostNewThreadFragment;
 import com.mislead.ikanxue.app.model.ForumThreadTitleObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
-import com.mislead.ikanxue.app.util.ChangeThemeUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.util.RemoveNullInList;
+import com.mislead.ikanxue.app.util.ShPreUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
@@ -36,15 +33,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * ForumDisplayFragment
+ * ForumDisplayActivity
  *
  * @author Mislead
- *         DATE: 2015/7/11
+ *         DATE: 2015/9/25
  *         DESC:
  **/
-public class ForumDisplayFragment extends BaseFragment {
+public class ForumDisplayActivity extends SwipeBackActivity {
 
-  private static String TAG = "ForumDisplayFragment";
+  private static String TAG = "ForumDisplayActivity";
 
   private int currPage = 1;
 
@@ -61,6 +58,8 @@ public class ForumDisplayFragment extends BaseFragment {
   private int lastVisibleIndex = 0;
 
   private int footState = 0; // 0 -can load more,1-loading, 2-no more
+  private int titleID;
+  private String title = "";
 
   private List<ForumThreadTitleObject.ThreadListEntity> threads = new ArrayList<>();
 
@@ -71,46 +70,31 @@ public class ForumDisplayFragment extends BaseFragment {
     }
   };
 
-  private ItemClickListener listener = new ItemClickListener() {
-    @Override public void itemClick(int pos) {
-      int threadId = threads.get(pos).getThreadid();
-      int open = threads.get(pos).getOpen();
-      int replyCount = threads.get(pos).getReplycount();
-      Bundle data = new Bundle();
-      data.putInt("threadId", threadId);
-      data.putInt("open", open);
-      data.putInt("replyCount", replyCount);
-      data.putString("title", title);
-
-      ThreadDisplayFragment fragment = new ThreadDisplayFragment();
-      fragment.setData(data);
-      //mainActivity.gotoFragment(fragment, false);
-    }
-  };
-
-  @Override public void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setHasOptionsMenu(true);
-  }
 
-  @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    title = data.getString("title");
-    return inflater.inflate(R.layout.fragment_forum_threads, container, false);
-  }
+    int theme_id = ShPreUtil.getInt(Constants.THEME_ID, R.style.Theme_Dark);
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    list = (LoadMoreRecyclerView) view.findViewById(R.id.list);
-    swipe_refresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
-    ll_root = (LinearLayout) view.findViewById(R.id.ll_root);
+    setTheme(theme_id);
+    setContentView(R.layout.activity_forum_threads);
+    list = (LoadMoreRecyclerView) findViewById(R.id.list);
+    swipe_refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+    ll_root = (LinearLayout) findViewById(R.id.ll_root);
+    Intent intent = getIntent();
+    titleID = intent.getIntExtra("id", 0);
+    title = intent.getStringExtra("title");
+
+    setTitle(title);
+
     initView();
+    ibtnRight.setVisibility(View.VISIBLE);
+    setIbtnRightImage(R.mipmap.ic_post);
     list.post(runnable);
   }
 
   private void initView() {
     // set vertical listView
-    final LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+    final LinearLayoutManager manager = new LinearLayoutManager(this);
     manager.setOrientation(LinearLayoutManager.VERTICAL);
     list.setLayoutManager(manager);
     list.initFootView();
@@ -159,7 +143,7 @@ public class ForumDisplayFragment extends BaseFragment {
 
               @Override public void onResponse(JSONObject object) {
                 if (object.has("result")) {
-                  ToastHelper.toastShort(getActivity(), "没有新帖");
+                  ToastHelper.toastShort(ForumDisplayActivity.this, "没有新帖");
                   swipe_refresh.setRefreshing(false);
                 } else {
                   currPage = 1;
@@ -170,6 +154,9 @@ public class ForumDisplayFragment extends BaseFragment {
   }
 
   private void loadMore() {
+    if (list.getFootState() == 2) {
+      return;
+    }
     list.changeFootState(1);
     currPage++;
     loadData();
@@ -219,12 +206,16 @@ public class ForumDisplayFragment extends BaseFragment {
     adapter.notifyDataSetChanged();
   }
 
+  @Override protected void ibtnRightClicked() {
+    postNewThreadOrLogin();
+  }
+
   private void postNewThreadOrLogin() {
     if (Api.getInstance().isLogin()) {
       String type = Api.getInstance().getLoginUserType();
       if (type.equals("临时会员") && (titleID != Api.TEMPORARY_FORUM_ID
           && titleID != Api.HELP_FORUM_ID)) {
-        ToastHelper.toastShort(getActivity(), R.string.temporary_limit);
+        ToastHelper.toastShort(this, R.string.temporary_limit);
         return;
       }
 
@@ -234,47 +225,30 @@ public class ForumDisplayFragment extends BaseFragment {
       fragment.setData(data);
       //mainActivity.gotoFragment(fragment, false);
     } else {
-      getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+      startActivity(new Intent(this, LoginActivity.class));
     }
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_post_refresh, menu);
-  }
+  private ItemClickListener listener = new ItemClickListener() {
+    @Override public void itemClick(int pos) {
+      int threadId = threads.get(pos).getThreadid();
+      int open = threads.get(pos).getOpen();
+      int replyCount = threads.get(pos).getReplycount();
+      Intent intent = new Intent(ForumDisplayActivity.this, ThreadDisplayActivity.class);
+      intent.putExtra("threadId", threadId);
+      intent.putExtra("open", open);
+      intent.putExtra("replyCount", replyCount);
+      intent.putExtra("title", title);
 
-  @Override public void onPrepareOptionsMenu(Menu menu) {
-    super.onPrepareOptionsMenu(menu);
-    // 新帖版块不能发帖
-    if (titleID == Api.NEW_FORUM_ID) {
-      MenuItem item = menu.findItem(R.id.action_post);
-
-      if (item != null) item.setVisible(false);
+      startActivity(intent);
     }
+  };
+
+  @Override protected void ibtnLeftClicked() {
+    onBackPressed();
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.action_new_post:
-        postNewThreadOrLogin();
-        break;
-      case R.id.action_refresh:
-        swipe_refresh.setRefreshing(true);
-        refresh();
-        break;
-      default:
-        break;
-    }
-    return true;
-  }
-
-  @Override protected void onLoginOrLogout() {
-    super.onLoginOrLogout();
-    refresh();
-  }
-
-  @Override public void onRefresh() {
-    super.onRefresh();
+  public void onRefresh(Bundle data) {
     if (data != null) {
       // post a new topic
       int index = getLastStickyIndex();
@@ -295,27 +269,6 @@ public class ForumDisplayFragment extends BaseFragment {
       threads.add(index, entity);
 
       adapter.setData(threads);
-
-    }
-  }
-
-  @Override protected void changeTheme() {
-    list.clear();
-    list.getLayoutManager().removeAllViews();
-    adapter.notifyDataSetChanged();
-
-    int bgColor =
-        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.second_main_bg_color);
-
-    if (bgColor != 0) {
-      ll_root.setBackgroundColor(bgColor);
-    }
-
-    int textColor =
-        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.text_color_2);
-
-    if (textColor != 0) {
-      list.changetFootTextColor(textColor);
     }
   }
 

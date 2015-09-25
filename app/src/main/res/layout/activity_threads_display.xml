@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_root"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    >
+
+  <android.support.v7.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:minHeight="?attr/actionBarSize"
+      android:background="@color/main_bg_dark"
+      app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:background="?attr/second_main_bg_color"
+      >
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        >
+      <com.mislead.ikanxue.app.view.LoadMoreRecyclerView
+          android:id="@+id/list"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/text_black_4"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="?attr/main_bg_color"
+        >
+
+      <EditText
+          android:id="@+id/et_reply"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1.0"
+          android:inputType="text"
+          style="@style/select_all_on_focus"
+          android:singleLine="false"
+          android:textColor="?attr/text_color_1"
+          android:textSize="@dimen/text_size_normal"
+          android:textColorHint="?attr/text_color_3"
+          />
+
+      <ImageButton
+          android:id="@+id/btn_reply"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:background="@drawable/ibtn_bg"
+          android:src="@mipmap/social_send_now_dark"
+          />
+
+    </LinearLayout>
+  </LinearLayout>
+
+</LinearLayout>

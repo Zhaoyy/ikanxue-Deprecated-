@@ -53,6 +53,16 @@
         />
 
     <activity
+        android:name=".activity.ForumDisplayActivity"
+        android:screenOrientation="portrait"
+        />
+
+    <activity
+        android:name=".activity.ThreadDisplayActivity"
+        android:screenOrientation="portrait"
+        />
+
+    <activity
         android:name="com.mislead.ikanxue.app.test.TestActivity"
         android:label="test "
         android:theme="@style/MainActivityTheme"

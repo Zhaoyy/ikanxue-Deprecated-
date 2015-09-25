@@ -90,6 +90,8 @@ public class MainActivity extends ToolbarActivity implements View.OnClickListene
     ll_exit.setOnClickListener(this);
     userInfo.setOnClickListener(this);
 
+    ibtnRight.setVisibility(View.VISIBLE);
+
     initView();
     setThemeIcon(theme_id);
 
@@ -150,9 +152,10 @@ public class MainActivity extends ToolbarActivity implements View.OnClickListene
         String name = titles.get(position).getName();
         int id = titles.get(position).getId();
 
-        Bundle data = new Bundle();
-        data.putString("title", name);
-        data.putInt("id", id);
+        Intent intent = new Intent(MainActivity.this, ForumDisplayActivity.class);
+        intent.putExtra("title", name);
+        intent.putExtra("id", id);
+        startActivity(intent);
       }
     });
     recyclerView.setAdapter(adapter);

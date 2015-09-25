@@ -1,9 +1,8 @@
-package com.mislead.ikanxue.app.fragment;
+package com.mislead.ikanxue.app.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,9 +11,6 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -26,14 +22,14 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mislead.circleimageview.lib.CircleImageView;
 import com.mislead.ikanxue.app.R;
-import com.mislead.ikanxue.app.activity.LoginActivity;
 import com.mislead.ikanxue.app.api.Api;
-import com.mislead.ikanxue.app.base.BaseFragment;
+import com.mislead.ikanxue.app.base.Constants;
+import com.mislead.ikanxue.app.base.SwipeBackActivity;
 import com.mislead.ikanxue.app.model.ForumThreadObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
-import com.mislead.ikanxue.app.util.ChangeThemeUtil;
 import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.util.RemoveNullInList;
+import com.mislead.ikanxue.app.util.ShPreUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
 import com.mislead.ikanxue.app.view.MaterialProgressDrawable;
@@ -46,16 +42,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * ThreadDisplayFragment
+ * ThreadDisplayActivity
  *
  * @author Mislead
- *         DATE: 2015/7/11
+ *         DATE: 2015/9/25
  *         DESC:
  **/
-public class ThreadDisplayFragment extends BaseFragment {
+public class ThreadDisplayActivity extends SwipeBackActivity {
 
-  private static String TAG = "ThreadDisplayFragment";
-
+  private static String TAG = "ThreadDisplayActivity";
   private int threadId;
   private int open;
   private int replyCount;
@@ -72,8 +67,6 @@ public class ThreadDisplayFragment extends BaseFragment {
   private EditText et_reply;
 
   private ImageButton btn_reply;
-
-  private View footView;
 
   private ForumThreadAdapter adapter;
 
@@ -105,70 +98,57 @@ public class ThreadDisplayFragment extends BaseFragment {
   private ItemClickListener listener = new ItemClickListener() {
     @Override public void itemClick(int pos) {
 
-      if (Api.getInstance().isLogin()) {
+      if (api.isLogin()) {
         // head clicked, show user info
-
-        UserInfoFragment fragment = new UserInfoFragment();
-        Bundle data = new Bundle();
-        data.putInt("userId", threads.get(pos).getUserid());
-        fragment.setData(data);
-
-        //mainActivity.gotoFragment(fragment, false);
+        Intent intent = new Intent(ThreadDisplayActivity.this, UserInfoActivity.class);
+        intent.putExtra("userId", threads.get(pos).getUserid());
+        startActivity(intent);
       } else {
-        ToastHelper.toastLong(getActivity(), "登录之后才能查看用户信息！");
+        ToastHelper.toastLong(ThreadDisplayActivity.this, "登录之后才能查看用户信息！");
       }
     }
   };
 
-  @Override public void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setHasOptionsMenu(true);
-  }
 
-  @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    threadId = data.getInt("threadId");
-    open = data.getInt("open");
-    replyCount = data.getInt("replyCount");
-    title = data.getString("title");
-    return inflater.inflate(R.layout.fragment_threads_display, container, false);
-  }
+    int theme_id = ShPreUtil.getInt(Constants.THEME_ID, R.style.Theme_Dark);
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    list = (LoadMoreRecyclerView) view.findViewById(R.id.list);
-    swipe_refresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
-    ll_reply = (LinearLayout) view.findViewById(R.id.ll_reply);
-    et_reply = (EditText) view.findViewById(R.id.et_reply);
-    btn_reply = (ImageButton) view.findViewById(R.id.btn_reply);
-    ll_root = (LinearLayout) view.findViewById(R.id.ll_root);
+    setTheme(theme_id);
+    setContentView(R.layout.activity_threads_display);
+
+    list = (LoadMoreRecyclerView) findViewById(R.id.list);
+    swipe_refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+    ll_reply = (LinearLayout) findViewById(R.id.ll_reply);
+    et_reply = (EditText) findViewById(R.id.et_reply);
+    btn_reply = (ImageButton) findViewById(R.id.btn_reply);
+    ll_root = (LinearLayout) findViewById(R.id.ll_root);
+
+    Intent intent = getIntent();
+    threadId = intent.getIntExtra("threadId", 0);
+    open = intent.getIntExtra("open", 0);
+    replyCount = intent.getIntExtra("replyCount", 0);
+    setTitle(intent.getStringExtra("title"));
+
     initView();
-
     // load first
     list.post(runnable);
   }
 
+  @Override protected void ibtnLeftClicked() {
+    onBackPressed();
+  }
+
   private void initView() {
     // set vertical listView
-    final LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+    final LinearLayoutManager manager = new LinearLayoutManager(ThreadDisplayActivity.this);
     manager.setOrientation(LinearLayoutManager.VERTICAL);
     list.setLayoutManager(manager);
 
     // to improve performance
     list.setHasFixedSize(true);
 
-    // add foot view
-    footView = LayoutInflater.from(getActivity()).inflate(R.layout.view_load_more, null);
-    LinearLayout.LayoutParams params =
-        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT);
-    footView.setLayoutParams(params);
-    ImageView ivProgress = (ImageView) footView.findViewById(R.id.iv_progress);
-    progressDrawable = new MaterialProgressDrawable(getActivity(), ivProgress);
-    progressDrawable.setAlpha(255);
-    progressDrawable.setColorSchemeColors(getResources().getColor(R.color.ics_blue_dark));
-    progressDrawable.updateSizes(MaterialProgressDrawable.DEFAULT);
-    ivProgress.setImageDrawable(progressDrawable);
+    list.initFootView();
 
     adapter = new ForumThreadAdapter();
     list.setAdapter(adapter);
@@ -213,17 +193,8 @@ public class ThreadDisplayFragment extends BaseFragment {
     });
   }
 
-  private void changeFootState(int state) {
-    footState = state;
-
-    footView.findViewById(R.id.tv_load_more).setVisibility(state == 0 ? View.VISIBLE : View.GONE);
-    footView.findViewById(R.id.ll_loading).setVisibility(state == 1 ? View.VISIBLE : View.GONE);
-    footView.findViewById(R.id.tv_no_more).setVisibility(state == 2 ? View.VISIBLE : View.GONE);
-
-    footView.findViewById(R.id.iv_progress).post(progressRunable);
-  }
-
   private void refresh() {
+
     // check there is new post or not
     Api.getInstance()
         .checkNewPostInShowThreadPage(threadId, lastRefreshTime,
@@ -234,7 +205,7 @@ public class ThreadDisplayFragment extends BaseFragment {
 
               @Override public void onResponse(JSONObject object) {
                 if (object.has("result")) {
-                  ToastHelper.toastShort(getActivity(), "没有新帖");
+                  ToastHelper.toastShort(ThreadDisplayActivity.this, "没有新帖");
                   swipe_refresh.setRefreshing(false);
                 } else {
                   currPage = 1;
@@ -245,7 +216,10 @@ public class ThreadDisplayFragment extends BaseFragment {
   }
 
   private void loadMore() {
-    changeFootState(1);
+    if (list.getFootState() == 2) {
+      return;
+    }
+    list.changeFootState(1);
     removeYourReply();
     currPage++;
     loadData();
@@ -253,6 +227,7 @@ public class ThreadDisplayFragment extends BaseFragment {
 
   // request data from net
   private void loadData() {
+
     Api.getInstance()
         .getForumShowthreadPage(threadId, currPage,
             new VolleyHelper.ResponseListener<JSONObject>() {
@@ -286,10 +261,10 @@ public class ThreadDisplayFragment extends BaseFragment {
       }
     }
 
-    if (threads.size() > replyCount) {
-      changeFootState(2);
+    if (threads.size() > (replyCount + 1)) {
+      list.changeFootState(2);
     } else {
-      changeFootState(0);
+      list.changeFootState(0);
     }
     new RemoveNullInList<ForumThreadObject.PostbitsEntity>().removeNull(threads);
     swipe_refresh.setRefreshing(false);
@@ -302,12 +277,12 @@ public class ThreadDisplayFragment extends BaseFragment {
       String reply = et_reply.getText().toString();
 
       if (TextUtils.isEmpty(reply)) {
-        ToastHelper.toastShort(getActivity(), "回复内容不能为空！");
+        ToastHelper.toastShort(ThreadDisplayActivity.this, "回复内容不能为空！");
         return;
       }
 
       if (reply.length() < Api.POST_CONTENT_SIZE_MIN) {
-        ToastHelper.toastShort(getActivity(), "回复内容不能少于6个字！");
+        ToastHelper.toastShort(ThreadDisplayActivity.this, "回复内容不能少于6个字！");
         return;
       }
 
@@ -324,16 +299,18 @@ public class ThreadDisplayFragment extends BaseFragment {
 
             switch (result) {
               case Api.NEW_POST_SUCCESS:
-                ToastHelper.toastLong(getActivity(), R.string.new_post_success);
+                ToastHelper.toastLong(ThreadDisplayActivity.this, R.string.new_post_success);
                 addNewReply(et_reply.getText().toString());
                 et_reply.setHint(String.format("回复不少于6个字，已有%s个回复", replyCount));
                 et_reply.setText("");
                 break;
               case Api.NEW_POST_FAIL_WITHIN_THIRTY_SECONDS:
-                ToastHelper.toastLong(getActivity(), R.string.new_post_fail_within_thirty_seconds);
+                ToastHelper.toastLong(ThreadDisplayActivity.this,
+                    R.string.new_post_fail_within_thirty_seconds);
                 return;
               case Api.NEW_POST_FAIL_WITHIN_FIVE_MINUTES:
-                ToastHelper.toastLong(getActivity(), R.string.new_post_fail_within_five_minutes);
+                ToastHelper.toastLong(ThreadDisplayActivity.this,
+                    R.string.new_post_fail_within_five_minutes);
                 return;
               default:
                 break;
@@ -344,7 +321,8 @@ public class ThreadDisplayFragment extends BaseFragment {
         }
       });
     } else {
-      getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+      ThreadDisplayActivity.this.startActivity(
+          new Intent(ThreadDisplayActivity.this, LoginActivity.class));
     }
   }
 
@@ -385,67 +363,6 @@ public class ThreadDisplayFragment extends BaseFragment {
     }
   }
 
-  @Override protected void changeTheme() {
-    list.clear();
-    list.getLayoutManager().removeAllViews();
-    adapter.notifyDataSetChanged();
-
-    int bgColor =
-        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.second_main_bg_color);
-
-    if (bgColor != 0) {
-      ll_root.setBackgroundColor(bgColor);
-    }
-
-    bgColor = ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.main_bg_color);
-
-    if (bgColor != 0) {
-      ll_reply.setBackgroundColor(bgColor);
-    }
-
-    int textColor =
-        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.text_color_2);
-
-    if (textColor != 0) {
-      list.changetFootTextColor(textColor);
-    }
-
-    textColor = ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.text_color_1);
-
-    if (textColor != 0) {
-      et_reply.setTextColor(textColor);
-    }
-
-    int hintColor =
-        ChangeThemeUtil.getAttrColorValue(getActivity().getTheme(), R.attr.text_color_3);
-
-    if (hintColor != 0) {
-      ChangeThemeUtil.ChangeETHintColor(et_reply, hintColor);
-    }
-  }
-
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_refresh, menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.action_refresh:
-        swipe_refresh.setRefreshing(true);
-        refresh();
-        break;
-      default:
-        break;
-    }
-    return true;
-  }
-
-  @Override protected void onLoginOrLogout() {
-    super.onLoginOrLogout();
-    refresh();
-  }
-
   public class ForumThreadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<ForumThreadObject.PostbitsEntity> data = new ArrayList<>();
@@ -462,7 +379,7 @@ public class ThreadDisplayFragment extends BaseFragment {
             .inflate(R.layout.item_thread_display, parent, false);
         return new ThreadHolder(view);
       } else {
-        return new FootHolder(footView);
+        return new FootHolder(list.getFootView());
       }
     }
 
@@ -531,7 +448,7 @@ public class ThreadDisplayFragment extends BaseFragment {
 
             String url = Api.getInstance().getAttachmentImgUrl(attachment.getAttachmentid());
 
-            ImageView imageView = new ImageView(getActivity());
+            ImageView imageView = new ImageView(ThreadDisplayActivity.this);
             imageView.setLayoutParams(lp);
 
             VolleyHelper.requestImageWithCache(url, imageView, AndroidHelper.getImageDiskCache(),
@@ -551,7 +468,7 @@ public class ThreadDisplayFragment extends BaseFragment {
 
             if (attachment == null) continue;
 
-            TextView textView = new TextView(getActivity());
+            TextView textView = new TextView(ThreadDisplayActivity.this);
             textView.setLayoutParams(lp);
             textView.setTextColor(getResources().getColor(R.color.ics_blue_dark));
             textView.setTextSize(14);
