@@ -84,7 +84,7 @@ public class ForumDisplayFragment extends BaseFragment {
 
       ThreadDisplayFragment fragment = new ThreadDisplayFragment();
       fragment.setData(data);
-      mainActivity.gotoFragment(fragment, false);
+      //mainActivity.gotoFragment(fragment, false);
     }
   };
 
@@ -232,7 +232,7 @@ public class ForumDisplayFragment extends BaseFragment {
       Bundle data = new Bundle();
       data.putInt("id", titleID);
       fragment.setData(data);
-      mainActivity.gotoFragment(fragment, false);
+      //mainActivity.gotoFragment(fragment, false);
     } else {
       getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
     }

@@ -113,7 +113,7 @@ public class ThreadDisplayFragment extends BaseFragment {
         data.putInt("userId", threads.get(pos).getUserid());
         fragment.setData(data);
 
-        mainActivity.gotoFragment(fragment, false);
+        //mainActivity.gotoFragment(fragment, false);
       } else {
         ToastHelper.toastLong(getActivity(), "登录之后才能查看用户信息！");
       }

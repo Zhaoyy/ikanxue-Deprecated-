@@ -48,7 +48,7 @@ public class UserInfoFragment extends BaseFragment {
       Bundle savedInstanceState) {
     title = getString(R.string.user_info);
 
-    return inflater.inflate(R.layout.fragment_user_info, container, false);
+    return inflater.inflate(R.layout.activity_user_info, container, false);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -140,7 +140,7 @@ public class UserInfoFragment extends BaseFragment {
             Api.getInstance().clearLoginData();
             getActivity().sendBroadcast(new Intent(MyApplication.LOGIN_STATE_CHANGE_ACTION));
             ToastHelper.toastShort(getActivity(), "退出登录成功！");
-            mainActivity.backToFragment(true);
+            //mainActivity.backToFragment(true);
           }
         } catch (JSONException e) {
           e.printStackTrace();

@@ -26,6 +26,7 @@ public class SplashActivity extends Activity {
   private ImageView ivDaily;
 
   private boolean hasPost = false;
+  private boolean autoFinish = true;
 
   private Runnable runnable = new Runnable() {
     @Override public void run() {
@@ -44,19 +45,24 @@ public class SplashActivity extends Activity {
     tvDailyZh = (AutoSizeTextView) findViewById(R.id.tv_daily_zh);
     ivDaily = (ImageView) findViewById(R.id.iv_daily);
 
-    findViewById(R.id.rl_root).setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        tvDailyEn.postDelayed(runnable, 1000);
-      }
-    });
-
+    autoFinish = getIntent().getBooleanExtra("auto", true);
     setDailyEnglish();
-
-    tvDailyEn.postDelayed(runnable, 4 * 1000);
+    if (autoFinish) {
+      findViewById(R.id.rl_root).setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          tvDailyEn.postDelayed(runnable, 1000);
+        }
+      });
+      tvDailyEn.postDelayed(runnable, 4 * 1000);
+    }
   }
 
   @Override public void onBackPressed() {
-    tvDailyEn.post(runnable);
+    if (autoFinish) {
+      tvDailyEn.post(runnable);
+    } else {
+      finish();
+    }
   }
 
   private void setDailyEnglish() {
@@ -80,8 +86,6 @@ public class SplashActivity extends Activity {
       } else {
         ivDaily.setImageResource(R.mipmap.daily);
       }
-
     }
   }
-
 }

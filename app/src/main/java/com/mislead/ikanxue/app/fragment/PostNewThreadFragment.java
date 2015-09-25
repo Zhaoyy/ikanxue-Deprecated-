@@ -87,7 +87,7 @@ public class PostNewThreadFragment extends BaseFragment {
             int id = jsonObject.getInt("threadid");
             data.putInt("threadid", id);
 
-            mainActivity.backToFragment(true, data);
+            //mainActivity.backToFragment(true, data);
           } catch (JSONException e) {
             LogHelper.e(e.toString());
           }

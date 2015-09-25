@@ -1,45 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp"
     android:background="?attr/main_bg_color"
     >
 
-  <EditText
-      android:id="@+id/et_user_name"
-      style="@style/select_all_on_focus"
+  <android.support.v7.widget.Toolbar
+      android:id="@+id/toolbar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:paddingLeft="4dp"
-      android:paddingRight="4dp"
-      android:textSize="@dimen/text_size_normal"
-      android:inputType="text"
-      android:hint="@string/user_name"
+      android:minHeight="?attr/actionBarSize"
+      android:background="@color/main_bg_dark"
+      app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
       />
 
-  <EditText
-      android:id="@+id/et_user_pwd"
-      style="@style/select_all_on_focus"
+  <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="12dp"
-      android:paddingLeft="4dp"
-      android:paddingRight="4dp"
-      android:textSize="@dimen/text_size_normal"
-      android:inputType="textPassword"
-      android:hint="@string/user_pwd"
-      />
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:padding="24dp"
+      >
 
-  <Button
-      android:id="@+id/btn_login"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="12dp"
-      android:text="@string/login"
-      android:textColor="@color/white"
-      android:textSize="@dimen/text_size_normal"
-      android:background="@drawable/btn_bg"
-      />
+    <EditText
+        android:id="@+id/et_user_name"
+        style="@style/select_all_on_focus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textSize="@dimen/text_size_normal"
+        android:inputType="text"
+        android:hint="@string/user_name"
+        />
+
+    <EditText
+        android:id="@+id/et_user_pwd"
+        style="@style/select_all_on_focus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textSize="@dimen/text_size_normal"
+        android:inputType="textPassword"
+        android:hint="@string/user_pwd"
+        />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_normal"
+        android:background="@drawable/btn_bg"
+        />
+
+  </LinearLayout>
 </LinearLayout>

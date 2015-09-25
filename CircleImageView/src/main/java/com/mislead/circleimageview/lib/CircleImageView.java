@@ -14,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ImageView;
 
 /**
@@ -56,7 +57,7 @@ public class CircleImageView extends ImageView {
 
   public CircleImageView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    setScaleType(ScaleType.CENTER_CROP);
+    setScaleType(ScaleType.CENTER_INSIDE);
 
     TypedArray a =
         context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyleAttr, 0);
@@ -106,7 +107,6 @@ public class CircleImageView extends ImageView {
     if (getDrawable() == null) return;
     //Log.e(TAG, "onDraw");
     canvas.drawCircle(getWidth() / 2, getHeight() / 2, bitmapRadius, bitmapPaint);
-
   }
 
   @Override protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -187,14 +187,20 @@ public class CircleImageView extends ImageView {
     shaderMatrix.set(null);
 
     // 尽可能多显示图片
-    if (bitmapWidth * bitmapRect.height() > bitmapHeight * bitmapRect.width()) {
-      scall = bitmapRect.height() / (float) bitmapHeight;
+    if (bitmapWidth > bitmapHeight) {
+      scall = bitmapRadius * 2 / (float) bitmapHeight;
     } else {
-      scall = bitmapRect.width() / (float) bitmapWidth;
+      scall = bitmapRadius * 2 / (float) bitmapWidth;
     }
 
-    shaderMatrix.setScale(scall, scall);
-    shaderMatrix.postTranslate(borederWidth, borederWidth);
+    // 图片需要缩小
+    Log.e(TAG,
+        "scall:" + scall + " bw:" + bitmapWidth + " bh:" + bitmapHeight + "\nrr" + bitmapRadius);
+    if (scall < 1) {
+      shaderMatrix.setScale(scall, scall);
+    }
+
+    shaderMatrix.setTranslate((getWidth() - bitmapWidth) / 2, (getHeight() - bitmapHeight) / 2);
 
     bitmapShader.setLocalMatrix(shaderMatrix);
   }

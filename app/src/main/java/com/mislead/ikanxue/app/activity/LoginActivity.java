@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +12,7 @@ import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
 import com.mislead.ikanxue.app.base.Constants;
+import com.mislead.ikanxue.app.base.SwipeBackActivity;
 import com.mislead.ikanxue.app.model.KanxueResponse;
 import com.mislead.ikanxue.app.net.HttpClientUtil;
 import com.mislead.ikanxue.app.util.AndroidHelper;
@@ -33,7 +31,7 @@ import org.json.JSONObject;
  *         DATE: 2015/7/6
  *         DESC:
  **/
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends SwipeBackActivity {
 
   private static String TAG = "LoginActivity";
 
@@ -72,8 +70,6 @@ public class LoginActivity extends AppCompatActivity {
     int themeId = ShPreUtil.getInt(Constants.THEME_ID, R.style.Theme_Dark);
     setTheme(themeId);
     setContentView(R.layout.activity_login);
-
-    initActionbar(getSupportActionBar());
 
     etName = (EditText) findViewById(R.id.et_user_name);
     etPwd = (EditText) findViewById(R.id.et_user_pwd);
@@ -139,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                                                           .getCookieStorage()
                                                           .addCookie(cookie.getName(),
                                                               cookie.getValue());
-                            }
+                                                    }
                                                     // get user type
                                                     Api.getInstance()
                                                         .getUserInfoPage(retObj.getInt("userid"),
@@ -169,20 +165,14 @@ public class LoginActivity extends AppCompatActivity {
                                                         HttpClientUtil.NET_SUCCESS);
                                                   } catch (JSONException e) {
                                                     e.printStackTrace();
-                          }
-                        }
+                                                  }
+                                                }
                                               });
                                     }
                                   }
-        }
+                                }
 
     );
-  }
-
-  private void initActionbar(ActionBar actionBar) {
-    if (actionBar == null) return;
-    actionBar.setDisplayHomeAsUpEnabled(true);
-    actionBar.setHomeButtonEnabled(true);
   }
 
   private boolean check() {
@@ -198,12 +188,7 @@ public class LoginActivity extends AppCompatActivity {
     return true;
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case android.R.id.home:
-        finish();
-        break;
-    }
-    return super.onOptionsItemSelected(item);
+  @Override protected void ibtnLeftClicked() {
+    onBackPressed();
   }
 }

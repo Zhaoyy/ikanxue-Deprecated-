@@ -1,6 +1,7 @@
 <com.mislead.ikanxue.app.view.MySlidingLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
@@ -23,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@android:color/white"
         >
       <android.support.v7.widget.Toolbar
           android:id="@+id/toolbar"
@@ -33,11 +35,7 @@
           app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
           />
 
-      <FrameLayout
-          android:id="@+id/container"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          />
+      <include layout="@layout/view_recyclerview"/>
     </com.mislead.ikanxue.app.view.InterceptTouchLinearLayout>
 
   </LinearLayout>

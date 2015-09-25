@@ -29,6 +29,7 @@ public class MySlidingLayout extends HorizontalScrollView implements View.OnClic
   private int downX;
   private int downY;
   private int moveType = 0; //触摸滑动类型：0-不确定，1-上下，2-左右
+  private boolean scrollEnable = false;//是否触摸来滚动
 
   private boolean isMenuOpen = false;
 
@@ -38,6 +39,10 @@ public class MySlidingLayout extends HorizontalScrollView implements View.OnClic
 
   public MySlidingLayout(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+  }
+
+  public void setScrollEnable(boolean scrollEnable) {
+    this.scrollEnable = scrollEnable;
   }
 
   @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -133,7 +138,7 @@ public class MySlidingLayout extends HorizontalScrollView implements View.OnClic
         break;
     }
 
-    return super.onTouchEvent(ev);
+    return scrollEnable && super.onTouchEvent(ev);
   }
 
   @Override protected void onScrollChanged(int l, int t, int oldl, int oldt) {

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    >
+  <android.support.v7.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:minHeight="?attr/actionBarSize"
+      android:background="@color/main_bg_dark"
+      app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+      />
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scrollbars="none"
+      android:background="?attr/second_main_bg_color"
+      android:id="@+id/sl_root"
+      >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <TextView
+          android:id="@+id/tv_title1"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/about_kanxue"
+          android:textColor="?attr/text_color_1"
+          android:textSize="@dimen/text_size_large"
+          android:padding="16dp"
+          />
+
+      <TextView
+          android:id="@+id/tv_content1"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/about_kanxue_msg"
+          android:textColor="?attr/text_color_1"
+          android:textSize="@dimen/text_size_normal"
+          android:paddingBottom="16dp"
+          android:paddingLeft="16dp"
+          android:paddingRight="16dp"
+          />
+
+      <TextView
+          android:id="@+id/tv_title2"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/about_ikanxue"
+          android:textColor="?attr/text_color_1"
+          android:textSize="@dimen/text_size_large"
+          android:paddingBottom="16dp"
+          android:paddingLeft="16dp"
+          android:paddingRight="16dp"
+          />
+
+      <TextView
+          android:id="@+id/tv_content2"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/about_ikanxue_msg"
+          android:textColor="?attr/text_color_1"
+          android:textSize="@dimen/text_size_normal"
+          android:paddingBottom="16dp"
+          android:paddingLeft="16dp"
+          android:paddingRight="16dp"
+          />
+
+      <TextView
+          android:id="@+id/tv_tail"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingBottom="16dp"
+          android:paddingLeft="16dp"
+          android:paddingRight="16dp"
+          android:text="by Mislead"
+          android:textSize="@dimen/text_size_normal"
+          android:textColor="?attr/text_color_2"
+          android:textStyle="italic"
+          android:gravity="right"
+          />
+    </LinearLayout>
+
+  </ScrollView>
+</LinearLayout>
+
