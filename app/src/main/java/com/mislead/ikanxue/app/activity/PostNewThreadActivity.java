@@ -1,12 +1,8 @@
-package com.mislead.ikanxue.app.fragment;
+package com.mislead.ikanxue.app.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -17,9 +13,11 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
-import com.mislead.ikanxue.app.base.BaseFragment;
+import com.mislead.ikanxue.app.base.Constants;
+import com.mislead.ikanxue.app.base.SwipeBackActivity;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
+import com.mislead.ikanxue.app.util.ShPreUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.view.ThreadTypePopup;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
@@ -27,15 +25,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * PostNewThreadFragment
+ * PostNewThreadActivity
  *
  * @author Mislead
- *         DATE: 2015/7/17
+ *         DATE: 2015/9/25
  *         DESC:
  **/
-public class PostNewThreadFragment extends BaseFragment {
+public class PostNewThreadActivity extends SwipeBackActivity {
 
-  private static String TAG = "PostNewThreadFragment";
+  private static String TAG = "PostNewThreadActivity";
   private EditText et_title;
   private EditText et_kx;
   private EditText et_msg;
@@ -65,54 +63,55 @@ public class PostNewThreadFragment extends BaseFragment {
 
             switch (result) {
               case Api.NEW_POST_SUCCESS:
-                Toast.makeText(mainActivity, R.string.new_post_success, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostNewThreadActivity.this, R.string.new_post_success,
+                    Toast.LENGTH_SHORT).show();
                 break;
               case Api.NEW_POST_FAIL_WITHIN_THIRTY_SECONDS:
-                Toast.makeText(mainActivity, R.string.new_post_fail_within_thirty_seconds,
-                    Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostNewThreadActivity.this,
+                    R.string.new_post_fail_within_thirty_seconds, Toast.LENGTH_SHORT).show();
                 return;
               case Api.NEW_POST_FAIL_WITHIN_FIVE_MINUTES:
-                Toast.makeText(mainActivity, R.string.new_post_fail_within_five_minutes,
-                    Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostNewThreadActivity.this,
+                    R.string.new_post_fail_within_five_minutes, Toast.LENGTH_SHORT).show();
                 return;
               case Api.NEW_POST_FAIL_NOT_ENOUGH_KX:
-                Toast.makeText(mainActivity, R.string.new_post_fail_not_enough_kx,
+                Toast.makeText(PostNewThreadActivity.this, R.string.new_post_fail_not_enough_kx,
                     Toast.LENGTH_SHORT).show();
                 return;
               default:
                 break;
             }
-            Bundle data = new Bundle();
-            data.putString("subject", subject);
+            Intent intent = new Intent();
+            intent.putExtra("subject", subject);
             int id = jsonObject.getInt("threadid");
-            data.putInt("threadid", id);
+            intent.putExtra("threadid", id);
 
-            //mainActivity.backToFragment(true, data);
+            setResult(502, intent);
           } catch (JSONException e) {
             LogHelper.e(e.toString());
           }
         }
       };
 
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-  @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    title = getString(R.string.post_new_thread);
-    setHasOptionsMenu(true);
-    return inflater.inflate(R.layout.fragment_new_thread, container, false);
-  }
+    int theme_id = ShPreUtil.getInt(Constants.THEME_ID, R.style.Theme_Dark);
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    et_title = (EditText) view.findViewById(R.id.et_title);
-    et_kx = (EditText) view.findViewById(R.id.et_kx);
-    et_msg = (EditText) view.findViewById(R.id.et_msg);
-    ch_type = (CheckBox) view.findViewById(R.id.ch_type);
-    ll_kx = (LinearLayout) view.findViewById(R.id.ll_kx);
+    setTheme(theme_id);
+    setContentView(R.layout.activity_new_thread);
+    setTitle(R.string.post_new_thread);
+    setIbtnRightImage(R.mipmap.social_send_now);
+    ibtnRight.setVisibility(View.VISIBLE);
+    et_title = (EditText) findViewById(R.id.et_title);
+    et_kx = (EditText) findViewById(R.id.et_kx);
+    et_msg = (EditText) findViewById(R.id.et_msg);
+    ch_type = (CheckBox) findViewById(R.id.ch_type);
+    ll_kx = (LinearLayout) findViewById(R.id.ll_kx);
 
-    popup = new ThreadTypePopup(getActivity());
+    popup = new ThreadTypePopup(this);
     popup.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-    popup.setHeight(AndroidHelper.dp2px(getActivity(), 116));
+    popup.setHeight(AndroidHelper.dp2px(this, 116));
     popup.setAnimationStyle(R.style.mypopwindow_anim_style);
     popup.setSelectedListener(new ThreadTypePopup.TypeSelectedListener() {
       @Override public void selected(String s) {
@@ -122,23 +121,23 @@ public class PostNewThreadFragment extends BaseFragment {
     });
     popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
       @Override public void onDismiss() {
-        if (ch_type.isChecked()) {
-          ch_type.setChecked(false);
-        }
+        ch_type.setChecked(false);
       }
     });
     ch_type.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        if (popup.isShowing()) {
-          popup.dismiss();
-        } else {
+        LogHelper.e("show:" + popup.isShowing() + " checked:" + ch_type.isChecked());
+        if (!popup.isShowing()) {
           popup.showAsDropDown(ch_type, 0, 32);
-          if (!ch_type.isChecked()) ch_type.setChecked(true);
+        } else {
+          popup.dismiss();
         }
       }
     });
 
-    id = data.getInt("id");
+    ch_type.setChecked(false);
+
+    id = getIntent().getIntExtra("id", 0);
 
     if (id == Api.HELP_FORUM_ID) {
       ll_kx.setVisibility(View.VISIBLE);
@@ -152,7 +151,6 @@ public class PostNewThreadFragment extends BaseFragment {
     } else {
       ch_type.setClickable(true);
     }
-
   }
 
   private void postThread() {
@@ -173,68 +171,59 @@ public class PostNewThreadFragment extends BaseFragment {
   private boolean check() {
 
     if (TextUtils.isEmpty(et_title.getText().toString())) {
-      ToastHelper.toastShort(mainActivity, "标题不能为空！");
+      ToastHelper.toastShort(this, "标题不能为空！");
       return false;
     }
 
     if (id == Api.HELP_FORUM_ID) {
 
       if (TextUtils.isEmpty(et_kx.getText().toString())) {
-        ToastHelper.toastShort(mainActivity, "悬赏金额不能为空！");
+        ToastHelper.toastShort(this, "悬赏金额不能为空！");
         return false;
       }
 
       int kxNum = Integer.decode(et_kx.getText().toString());
 
       if (kxNum < 10 || kxNum > 100) {
-        ToastHelper.toastShort(mainActivity, "悬赏金额超出限制（10-100）");
+        ToastHelper.toastShort(this, "悬赏金额超出限制（10-100）");
         return false;
       }
     }
 
     if (id != Api.GET_JOB_FORUM_ID && TextUtils.isEmpty(type)) {
-      ToastHelper.toastShort(mainActivity, "请选择话题类型！");
+      ToastHelper.toastShort(this, "请选择话题类型！");
       return false;
     }
 
     String message = et_msg.getText().toString();
     if (TextUtils.isEmpty(message)) {
-      ToastHelper.toastShort(mainActivity, "内容不能为空！");
+      ToastHelper.toastShort(this, "内容不能为空！");
       return false;
     }
 
     if (message.length() < Api.POST_CONTENT_SIZE_MIN) {
-      ToastHelper.toastShort(mainActivity, "内容长度不能少于6个字！");
+      ToastHelper.toastShort(this, "内容长度不能少于6个字！");
       return false;
     }
 
     return true;
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-
-    inflater.inflate(R.menu.menu_post, menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.action_post:
-        postThread();
-        break;
-      default:
-        break;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
-  @Override public boolean onBackPressed() {
+  @Override public void onBackPressed() {
 
     if (popup.isShowing()) {
       popup.dismiss();
-      return true;
+      return;
     }
 
-    return super.onBackPressed();
+    super.onBackPressed();
+  }
+
+  @Override protected void ibtnLeftClicked() {
+    super.onBackPressed();
+  }
+
+  @Override protected void ibtnRightClicked() {
+    postThread();
   }
 }

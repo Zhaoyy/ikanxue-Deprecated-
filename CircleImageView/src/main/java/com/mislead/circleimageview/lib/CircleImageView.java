@@ -14,7 +14,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ImageView;
 
 /**
@@ -194,8 +193,6 @@ public class CircleImageView extends ImageView {
     }
 
     // 图片需要缩小
-    Log.e(TAG,
-        "scall:" + scall + " bw:" + bitmapWidth + " bh:" + bitmapHeight + "\nrr" + bitmapRadius);
     if (scall < 1) {
       shaderMatrix.setScale(scall, scall);
     }

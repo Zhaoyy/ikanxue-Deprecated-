@@ -25,7 +25,6 @@
     <file url="file://$PROJECT_DIR$/app/src/main/res/anim/base_slide_right_in.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/anim/base_slide_right_out.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/dict_flow_item_hint_selector.xml" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/drawer_shadow.9.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/base.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_navigation_drawer.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/bg_home.jpg" charset="GBK" />

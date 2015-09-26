@@ -33,6 +33,8 @@
         android:textSize="@dimen/text_size_normal"
         android:inputType="text"
         android:hint="@string/user_name"
+        android:textColor="?attr/text_color_1"
+        android:textColorHint="?attr/text_color_3"
         />
 
     <EditText
@@ -46,6 +48,8 @@
         android:textSize="@dimen/text_size_normal"
         android:inputType="textPassword"
         android:hint="@string/user_pwd"
+        android:textColor="?attr/text_color_1"
+        android:textColorHint="?attr/text_color_3"
         />
 
     <Button

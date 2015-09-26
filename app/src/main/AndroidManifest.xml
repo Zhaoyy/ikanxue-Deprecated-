@@ -63,6 +63,11 @@
         />
 
     <activity
+        android:name=".activity.PostNewThreadActivity"
+        android:screenOrientation="portrait"
+        />
+
+    <activity
         android:name="com.mislead.ikanxue.app.test.TestActivity"
         android:label="test "
         android:theme="@style/MainActivityTheme"

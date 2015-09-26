@@ -18,7 +18,6 @@ import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.base.Constants;
 import com.mislead.ikanxue.app.base.SwipeBackActivity;
-import com.mislead.ikanxue.app.fragment.PostNewThreadFragment;
 import com.mislead.ikanxue.app.model.ForumThreadTitleObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
@@ -87,7 +86,8 @@ public class ForumDisplayActivity extends SwipeBackActivity {
     setTitle(title);
 
     initView();
-    ibtnRight.setVisibility(View.VISIBLE);
+    //todo: post new thread
+    //ibtnRight.setVisibility(View.VISIBLE);
     setIbtnRightImage(R.mipmap.ic_post);
     list.post(runnable);
   }
@@ -219,11 +219,9 @@ public class ForumDisplayActivity extends SwipeBackActivity {
         return;
       }
 
-      PostNewThreadFragment fragment = new PostNewThreadFragment();
-      Bundle data = new Bundle();
-      data.putInt("id", titleID);
-      fragment.setData(data);
-      //mainActivity.gotoFragment(fragment, false);
+      Intent intent = new Intent(this, PostNewThreadActivity.class);
+      intent.putExtra("id", titleID);
+      startActivityForResult(intent, 502);
     } else {
       startActivity(new Intent(this, LoginActivity.class));
     }
@@ -248,13 +246,17 @@ public class ForumDisplayActivity extends SwipeBackActivity {
     onBackPressed();
   }
 
-  public void onRefresh(Bundle data) {
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    onRefresh(data);
+  }
+
+  public void onRefresh(Intent data) {
     if (data != null) {
       // post a new topic
       int index = getLastStickyIndex();
 
-      int threadId = data.getInt("threadid");
-      String subject = data.getString("subject");
+      int threadId = data.getIntExtra("threadid", 0);
+      String subject = data.getStringExtra("subject");
 
       ForumThreadTitleObject.ThreadListEntity entity =
           new ForumThreadTitleObject.ThreadListEntity();
