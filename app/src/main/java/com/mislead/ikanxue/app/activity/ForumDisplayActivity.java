@@ -87,7 +87,7 @@ public class ForumDisplayActivity extends SwipeBackActivity {
 
     initView();
     //todo: post new thread
-    //ibtnRight.setVisibility(View.VISIBLE);
+    ibtnRight.setVisibility(View.VISIBLE);
     setIbtnRightImage(R.mipmap.ic_post);
     list.post(runnable);
   }
