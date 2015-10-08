@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.mislead.circleimageview.lib.CircleImageView;
 import com.mislead.ikanxue.app.R;
+import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
 import com.mislead.ikanxue.app.base.Constants;
 import com.mislead.ikanxue.app.base.ToolbarActivity;
@@ -162,7 +163,7 @@ public class MainActivity extends ToolbarActivity implements View.OnClickListene
   }
 
   private void parseResponse(JSONObject object) throws JSONException {
-
+    addQuikeTitle();
     JSONArray ret = object.getJSONArray("forumbits");
     for (int i = 0; i < ret.length(); i++) {
 
@@ -190,6 +191,23 @@ public class MainActivity extends ToolbarActivity implements View.OnClickListene
     new RemoveNullInList<ForumTitleObject>().removeNull(titles);
     adapter.setData(titles);
     adapter.notifyDataSetChanged();
+  }
+
+  private void addQuikeTitle() {
+    ForumTitleObject object = new ForumTitleObject();
+    object.setType(0);
+    object.setName("快捷入口");
+    titles.add(object);
+    ForumTitleObject child1 = new ForumTitleObject();
+    child1.setName("查看新帖");
+    child1.setId(Api.NEW_FORUM_ID);
+    child1.setType(1);
+    titles.add(child1);
+    ForumTitleObject child2 = new ForumTitleObject();
+    child2.setName("安全资讯");
+    child2.setId(Api.SECURITY_FORUM_ID);
+    child2.setType(1);
+    titles.add(child2);
   }
 
   @Override protected void onLoginOrLogout() {

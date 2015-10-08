@@ -139,6 +139,7 @@ public class ForumDisplayActivity extends SwipeBackActivity {
             new VolleyHelper.ResponseListener<JSONObject>() {
               @Override public void onErrorResponse(VolleyError volleyError) {
                 LogHelper.e(volleyError.toString());
+                swipe_refresh.setRefreshing(false);
               }
 
               @Override public void onResponse(JSONObject object) {
@@ -168,6 +169,7 @@ public class ForumDisplayActivity extends SwipeBackActivity {
         .getForumDisplayPage(titleID, currPage, new VolleyHelper.ResponseListener<JSONObject>() {
           @Override public void onErrorResponse(VolleyError volleyError) {
             LogHelper.e(volleyError.toString());
+            swipe_refresh.setRefreshing(false);
           }
 
           @Override public void onResponse(JSONObject object) {
