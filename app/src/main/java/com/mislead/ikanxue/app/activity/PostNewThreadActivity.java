@@ -3,6 +3,7 @@ package com.mislead.ikanxue.app.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -126,7 +127,6 @@ public class PostNewThreadActivity extends SwipeBackActivity {
     });
     ch_type.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        LogHelper.e("show:" + popup.isShowing() + " checked:" + ch_type.isChecked());
         if (!popup.isShowing()) {
           popup.showAsDropDown(ch_type, 0, 32);
         } else {
@@ -166,6 +166,27 @@ public class PostNewThreadActivity extends SwipeBackActivity {
         Api.getInstance().newThreadWithoutReward(id, subject, message, listener);
       }
     }
+  }
+
+  int location[] = new int[2];
+
+  @Override public boolean dispatchTouchEvent(MotionEvent ev) {
+
+    // process touch event on checkbox when popup window is showing.
+    if (popup != null && popup.isShowing()) {
+      ch_type.getLocationOnScreen(location);
+      int left = location[0];
+      int top = location[1];
+      int right = left + ch_type.getWidth();
+      int bottom = top + ch_type.getHeight();
+
+      float eX = ev.getRawX();
+      float eY = ev.getRawY();
+      if (eX < right && eX > left && eY > top && eY < bottom) {
+        return true;
+      }
+    }
+    return super.dispatchTouchEvent(ev);
   }
 
   private boolean check() {
