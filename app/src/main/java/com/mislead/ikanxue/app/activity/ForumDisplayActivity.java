@@ -168,7 +168,7 @@ public class ForumDisplayActivity extends SwipeBackActivity {
     Api.getInstance()
         .getForumDisplayPage(titleID, currPage, new VolleyHelper.ResponseListener<JSONObject>() {
           @Override public void onErrorResponse(VolleyError volleyError) {
-            LogHelper.e(volleyError.toString());
+            ToastHelper.toastShort(ForumDisplayActivity.this, volleyError.toString());
             swipe_refresh.setRefreshing(false);
           }
 

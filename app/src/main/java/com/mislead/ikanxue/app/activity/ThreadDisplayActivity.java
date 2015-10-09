@@ -233,7 +233,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
         .getForumShowthreadPage(threadId, currPage,
             new VolleyHelper.ResponseListener<JSONObject>() {
               @Override public void onErrorResponse(VolleyError volleyError) {
-                LogHelper.e(volleyError.toString());
+                ToastHelper.toastShort(ThreadDisplayActivity.this, volleyError.toString());
                 swipe_refresh.setRefreshing(false);
               }
 
@@ -263,7 +263,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
       }
     }
 
-    if (threads.size() > (replyCount + 1)) {
+    if (threads.size() >= (replyCount + 1)) {
       list.changeFootState(2);
     } else {
       list.changeFootState(0);
@@ -452,6 +452,12 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
             ImageView imageView = new ImageView(ThreadDisplayActivity.this);
             imageView.setLayoutParams(lp);
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+              @Override public void onClick(View v) {
+
+              }
+            });
 
             VolleyHelper.requestImageWithCache(url, imageView, AndroidHelper.getImageDiskCache(),
                 R.mipmap.image_404, R.mipmap.image_404);
