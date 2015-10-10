@@ -9,7 +9,7 @@ i看雪是个人根据看雪API开发的第三方Android APP。目的是为了�
 - 其他
 
 ###示例图片
-![](https://github.com/Zhaoyy/ikanxue/blob/2.x/gif/ikanxue1.gif)
+![](https://github.com/Zhaoyy/ikanxue/blob/2.x/file/ikanxue1.gif)
 
 
 *参考资源*
