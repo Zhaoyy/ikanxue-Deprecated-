@@ -7,7 +7,7 @@ i看雪是个人根据看雪API开发的第三方Android APP。目的是为了�
 - *Material Design风格*
 - 帖子收藏功能
 - 其他
-
+###示例图片
 ![](https://github.com/Zhaoyy/ikanxue/blob/2.x/gif/ikanxue1.gif)
 
 
