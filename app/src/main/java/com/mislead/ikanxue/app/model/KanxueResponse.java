@@ -1,5 +1,6 @@
 package com.mislead.ikanxue.app.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.cookie.Cookie;
@@ -11,7 +12,7 @@ import org.apache.http.cookie.Cookie;
  *         DATE: 2015/7/3
  *         DESC:
  **/
-public class KanxueResponse {
+public class KanxueResponse implements Serializable {
 
   private static String TAG = "KanxueResponse";
 

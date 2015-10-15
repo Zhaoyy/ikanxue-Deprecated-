@@ -1,5 +1,6 @@
 package com.mislead.ikanxue.app.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * AUTHOR:Zhaoyy  2015/6/27
  * DESC:
  **/
-public class DailyEnglishObject {
+public class DailyEnglishObject implements Serializable {
 
   private static String TAG = "DailyEnglish";
 
@@ -138,7 +139,7 @@ public class DailyEnglishObject {
     return translation;
   }
 
-  public class TagsEntity {
+  public class TagsEntity implements Serializable {
     /**
      * name : ������
      * id : 10

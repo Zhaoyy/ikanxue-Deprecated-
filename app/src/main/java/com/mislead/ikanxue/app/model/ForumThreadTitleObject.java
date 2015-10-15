@@ -1,5 +1,6 @@
 package com.mislead.ikanxue.app.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  *         DATE: 2015/7/13
  *         DESC:
  **/
-public class ForumThreadTitleObject {
+public class ForumThreadTitleObject implements Serializable {
 
   private static String TAG = "ForumThreadTitleObject";
   /**
@@ -46,7 +47,7 @@ public class ForumThreadTitleObject {
     return pagenav;
   }
 
-  public static class ThreadListEntity {
+  public static class ThreadListEntity implements Serializable {
     /**
      * avatardateline : 0
      * goodnees : 0

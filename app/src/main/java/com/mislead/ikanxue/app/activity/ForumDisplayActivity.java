@@ -60,7 +60,8 @@ public class ForumDisplayActivity extends SwipeBackActivity {
   private int titleID;
   private String title = "";
 
-  private List<ForumThreadTitleObject.ThreadListEntity> threads = new ArrayList<>();
+  private List<ForumThreadTitleObject.ThreadListEntity> threads =
+      new ArrayList<ForumThreadTitleObject.ThreadListEntity>();
 
   private Runnable runnable = new Runnable() {
     @Override public void run() {
@@ -292,7 +293,8 @@ public class ForumDisplayActivity extends SwipeBackActivity {
 
   public class ForumThreadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<ForumThreadTitleObject.ThreadListEntity> data = new ArrayList<>();
+    private List<ForumThreadTitleObject.ThreadListEntity> data =
+        new ArrayList<ForumThreadTitleObject.ThreadListEntity>();
 
     public void setData(List<ForumThreadTitleObject.ThreadListEntity> data) {
       this.data = data;

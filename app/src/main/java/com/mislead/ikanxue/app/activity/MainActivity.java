@@ -39,7 +39,7 @@ public class MainActivity extends ToolbarActivity implements View.OnClickListene
 
   private LoadMoreRecyclerView recyclerView;
 
-  private List<ForumTitleObject> titles = new ArrayList<>();
+  private List<ForumTitleObject> titles = new ArrayList<ForumTitleObject>();
 
   private RecyclerViewAdapter adapter;
   private LinearLayout ll_root;
@@ -353,7 +353,7 @@ public class MainActivity extends ToolbarActivity implements View.OnClickListene
 
   public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<ForumTitleObject> data = new ArrayList<>();
+    private List<ForumTitleObject> data = new ArrayList<ForumTitleObject>();
 
     private ItemListener itemListener;
 

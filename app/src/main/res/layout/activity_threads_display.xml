@@ -66,6 +66,7 @@
           android:singleLine="false"
           android:textColor="?attr/text_color_1"
           android:textSize="@dimen/text_size_normal"
+          android:hint="@string/quick_reply"
           android:textColorHint="?attr/text_color_3"
           />
 

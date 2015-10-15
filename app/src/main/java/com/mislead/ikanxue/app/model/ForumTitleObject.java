@@ -1,5 +1,7 @@
 package com.mislead.ikanxue.app.model;
 
+import java.io.Serializable;
+
 /**
  * ForumTitleObject
  *
@@ -7,7 +9,7 @@ package com.mislead.ikanxue.app.model;
  *         DATE: 2015/7/10
  *         DESC:
  **/
-public class ForumTitleObject {
+public class ForumTitleObject implements Serializable {
 
   private static String TAG = "ForumTitleObject";
   private String name = "";  // title

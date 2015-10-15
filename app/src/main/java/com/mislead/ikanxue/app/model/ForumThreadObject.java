@@ -1,6 +1,7 @@
 package com.mislead.ikanxue.app.model;
 
 import android.text.Spanned;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  *         DATE: 2015/7/11
  *         DESC:
  **/
-public class ForumThreadObject {
+public class ForumThreadObject implements Serializable {
 
   private static String TAG = "ForumThreadObject";
   private List<PostbitsEntity> postbits;
@@ -42,7 +43,7 @@ public class ForumThreadObject {
     return pagenav;
   }
 
-  public static class PostbitsEntity {
+  public static class PostbitsEntity implements Serializable {
     private int postid;
     private int thumbnail;  //内容摘要
     private String username;
@@ -165,7 +166,7 @@ public class ForumThreadObject {
     }
   }
 
-  public class ThumbnailattachmentsEntity {
+  public class ThumbnailattachmentsEntity implements Serializable {
     private int attachmentid;
     private String filename;
     private String filesize;

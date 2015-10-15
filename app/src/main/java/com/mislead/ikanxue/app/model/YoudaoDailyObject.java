@@ -1,11 +1,13 @@
 package com.mislead.ikanxue.app.model;
 
+import java.io.Serializable;
+
 /**
  * YoudaoDailyObject
  * AUTHOR:Zhaoyy  2015/6/12
  * DESC:
  **/
-public class YoudaoDailyObject {
+public class YoudaoDailyObject implements Serializable {
 
   private static String TAG = "YoudaoDailyObject";
 

@@ -32,7 +32,6 @@ import com.mislead.ikanxue.app.util.RemoveNullInList;
 import com.mislead.ikanxue.app.util.ShPreUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
 import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
-import com.mislead.ikanxue.app.view.MaterialProgressDrawable;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
 import com.mislead.ikanxue.app.volley.VolleyImageGetter;
 import java.util.ArrayList;
@@ -53,16 +52,14 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
   private static String TAG = "ThreadDisplayActivity";
   private int threadId;
   private int open;
-  private int replyCount;
   private int currPage = 1;
+  private int lastFirstPostId = 0;
 
   private long lastRefreshTime;
-  private int pageCount;
 
   private LoadMoreRecyclerView list;
   private SwipeRefreshLayout swipe_refresh;
   private LinearLayout ll_reply;
-  private LinearLayout ll_root;
 
   private EditText et_reply;
 
@@ -74,24 +71,13 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
   private int footState = 0; // 0 -can load more,1-loading, 2-no more
 
-  private List<ForumThreadObject.PostbitsEntity> threads = new ArrayList<>();
-
-  private MaterialProgressDrawable progressDrawable;
+  private List<ForumThreadObject.PostbitsEntity> threads =
+      new ArrayList<ForumThreadObject.PostbitsEntity>();
 
   private Runnable runnable = new Runnable() {
     @Override public void run() {
       swipe_refresh.setRefreshing(true);
       refresh();
-    }
-  };
-
-  private Runnable progressRunable = new Runnable() {
-    @Override public void run() {
-      if (footState == 1) {
-        progressDrawable.start();
-      } else {
-        progressDrawable.stop();
-      }
     }
   };
 
@@ -122,13 +108,13 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
     ll_reply = (LinearLayout) findViewById(R.id.ll_reply);
     et_reply = (EditText) findViewById(R.id.et_reply);
     btn_reply = (ImageButton) findViewById(R.id.btn_reply);
-    ll_root = (LinearLayout) findViewById(R.id.ll_root);
 
     Intent intent = getIntent();
     threadId = intent.getIntExtra("threadId", 0);
     open = intent.getIntExtra("open", 0);
-    replyCount = intent.getIntExtra("replyCount", 0);
     setTitle(intent.getStringExtra("title"));
+
+    setIbtnRightImage(R.mipmap.ic_favor);
 
     initView();
     // load first
@@ -137,6 +123,9 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
   @Override protected void ibtnLeftClicked() {
     onBackPressed();
+  }
+
+  @Override protected void ibtnRightClicked() {
   }
 
   private void initView() {
@@ -183,8 +172,6 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
     if (open != 1) {
       ll_reply.setVisibility(View.GONE);
     }
-
-    et_reply.setHint(String.format("回复不少于6个字，已有%s个回复", replyCount));
 
     btn_reply.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
@@ -252,18 +239,28 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
     ForumThreadObject object = gson.fromJson(json.toString(), ForumThreadObject.class);
 
     lastRefreshTime = object.getTime();
-    pageCount = object.getPagenav();
+    boolean isAll = false;
 
     if (currPage == 1) {
       threads = object.getPostbits();
     } else {
       // add new thread
-      for (ForumThreadObject.PostbitsEntity entity : object.getPostbits()) {
-        threads.add(entity);
+
+      if (object.getPostbits().size() > 0) {
+        int postId = object.getPostbits().get(0).getPostid();
+
+        if (postId == lastFirstPostId) {
+          isAll = true;
+        } else {
+          lastFirstPostId = postId;
+          for (ForumThreadObject.PostbitsEntity entity : object.getPostbits()) {
+            threads.add(entity);
+          }
+        }
       }
     }
 
-    if (threads.size() >= (replyCount + 1)) {
+    if (isAll) {
       list.changeFootState(2);
     } else {
       list.changeFootState(0);
@@ -303,7 +300,6 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
               case Api.NEW_POST_SUCCESS:
                 ToastHelper.toastLong(ThreadDisplayActivity.this, R.string.new_post_success);
                 addNewReply(et_reply.getText().toString());
-                et_reply.setHint(String.format("回复不少于6个字，已有%s个回复", replyCount));
                 et_reply.setText("");
                 break;
               case Api.NEW_POST_FAIL_WITHIN_THIRTY_SECONDS:
@@ -350,7 +346,6 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
     threads.add(entity);
     adapter.setData(threads);
-    replyCount++;
   }
 
   /**
@@ -367,7 +362,8 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
   public class ForumThreadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<ForumThreadObject.PostbitsEntity> data = new ArrayList<>();
+    private List<ForumThreadObject.PostbitsEntity> data =
+        new ArrayList<ForumThreadObject.PostbitsEntity>();
 
     public void setData(List<ForumThreadObject.PostbitsEntity> data) {
       this.data = data;
