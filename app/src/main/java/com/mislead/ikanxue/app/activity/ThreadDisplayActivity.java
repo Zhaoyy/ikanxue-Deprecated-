@@ -54,6 +54,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
   private int open;
   private int currPage = 1;
   private int lastFirstPostId = 0;
+  private String title;
 
   private long lastRefreshTime;
 
@@ -112,7 +113,8 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
     Intent intent = getIntent();
     threadId = intent.getIntExtra("threadId", 0);
     open = intent.getIntExtra("open", 0);
-    setTitle(intent.getStringExtra("title"));
+    title = intent.getStringExtra("title");
+    setTitle(title);
 
     setIbtnRightImage(R.mipmap.ic_favor);
 
@@ -449,9 +451,14 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
             ImageView imageView = new ImageView(ThreadDisplayActivity.this);
             imageView.setLayoutParams(lp);
 
+            imageView.setTag(url);
+
             imageView.setOnClickListener(new View.OnClickListener() {
               @Override public void onClick(View v) {
-
+                Intent intent = new Intent(ThreadDisplayActivity.this, ImageActivity.class);
+                intent.putExtra("title", title);
+                intent.putExtra("url", v.getTag().toString());
+                startActivity(intent);
               }
             });
 
