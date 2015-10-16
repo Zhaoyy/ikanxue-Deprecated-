@@ -21,6 +21,7 @@ android {
       storePassword '123456'
     }
   }
+
   compileSdkVersion 21
   buildToolsVersion "22.0.1"
   defaultConfig {
@@ -41,6 +42,13 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+
+  lintOptions {
+    checkReleaseBuilds false
+    // Or, if you prefer, you can continue to check for errors in release builds,
+    // but continue the build even when errors are found:
+    abortOnError false
+  }
 }
 
 dependencies {
@@ -49,6 +57,7 @@ dependencies {
   compile 'com.android.support:appcompat-v7:22.2.1'
   compile 'com.android.support:recyclerview-v7:22.2.0'
   compile 'org.htmlparser:htmlparser:+'
+  compile 'com.umeng.analytics:analytics:latest.integration'
   compile 'com.google.code.gson:gson:2.3.1'
   compile 'io.reactivex:rxjava:1.0.14'
   compile 'io.reactivex:rxandroid:1.0.1'

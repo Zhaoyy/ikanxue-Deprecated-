@@ -35,3 +35,14 @@
 
 # Application classes that will be serialized/deserialized over Gson
 -keep class com.google.gson.examples.android.model.** { *; }
+# umeng
+-keepclassmembers class * {
+   public <init>(org.json.JSONObject);
+}
+-keep public class com.mislead.ikanxue.app.R$*{
+public static final int *;
+}
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}

@@ -15,6 +15,7 @@ import com.mislead.circleimageview.lib.CircleImageView;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.application.MyApplication;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * BaseActivity
@@ -106,6 +107,16 @@ public class ToolbarActivity extends AppCompatActivity {
     } else {
       tvTitle.setText(titleId);
     }
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+    MobclickAgent.onResume(this);
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    MobclickAgent.onPause(this);
   }
 
   @Override protected void onDestroy() {

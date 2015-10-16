@@ -29,6 +29,7 @@ import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
 import com.mislead.ikanxue.app.view.MySlidingLayout;
 import com.mislead.ikanxue.app.view.RecyclerLinearItemDecoration;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
+import com.umeng.update.UmengUpdateAgent;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
@@ -113,6 +114,8 @@ public class MainActivity extends ToolbarActivity implements View.OnClickListene
     }
 
     loginOrCustomer();
+    UmengUpdateAgent.setUpdateOnlyWifi(false);
+    UmengUpdateAgent.update(this);
   }
 
   private void requestFortumTitles() {
