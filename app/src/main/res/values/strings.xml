@@ -58,6 +58,7 @@
   <string name="dark_theme">夜间模式</string>
   <string name="light_theme">日间模式</string>
   <string name="daily_beauty">每日美文</string>
+  <string name="my_favor">我的收藏</string>
   <string name="quick_reply">快速回复，不少于6个字</string>
 
   <string-array name="topic_list">

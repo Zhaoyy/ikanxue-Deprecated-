@@ -6,7 +6,6 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.FloatMath;
@@ -71,14 +70,6 @@ public class MyImageView extends ImageView {
     setupView();
   }
 
-  @Override public void setImageDrawable(Drawable drawable) {
-    super.setImageDrawable(drawable);
-    if (drawable instanceof BitmapDrawable) {
-      bitmap = ((BitmapDrawable) drawable).getBitmap();
-    }
-    post(centerRunnable);
-  }
-
   @Override public void setImageBitmap(Bitmap bm) {
     super.setImageBitmap(bm);
     bitmap = bm;
@@ -100,8 +91,6 @@ public class MyImageView extends ImageView {
     this.setScaleType(ScaleType.MATRIX);
     this.setImageBitmap(bitmap);
 
-    //bitmap为空就不调用center函数
-    post(centerRunnable);
     this.setImageMatrix(matrix);
     this.setOnTouchListener(new OnTouchListener() {
       @Override public boolean onTouch(View v, MotionEvent event) {
@@ -187,6 +176,7 @@ public class MyImageView extends ImageView {
       }
     }
     matrix.postTranslate(deltaX, deltaY);
+    setImageMatrix(matrix);
   }
 
   /**

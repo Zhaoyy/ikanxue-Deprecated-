@@ -25,7 +25,9 @@ import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.base.Constants;
 import com.mislead.ikanxue.app.base.SwipeBackActivity;
+import com.mislead.ikanxue.app.db.FavorDao;
 import com.mislead.ikanxue.app.model.ForumThreadObject;
+import com.mislead.ikanxue.app.model.ForumThreadTitleObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.util.RemoveNullInList;
@@ -50,9 +52,8 @@ import org.json.JSONObject;
 public class ThreadDisplayActivity extends SwipeBackActivity {
 
   private static String TAG = "ThreadDisplayActivity";
-  private int threadId;
-  private int open;
   private int currPage = 1;
+  private ForumThreadTitleObject.ThreadListEntity entity;
   private int lastFirstPostId = 0;
   private String title;
 
@@ -65,6 +66,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
   private EditText et_reply;
 
   private ImageButton btn_reply;
+  private FavorDao favorDao;
 
   private ForumThreadAdapter adapter;
 
@@ -111,13 +113,12 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
     btn_reply = (ImageButton) findViewById(R.id.btn_reply);
 
     Intent intent = getIntent();
-    threadId = intent.getIntExtra("threadId", 0);
-    open = intent.getIntExtra("open", 0);
+    entity = (ForumThreadTitleObject.ThreadListEntity) intent.getSerializableExtra("entity");
     title = intent.getStringExtra("title");
     setTitle(title);
 
     setIbtnRightImage(R.mipmap.ic_favor);
-
+    ibtnRight.setVisibility(View.VISIBLE);
     initView();
     // load first
     list.post(runnable);
@@ -128,6 +129,11 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
   }
 
   @Override protected void ibtnRightClicked() {
+    if (favorDao == null) {
+      favorDao = new FavorDao(this);
+    }
+    favorDao.addFavor(entity);
+    ToastHelper.toastShort(this, "帖子收藏成功!");
   }
 
   private void initView() {
@@ -171,7 +177,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
       }
     });
     // thread has closed
-    if (open != 1) {
+    if (entity.getOpen() != 1) {
       ll_reply.setVisibility(View.GONE);
     }
 
@@ -185,8 +191,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
   private void refresh() {
 
     // check there is new post or not
-    Api.getInstance()
-        .checkNewPostInShowThreadPage(threadId, lastRefreshTime,
+    Api.getInstance().checkNewPostInShowThreadPage(entity.getThreadid(), lastRefreshTime,
             new VolleyHelper.ResponseListener<JSONObject>() {
               @Override public void onErrorResponse(VolleyError volleyError) {
                 LogHelper.e(volleyError.toString());
@@ -218,8 +223,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
   // request data from net
   private void loadData() {
 
-    Api.getInstance()
-        .getForumShowthreadPage(threadId, currPage,
+    Api.getInstance().getForumShowthreadPage(entity.getThreadid(), currPage,
             new VolleyHelper.ResponseListener<JSONObject>() {
               @Override public void onErrorResponse(VolleyError volleyError) {
                 ToastHelper.toastShort(ThreadDisplayActivity.this, volleyError.toString());
@@ -245,6 +249,9 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
     if (currPage == 1) {
       threads = object.getPostbits();
+      if (threads.size() > 0) {
+        lastFirstPostId = threads.get(0).getPostid();
+      }
     } else {
       // add new thread
 
@@ -287,7 +294,8 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
         return;
       }
 
-      Api.getInstance().quickReply(threadId, reply, new VolleyHelper.ResponseListener<String>() {
+      Api.getInstance()
+          .quickReply(entity.getThreadid(), reply, new VolleyHelper.ResponseListener<String>() {
         @Override public void onErrorResponse(VolleyError volleyError) {
           LogHelper.e(volleyError.toString());
         }

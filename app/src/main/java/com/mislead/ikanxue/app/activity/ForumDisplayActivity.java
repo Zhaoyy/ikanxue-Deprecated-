@@ -18,6 +18,7 @@ import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.base.Constants;
 import com.mislead.ikanxue.app.base.SwipeBackActivity;
+import com.mislead.ikanxue.app.db.FavorDao;
 import com.mislead.ikanxue.app.model.ForumThreadTitleObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
@@ -45,12 +46,9 @@ public class ForumDisplayActivity extends SwipeBackActivity {
   private int currPage = 1;
 
   private long lastRefreshTime;
-  private int pageCount;
 
   private LoadMoreRecyclerView list;
   private SwipeRefreshLayout swipe_refresh;
-
-  private LinearLayout ll_root;
 
   private ForumThreadAdapter adapter;
 
@@ -59,6 +57,8 @@ public class ForumDisplayActivity extends SwipeBackActivity {
   private int footState = 0; // 0 -can load more,1-loading, 2-no more
   private int titleID;
   private String title = "";
+  private boolean fromFavor = false;
+  private FavorDao favorDao;
 
   private List<ForumThreadTitleObject.ThreadListEntity> threads =
       new ArrayList<ForumThreadTitleObject.ThreadListEntity>();
@@ -79,16 +79,15 @@ public class ForumDisplayActivity extends SwipeBackActivity {
     setContentView(R.layout.activity_forum_threads);
     list = (LoadMoreRecyclerView) findViewById(R.id.list);
     swipe_refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-    ll_root = (LinearLayout) findViewById(R.id.ll_root);
     Intent intent = getIntent();
     titleID = intent.getIntExtra("id", 0);
+    fromFavor = titleID == 0;
     title = intent.getStringExtra("title");
 
     setTitle(title);
 
     initView();
-    //todo: post new thread
-    ibtnRight.setVisibility(View.VISIBLE);
+    ibtnRight.setVisibility(fromFavor ? View.GONE : View.VISIBLE);
     setIbtnRightImage(R.mipmap.ic_post);
     list.post(runnable);
   }
@@ -105,21 +104,22 @@ public class ForumDisplayActivity extends SwipeBackActivity {
     adapter = new ForumThreadAdapter();
     list.setAdapter(adapter);
 
-    list.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        super.onScrollStateChanged(recyclerView, newState);
-        if (newState == RecyclerView.SCROLL_STATE_IDLE
-            && lastVisibleIndex + 1 == adapter.getItemCount()
-            && (footState == 0)) {
-          loadMore();
+    if (!fromFavor) {
+      list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+          super.onScrollStateChanged(recyclerView, newState);
+          if (newState == RecyclerView.SCROLL_STATE_IDLE
+              && lastVisibleIndex + 1 == adapter.getItemCount() && (footState == 0)) {
+            loadMore();
+          }
         }
-      }
 
-      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        super.onScrolled(recyclerView, dx, dy);
-        lastVisibleIndex = manager.findLastVisibleItemPosition();
-      }
-    });
+        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+          super.onScrolled(recyclerView, dx, dy);
+          lastVisibleIndex = manager.findLastVisibleItemPosition();
+        }
+      });
+    }
 
     swipe_refresh.setColorSchemeColors(getResources().getColor(R.color.ics_red_dark),
         getResources().getColor(R.color.ics_orange_dark),
@@ -134,25 +134,36 @@ public class ForumDisplayActivity extends SwipeBackActivity {
   }
 
   private void refresh() {
-    // check there is new post or not
-    Api.getInstance()
-        .checkNewPostInForumDisplayPage(titleID, lastRefreshTime,
-            new VolleyHelper.ResponseListener<JSONObject>() {
-              @Override public void onErrorResponse(VolleyError volleyError) {
-                LogHelper.e(volleyError.toString());
-                swipe_refresh.setRefreshing(false);
-              }
+    if (fromFavor) {
 
-              @Override public void onResponse(JSONObject object) {
-                if (object.has("result")) {
-                  ToastHelper.toastShort(ForumDisplayActivity.this, "没有新帖");
+      if (favorDao == null) {
+        favorDao = new FavorDao(this);
+      }
+
+      swipe_refresh.setRefreshing(false);
+      threads = favorDao.getFavors();
+      adapter.setData(threads);
+    } else {
+      // check there is new post or not
+      Api.getInstance()
+          .checkNewPostInForumDisplayPage(titleID, lastRefreshTime,
+              new VolleyHelper.ResponseListener<JSONObject>() {
+                @Override public void onErrorResponse(VolleyError volleyError) {
+                  LogHelper.e(volleyError.toString());
                   swipe_refresh.setRefreshing(false);
-                } else {
-                  currPage = 1;
-                  loadData();
                 }
-              }
-            });
+
+                @Override public void onResponse(JSONObject object) {
+                  if (object.has("result")) {
+                    ToastHelper.toastShort(ForumDisplayActivity.this, "没有新帖");
+                    swipe_refresh.setRefreshing(false);
+                  } else {
+                    currPage = 1;
+                    loadData();
+                  }
+                }
+              });
+    }
   }
 
   private void loadMore() {
@@ -188,7 +199,7 @@ public class ForumDisplayActivity extends SwipeBackActivity {
     ForumThreadTitleObject object = gson.fromJson(json.toString(), ForumThreadTitleObject.class);
 
     lastRefreshTime = object.getTime();
-    pageCount = object.getPagenav();
+    int pageCount = object.getPagenav();
 
     if (currPage < pageCount || object.getThreadList().size() > 0) {
       if (currPage == 1) {
@@ -206,7 +217,6 @@ public class ForumDisplayActivity extends SwipeBackActivity {
     new RemoveNullInList<ForumThreadTitleObject.ThreadListEntity>().removeNull(threads);
     swipe_refresh.setRefreshing(false);
     adapter.setData(threads);
-    adapter.notifyDataSetChanged();
   }
 
   @Override protected void ibtnRightClicked() {
@@ -232,13 +242,9 @@ public class ForumDisplayActivity extends SwipeBackActivity {
 
   private ItemClickListener listener = new ItemClickListener() {
     @Override public void itemClick(int pos) {
-      int threadId = threads.get(pos).getThreadid();
-      int open = threads.get(pos).getOpen();
-      int replyCount = threads.get(pos).getReplycount();
+      ForumThreadTitleObject.ThreadListEntity entity = threads.get(pos);
       Intent intent = new Intent(ForumDisplayActivity.this, ThreadDisplayActivity.class);
-      intent.putExtra("threadId", threadId);
-      intent.putExtra("open", open);
-      intent.putExtra("replyCount", replyCount);
+      intent.putExtra("entity", entity);
       intent.putExtra("title", title);
 
       startActivity(intent);
@@ -355,7 +361,7 @@ public class ForumDisplayActivity extends SwipeBackActivity {
     }
 
     @Override public int getItemCount() {
-      return data.size() + 1;
+      return data.size() + (fromFavor ? 0 : 1);
     }
 
     @Override public int getItemViewType(int position) {

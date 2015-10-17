@@ -77,6 +77,43 @@
       />
 
   <LinearLayout
+      android:id="@+id/ll_favor"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="16dp"
+      android:paddingBottom="16dp"
+      android:gravity="center_vertical"
+      android:background="@drawable/drawer_btn_bg"
+      android:orientation="horizontal"
+      >
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@mipmap/ic_favor"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/app_name"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/my_favor"
+        android:textColor="@color/text_black_2_dark"
+        android:textSize="20sp"
+        />
+
+  </LinearLayout>
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@color/text_black_4"
+      />
+
+  <LinearLayout
       android:id="@+id/ll_daily"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

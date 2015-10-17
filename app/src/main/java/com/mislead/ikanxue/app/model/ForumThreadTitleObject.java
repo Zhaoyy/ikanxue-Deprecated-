@@ -1,5 +1,7 @@
 package com.mislead.ikanxue.app.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.util.List;
 
@@ -47,6 +49,7 @@ public class ForumThreadTitleObject implements Serializable {
     return pagenav;
   }
 
+  @DatabaseTable(tableName = "favor")
   public static class ThreadListEntity implements Serializable {
     /**
      * avatardateline : 0
@@ -63,18 +66,31 @@ public class ForumThreadTitleObject implements Serializable {
      * open : 1
      * replycount : 2
      */
+    @DatabaseField
     private String avatardateline;
+    @DatabaseField
     private int goodnees;
+    @DatabaseField
     private int avatar;
+    @DatabaseField
     private int globalsticky;
+    @DatabaseField(id = true)
     private int threadid;
+    @DatabaseField
     private String threadtitle;
+    @DatabaseField
     private int postuserid;
+    @DatabaseField
     private int sticky;
+    @DatabaseField
     private String lastpostdate;
+    @DatabaseField
     private String postusername;
+    @DatabaseField
     private int views;
+    @DatabaseField
     private int open;
+    @DatabaseField
     private int replycount;
 
     public void setAvatardateline(String avatardateline) {

@@ -46,13 +46,8 @@ public class MainActivity extends ToolbarActivity implements View.OnClickListene
   private LinearLayout ll_root;
 
   private MySlidingLayout sl_root;
-  private LinearLayout userInfo;
   private CircleImageView circleIcon;
   private TextView name;
-  private LinearLayout ll_daily;
-  private LinearLayout ll_about;
-  private LinearLayout ll_change_theme;
-  private LinearLayout ll_exit;
   private TextView tv_type;
   private TextView tv_money;
   private ImageView iv_theme;
@@ -73,19 +68,20 @@ public class MainActivity extends ToolbarActivity implements View.OnClickListene
 
     recyclerView = (LoadMoreRecyclerView) findViewById(R.id.recyclerView);
     ll_root = (LinearLayout) findViewById(R.id.ll_root);
-    userInfo = (LinearLayout) findViewById(R.id.userInfo);
+    LinearLayout userInfo = (LinearLayout) findViewById(R.id.userInfo);
     circleIcon = (com.mislead.circleimageview.lib.CircleImageView) findViewById(R.id.circleIcon);
     name = (TextView) findViewById(R.id.name);
-    ll_daily = (LinearLayout) findViewById(R.id.ll_daily);
-    ll_about = (LinearLayout) findViewById(R.id.ll_about);
-    ll_change_theme = (LinearLayout) findViewById(R.id.ll_change_theme);
-    ll_exit = (LinearLayout) findViewById(R.id.ll_exit);
+    LinearLayout ll_daily = (LinearLayout) findViewById(R.id.ll_daily);
+    LinearLayout ll_about = (LinearLayout) findViewById(R.id.ll_about);
+    LinearLayout ll_change_theme = (LinearLayout) findViewById(R.id.ll_change_theme);
+    LinearLayout ll_exit = (LinearLayout) findViewById(R.id.ll_exit);
 
     tv_type = (TextView) findViewById(R.id.tv_type);
     tv_money = (TextView) findViewById(R.id.tv_money);
     iv_theme = (ImageView) findViewById(R.id.iv_theme);
     tv_theme = (TextView) findViewById(R.id.tv_theme);
 
+    findViewById(R.id.ll_favor).setOnClickListener(this);
     ll_daily.setOnClickListener(this);
     ll_about.setOnClickListener(this);
     ll_change_theme.setOnClickListener(this);
@@ -348,6 +344,11 @@ public class MainActivity extends ToolbarActivity implements View.OnClickListene
         break;
       case R.id.userInfo:
         gotoUerInfo();
+        break;
+      case R.id.ll_favor:
+        Intent intent = new Intent(MainActivity.this, ForumDisplayActivity.class);
+        intent.putExtra("title", getString(R.string.my_favor));
+        startActivity(intent);
         break;
       default:
         break;
