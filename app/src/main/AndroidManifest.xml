@@ -71,6 +71,10 @@
         android:name=".activity.ImageActivity"
         android:screenOrientation="portrait"
         />
+    <activity
+        android:name=".activity.ReplyActivity"
+        android:screenOrientation="portrait"
+        />
 
     <activity
         android:name="com.mislead.ikanxue.app.test.TestActivity"

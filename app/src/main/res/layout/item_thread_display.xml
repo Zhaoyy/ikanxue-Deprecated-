@@ -52,14 +52,15 @@
         />
 
     <TextView
-        android:id="@+id/tv_num"
+        android:id="@+id/tv_reply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/iv_head"
         android:textSize="@dimen/text_size_small"
         android:textColor="?attr/text_color_2"
-        android:text="@string/app_name"
+        android:background="@drawable/dialog_bg_transparent"
+        android:text="@string/reply"
         />
 
   </RelativeLayout>

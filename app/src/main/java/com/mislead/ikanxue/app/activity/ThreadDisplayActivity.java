@@ -97,6 +97,18 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
         ToastHelper.toastLong(ThreadDisplayActivity.this, "登录之后才能查看用户信息！");
       }
     }
+
+    @Override public void replyClick(int pos) {
+      if (Api.getInstance().isLogin()) {
+        // reply click
+        Intent intent = new Intent(ThreadDisplayActivity.this, ReplyActivity.class);
+        intent.putExtra("data", threads.get(pos));
+        startActivityForResult(intent, 201);
+      } else {
+        ThreadDisplayActivity.this.startActivity(
+            new Intent(ThreadDisplayActivity.this, LoginActivity.class));
+      }
+    }
   };
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -183,7 +195,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
     btn_reply.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        replyOrLogin();
+        replyOrLogin(et_reply.getText().toString().trim());
       }
     });
   }
@@ -280,9 +292,8 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
     adapter.notifyDataSetChanged();
   }
 
-  private void replyOrLogin() {
+  private void replyOrLogin(final String reply) {
     if (Api.getInstance().isLogin()) {
-      String reply = et_reply.getText().toString();
 
       if (TextUtils.isEmpty(reply)) {
         ToastHelper.toastShort(ThreadDisplayActivity.this, "回复内容不能为空！");
@@ -309,7 +320,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
                 switch (result) {
                   case Api.NEW_POST_SUCCESS:
                     ToastHelper.toastLong(ThreadDisplayActivity.this, R.string.new_post_success);
-                    addNewReply(et_reply.getText().toString());
+                    addNewReply(reply);
                     et_reply.setText("");
                     break;
                   case Api.NEW_POST_FAIL_WITHIN_THIRTY_SECONDS:
@@ -332,6 +343,15 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
       ThreadDisplayActivity.this.startActivity(
           new Intent(ThreadDisplayActivity.this, LoginActivity.class));
     }
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    if (resultCode == RESULT_OK && data != null) {
+      replyOrLogin(data.getStringExtra("msg"));
+    }
+
+    super.onActivityResult(requestCode, resultCode, data);
   }
 
   /**
@@ -406,8 +426,16 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
         forumThreadHolder.tv_name.setText(Html.fromHtml(entity.getUsername()));
 
-        forumThreadHolder.tv_time.setText(entity.getPostdate() + " " + entity.getPosttime());
-        forumThreadHolder.tv_num.setText((position + 1) + "#");
+        forumThreadHolder.tv_time.setText(
+            String.format("%1$s#  %2$s %3$s", position + 1, entity.getPostdate(),
+                entity.getPosttime()));
+        forumThreadHolder.tv_replay.setOnClickListener(new View.OnClickListener() {
+          @Override public void onClick(View view) {
+            if (listener != null) {
+              listener.replyClick(position);
+            }
+          }
+        });
 
         if (position == 0) {
           forumThreadHolder.tv_title.setVisibility(View.VISIBLE);
@@ -539,6 +567,8 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
   interface ItemClickListener {
     void itemClick(int pos);
+
+    void replyClick(int pos);
   }
 
   class ThreadHolder extends RecyclerView.ViewHolder {
@@ -547,7 +577,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
     public CircleImageView iv_head;
     public TextView tv_name;
     public TextView tv_time;
-    public TextView tv_num;
+    public TextView tv_replay;
     public TextView tv_title;
     public TextView tv_msg;
     public LinearLayout ll_attachment;
@@ -560,7 +590,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
       iv_head = (CircleImageView) itemView.findViewById(R.id.iv_head);
       tv_name = (TextView) itemView.findViewById(R.id.tv_name);
       tv_time = (TextView) itemView.findViewById(R.id.tv_time);
-      tv_num = (TextView) itemView.findViewById(R.id.tv_num);
+      tv_replay = (TextView) itemView.findViewById(R.id.tv_reply);
       tv_title = (TextView) itemView.findViewById(R.id.tv_title);
       tv_msg = (TextView) itemView.findViewById(R.id.tv_msg);
       ll_attachment = (LinearLayout) itemView.findViewById(R.id.ll_attachment);
