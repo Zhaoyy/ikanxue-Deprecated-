@@ -29,6 +29,7 @@ import com.mislead.ikanxue.app.db.FavorDao;
 import com.mislead.ikanxue.app.model.ForumThreadObject;
 import com.mislead.ikanxue.app.model.ForumThreadTitleObject;
 import com.mislead.ikanxue.app.util.AndroidHelper;
+import com.mislead.ikanxue.app.util.DownloadHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.util.RemoveNullInList;
 import com.mislead.ikanxue.app.util.ShPreUtil;
@@ -154,8 +155,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
       @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
         if (newState == RecyclerView.SCROLL_STATE_IDLE
-            && lastVisibleIndex + 1 == adapter.getItemCount()
-            && (footState == 0)) {
+            && lastVisibleIndex + 1 == adapter.getItemCount() && (footState == 0)) {
           loadMore();
         }
       }
@@ -296,38 +296,38 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
       Api.getInstance()
           .quickReply(entity.getThreadid(), reply, new VolleyHelper.ResponseListener<String>() {
-        @Override public void onErrorResponse(VolleyError volleyError) {
-          LogHelper.e(volleyError.toString());
-        }
-
-        @Override public void onResponse(String object) {
-          try {
-            JSONObject jsonObject = new JSONObject(object);
-
-            int result = jsonObject.getInt("result");
-
-            switch (result) {
-              case Api.NEW_POST_SUCCESS:
-                ToastHelper.toastLong(ThreadDisplayActivity.this, R.string.new_post_success);
-                addNewReply(et_reply.getText().toString());
-                et_reply.setText("");
-                break;
-              case Api.NEW_POST_FAIL_WITHIN_THIRTY_SECONDS:
-                ToastHelper.toastLong(ThreadDisplayActivity.this,
-                    R.string.new_post_fail_within_thirty_seconds);
-                return;
-              case Api.NEW_POST_FAIL_WITHIN_FIVE_MINUTES:
-                ToastHelper.toastLong(ThreadDisplayActivity.this,
-                    R.string.new_post_fail_within_five_minutes);
-                return;
-              default:
-                break;
+            @Override public void onErrorResponse(VolleyError volleyError) {
+              LogHelper.e(volleyError.toString());
             }
-          } catch (JSONException e) {
-            e.printStackTrace();
-          }
-        }
-      });
+
+            @Override public void onResponse(String object) {
+              try {
+                JSONObject jsonObject = new JSONObject(object);
+
+                int result = jsonObject.getInt("result");
+
+                switch (result) {
+                  case Api.NEW_POST_SUCCESS:
+                    ToastHelper.toastLong(ThreadDisplayActivity.this, R.string.new_post_success);
+                    addNewReply(et_reply.getText().toString());
+                    et_reply.setText("");
+                    break;
+                  case Api.NEW_POST_FAIL_WITHIN_THIRTY_SECONDS:
+                    ToastHelper.toastLong(ThreadDisplayActivity.this,
+                        R.string.new_post_fail_within_thirty_seconds);
+                    return;
+                  case Api.NEW_POST_FAIL_WITHIN_FIVE_MINUTES:
+                    ToastHelper.toastLong(ThreadDisplayActivity.this,
+                        R.string.new_post_fail_within_five_minutes);
+                    return;
+                  default:
+                    break;
+                }
+              } catch (JSONException e) {
+                e.printStackTrace();
+              }
+            }
+          });
     } else {
       ThreadDisplayActivity.this.startActivity(
           new Intent(ThreadDisplayActivity.this, LoginActivity.class));
@@ -491,7 +491,19 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
             textView.setLayoutParams(lp);
             textView.setTextColor(getResources().getColor(R.color.ics_blue_dark));
             textView.setTextSize(14);
+            textView.setTag(attachment);
             textView.setText(attachment.getFilename());
+
+            textView.setOnClickListener(new View.OnClickListener() {
+              @Override public void onClick(View view) {
+                ForumThreadObject.ThumbnailattachmentsEntity attachment =
+                    (ForumThreadObject.ThumbnailattachmentsEntity) view.getTag();
+
+                DownloadHelper downloadHelper =
+                    DownloadHelper.getInstance(ThreadDisplayActivity.this);
+                downloadHelper.addDownloadTask(ThreadDisplayActivity.this, attachment);
+              }
+            });
 
             forumThreadHolder.ll_other_attachment.addView(textView);
           }
