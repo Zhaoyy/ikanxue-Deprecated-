@@ -109,6 +109,16 @@ public class Api {
     }
   }
 
+  public void requestStringByGet(String url, VolleyHelper.ResponseListener<String> listener) {
+    if (isLogin()) {
+
+      VolleyHelper.requestStringWithHeadersAndParams(Request.Method.GET, url, listener,
+          getCookieHeader(), null);
+    } else {
+      VolleyHelper.requestStringGet(url, listener);
+    }
+  }
+
   public void requestJSONObjectByPost(String url,
       VolleyHelper.ResponseListener<JSONObject> listener, Map<String, String> param) {
     VolleyHelper.requestJSONObject(Request.Method.POST, url, null, listener);
@@ -182,9 +192,9 @@ public class Api {
    * @param page ���������б�ҳ��
    */
   public void getForumShowthreadPage(int id, int page,
-      final VolleyHelper.ResponseListener<JSONObject> responseListener) {
+      final VolleyHelper.ResponseListener<String> responseListener) {
     String url = DOMAIN + PATH + "showthread.php?" + STYLE + "&t=" + id + "&page=" + page;
-    requestJSONObjectByGet(url, responseListener);
+    requestStringByGet(url, responseListener);
   }
 
   /**
@@ -395,9 +405,9 @@ public class Api {
    * @param time �ϴ�ˢ�µ�ʱ���
    */
   public void checkNewPostInShowThreadPage(int id, long time,
-      VolleyHelper.ResponseListener<JSONObject> listener) {
+      VolleyHelper.ResponseListener<String> listener) {
     String url = DOMAIN + PATH + "showthread.php?t=" + id + "&getnewpost=" + time + "&" + STYLE;
-    VolleyHelper.requestJSONObjectWithHeaderAndParams(Request.Method.GET, url, null, listener,
+    VolleyHelper.requestStringWithHeadersAndParams(Request.Method.GET, url, listener,
         getCookieHeader(), null);
   }
 
