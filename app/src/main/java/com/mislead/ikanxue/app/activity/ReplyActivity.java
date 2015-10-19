@@ -79,7 +79,7 @@ public class ReplyActivity extends SwipeBackActivity {
       msg = msg.replace("\n", "<br \\/>\n");
 
       if (chWith.isChecked()) {
-        msg = reference + "<br \\/>\\n" + msg;
+        msg = reference + "<br \\/>" + msg;
       }
 
       setResult(RESULT_OK, new Intent().putExtra("msg", msg));
