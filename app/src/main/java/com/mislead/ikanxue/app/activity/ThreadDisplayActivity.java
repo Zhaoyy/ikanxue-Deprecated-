@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.mislead.circleimageview.lib.CircleImageView;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.api.Api;
@@ -204,14 +205,14 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
     // check there is new post or not
     Api.getInstance().checkNewPostInShowThreadPage(entity.getThreadid(), lastRefreshTime,
-            new VolleyHelper.ResponseListener<JSONObject>() {
+        new VolleyHelper.ResponseListener<String>() {
               @Override public void onErrorResponse(VolleyError volleyError) {
                 LogHelper.e(volleyError.toString());
                 swipe_refresh.setRefreshing(false);
               }
 
-              @Override public void onResponse(JSONObject object) {
-                if (object.has("result")) {
+          @Override public void onResponse(String object) {
+            if (object.contains("result:")) {
                   ToastHelper.toastShort(ThreadDisplayActivity.this, "没有新帖");
                   swipe_refresh.setRefreshing(false);
                 } else {
@@ -223,7 +224,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
   }
 
   private void loadMore() {
-    if (list.getFootState() == 2) {
+    if (threads == null || threads.size() == 0 || list.getFootState() == 2) {
       return;
     }
     list.changeFootState(1);
@@ -236,13 +237,13 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
   private void loadData() {
 
     Api.getInstance().getForumShowthreadPage(entity.getThreadid(), currPage,
-            new VolleyHelper.ResponseListener<JSONObject>() {
+        new VolleyHelper.ResponseListener<String>() {
               @Override public void onErrorResponse(VolleyError volleyError) {
                 ToastHelper.toastShort(ThreadDisplayActivity.this, volleyError.toString());
                 swipe_refresh.setRefreshing(false);
               }
 
-              @Override public void onResponse(JSONObject object) {
+          @Override public void onResponse(String object) {
                 try {
                   parseJSON(object);
                 } catch (JSONException e) {
@@ -252,11 +253,19 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
             });
   }
 
-  private void parseJSON(JSONObject json) throws JSONException {
+  private void parseJSON(String json) throws JSONException {
     Gson gson = new Gson();
-    ForumThreadObject object = gson.fromJson(json.toString(), ForumThreadObject.class);
+    ForumThreadObject object = null;
+    try {
+      object = gson.fromJson(json, ForumThreadObject.class);
+    } catch (JsonSyntaxException e) {
+      swipe_refresh.setRefreshing(false);
+      e.printStackTrace();
+      ToastHelper.toastShort(this, "解析数据出错，可在PC查看本帖！");
+      return;
+    }
 
-    lastRefreshTime = object.getTime();
+    lastRefreshTime = object == null ? System.currentTimeMillis() : object.getTime();
     boolean isAll = false;
 
     if (currPage == 1) {
