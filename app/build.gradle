@@ -28,8 +28,8 @@ android {
     applicationId "com.mislead.ikanxue.app"
     minSdkVersion 11
     targetSdkVersion 21
-    versionCode 4
-    versionName "2.2"
+    versionCode 5
+    versionName "2.3"
   }
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_7
