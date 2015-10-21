@@ -496,13 +496,13 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
             ImageView imageView = new ImageView(ThreadDisplayActivity.this);
             imageView.setLayoutParams(lp);
 
-            imageView.setTag(url);
+            imageView.setTag(attachment.getAttachmentid());
 
             imageView.setOnClickListener(new View.OnClickListener() {
               @Override public void onClick(View v) {
                 Intent intent = new Intent(ThreadDisplayActivity.this, ImageActivity.class);
                 intent.putExtra("title", title);
-                intent.putExtra("url", v.getTag().toString());
+                intent.putExtra("url", api.getImageAttachmentPCUrl((int) v.getTag()));
                 startActivity(intent);
               }
             });

@@ -31,6 +31,8 @@ public class Api {
    */
   public static final String STYLE = "styleid=12";
 
+  public static final String PC_STYLE = "styleid=1";
+
   // ��¼����״̬��
   public static final int LOGIN_SUCCESS = 0;
   public static final int LOGIN_FAIL_LESS_THAN_FIVE = 1; // �û��������������5������
@@ -205,7 +207,8 @@ public class Api {
   public void getForumFullThread(int id,
       final VolleyHelper.ResponseListener<String> responseListener) {
     String url = DOMAIN + PATH + "showpost.php?" + STYLE + "&p=" + id;
-    VolleyHelper.requestStringGet(url, responseListener);
+    VolleyHelper.requestStringWithHeadersAndParams(Request.Method.GET, url, responseListener,
+        getCookieHeader(), null);
   }
 
   /**
@@ -427,6 +430,10 @@ public class Api {
    */
   public String getAttachmentImgUrl(int id) {
     return DOMAIN + PATH + "attachment.php?attachmentid=" + id + "&thumb=1&" + STYLE;
+  }
+
+  public String getImageAttachmentPCUrl(int id) {
+    return DOMAIN + PATH + "attachment.php?attachmentid=" + id + "&thumb=1&" + PC_STYLE;
   }
 
   /**
