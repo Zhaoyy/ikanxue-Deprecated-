@@ -24,6 +24,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -85,7 +86,7 @@ public class ImageClickableTextView extends TextView {
       for (ImageSpan span : imageSpans) {
         final String url = span.getSource();
         if (!AndroidHelper.getImageDiskCache().hasBitMap(VolleyHelper.getCacheKey(url))) {
-          LogHelper.e("add key:" + url);
+          LogHelper.e("add url:" + url);
           sources.add(url);
         }
       }
@@ -110,12 +111,7 @@ public class ImageClickableTextView extends TextView {
         Observable.from(sources)
             .flatMap(new Func1<String, Observable<BitmapEntry>>() {
               @Override public Observable<BitmapEntry> call(String s) {
-                try {
-                  return Observable.just(getImageBitmap(s));
-                } catch (ExecutionException | InterruptedException e) {
-                  LogHelper.e(e.getMessage());
-                  return Observable.error(e);
-                }
+                return getBitmapEntry(s);
               }
             })
             .subscribeOn(Schedulers.io())
@@ -139,6 +135,22 @@ public class ImageClickableTextView extends TextView {
             });
 
     compositeSubscription.add(subscription);
+  }
+
+  // 使用defer来提高性能
+  // defer操作符是直到有订阅者订阅时，才通过Observable的工厂方法创建Observable并执行，
+  // 在使用rxjava中我们应该使用defer来包装慢的操作
+  private Observable<BitmapEntry> getBitmapEntry(final String url) {
+    return Observable.defer(new Func0<Observable<BitmapEntry>>() {
+      @Override public Observable<BitmapEntry> call() {
+        try {
+          return Observable.just(getImageBitmap(url));
+        } catch (ExecutionException | InterruptedException e) {
+          LogHelper.e(e.getMessage());
+          return Observable.error(e);
+        }
+      }
+    });
   }
 
   private void resetTextAndClickable() {
