@@ -30,7 +30,8 @@ public class ImageRequest extends Request<Bitmap> {
   public ImageRequest(String url, Response.Listener<Bitmap> listener, int maxWidth, int maxHeight,
       Bitmap.Config decodeConfig, Response.ErrorListener errorListener) {
     super(0, url, errorListener);
-    this.setRetryPolicy(new DefaultRetryPolicy(1000, 2, 2.0F));
+    this.setRetryPolicy(
+        new DefaultRetryPolicy(IMAGE_TIMEOUT_MS, IMAGE_MAX_RETRIES, IMAGE_BACKOFF_MULT));
     this.mListener = listener;
     this.mDecodeConfig = decodeConfig;
     this.mMaxWidth = maxWidth;

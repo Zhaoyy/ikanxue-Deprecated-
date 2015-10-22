@@ -35,4 +35,8 @@ public class ImageDiskCache extends DiskBasedCache implements ImageLoader.ImageC
     entry.data = BitmapHelper.convertBitmapToBytes(bitmap);
     put(s, entry);
   }
+
+  public boolean hasBitMap(String key) {
+    return get(key) != null;
+  }
 }

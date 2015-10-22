@@ -33,7 +33,12 @@ public class ImageActivity extends ToolbarActivity {
 
     Intent intent = getIntent();
     String titile = intent.getStringExtra("title");
-    String url = intent.getStringExtra("url");
+    String url = intent.getStringExtra("url").trim();
+
+    if (url.endsWith("styleid=12")) {
+      url = url.substring(0, url.length() - 1);
+    }
+
     setTitle(titile);
     VolleyHelper.requestImageWithCache(url, imageView, AndroidHelper.getImageDiskCache(),
         R.mipmap.image_404, R.mipmap.image_404);

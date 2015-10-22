@@ -8,8 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.widget.TextView;
 import com.mislead.ikanxue.app.util.AndroidHelper;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * VolleyImageGetter
@@ -25,21 +23,11 @@ public class VolleyImageGetter implements Html.ImageGetter {
   private static String TAG = "VolleyImageGetter";
   private int minHeight = 40;
 
-  private TextView textView;
-  private Drawable drawable;
-  private List<String> urls = new ArrayList<>();
-
-  public List<String> getUrls() {
-    return urls;
-  }
-
   public static VolleyImageGetter from(TextView textView) {
     return new VolleyImageGetter(textView);
   }
 
   private VolleyImageGetter(TextView textView) {
-    this.textView = textView;
-    urls.clear();
     minHeight = getFountHeight(textView.getTextSize());
   }
 
@@ -50,19 +38,13 @@ public class VolleyImageGetter implements Html.ImageGetter {
     return (int) Math.ceil(fm.descent - fm.ascent);
   }
 
-  @Override public Drawable getDrawable(String source) {
+  @Override public Drawable getDrawable(final String source) {
     // get the cache key, find bitmap in cache.
+    Drawable drawable = null;
     final String key = VolleyHelper.getCacheKey(source);
 
     Bitmap bitmap = AndroidHelper.getImageDiskCache().getBitmap(key);
-    // if not found, request with url
-    if (bitmap == null) {
-
-      if (!urls.contains(source)) {
-        urls.add(source);
-      }
-
-    } else {
+    if (bitmap != null) {
       drawable = new BitmapDrawable(Resources.getSystem(), bitmap);
       drawable.setBounds(0, 0, bitmap.getWidth() < minHeight ? minHeight : bitmap.getWidth(),
           bitmap.getHeight() < minHeight ? minHeight : bitmap.getHeight());

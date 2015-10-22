@@ -81,7 +81,7 @@
       android:text="@string/titles"
       />
 
-  <TextView
+    <com.mislead.ikanxue.app.view.ImageClickableTextView
       android:id="@+id/tv_msg"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

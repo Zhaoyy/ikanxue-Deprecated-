@@ -82,9 +82,9 @@ public class VolleyHelper {
     queue.add(request);
   }
 
-  public static void requestJSONObjectWithEncodingParams(int method, String url,
+  public static void requestJSONObjectWithEncodingParams(int method, String url, String jsonOblect,
       ResponseListener<JSONObject> listener, final Map<String, String> params) {
-    JsonObjectRequest request = new JsonObjectRequest(method, url, null, listener, listener) {
+    JsonObjectRequest request = new JsonObjectRequest(method, url, jsonOblect, listener, listener) {
       @Override protected Map<String, String> getParams() throws AuthFailureError {
         if (params == null) {
           return super.getParams();
@@ -240,8 +240,8 @@ public class VolleyHelper {
   public static void requestImageWithCacheAndHeader(String url, final Map<String, String> headers,
       ResponseListener<Bitmap> listener) {
     com.android.volley.toolbox.ImageRequest request =
-        new com.android.volley.toolbox.ImageRequest(url, listener, 0, 0, Bitmap.Config.RGB_565,
-            listener) {
+        new com.android.volley.toolbox.ImageRequest(url, listener, 0, 0,
+            ImageView.ScaleType.CENTER_INSIDE, Bitmap.Config.RGB_565, listener) {
           @Override public Map<String, String> getHeaders() throws AuthFailureError {
             if (headers != null) {
               return headers;
@@ -275,17 +275,17 @@ public class VolleyHelper {
    * @param maxWidth cache maximum width
    * @param maxHeight cache maximum height
    */
-  public static String getCacheKey(String url, int maxWidth, int maxHeight) {
-    return (new StringBuilder(url.length() + 12)).append("#W")
-        .append(maxWidth)
-        .append("#H")
-        .append(maxHeight)
-        .append(url)
-        .toString();
+  public static String getCacheKey(String url, int maxWidth, int maxHeight,
+      ImageView.ScaleType scaleType) {
+    return "#W" + maxWidth + "#H" + maxHeight + "#S" + scaleType.ordinal() + url;
+  }
+
+  public static void addRequest2Queue(Request request) {
+    queue.add(request);
   }
 
   public static String getCacheKey(String url) {
-    return getCacheKey(url, 0, 0);
+    return getCacheKey(url, 0, 0, ImageView.ScaleType.CENTER_INSIDE);
   }
 
   public static interface ResponseListener<T> extends Response.Listener<T>, Response.ErrorListener {

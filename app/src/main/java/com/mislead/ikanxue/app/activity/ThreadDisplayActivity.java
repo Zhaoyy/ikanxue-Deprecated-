@@ -1,15 +1,12 @@
 package com.mislead.ikanxue.app.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +32,9 @@ import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.util.RemoveNullInList;
 import com.mislead.ikanxue.app.util.ShPreUtil;
 import com.mislead.ikanxue.app.util.ToastHelper;
+import com.mislead.ikanxue.app.view.ImageClickableTextView;
 import com.mislead.ikanxue.app.view.LoadMoreRecyclerView;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
-import com.mislead.ikanxue.app.volley.VolleyImageGetter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -168,7 +165,8 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
       @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
         if (newState == RecyclerView.SCROLL_STATE_IDLE
-            && lastVisibleIndex + 1 == adapter.getItemCount() && (footState == 0)) {
+            && lastVisibleIndex + 1 == adapter.getItemCount()
+            && (footState == 0)) {
           loadMore();
         }
       }
@@ -204,15 +202,16 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
   private void refresh() {
 
     // check there is new post or not
-    Api.getInstance().checkNewPostInShowThreadPage(entity.getThreadid(), lastRefreshTime,
-        new VolleyHelper.ResponseListener<String>() {
+    Api.getInstance()
+        .checkNewPostInShowThreadPage(entity.getThreadid(), lastRefreshTime,
+            new VolleyHelper.ResponseListener<String>() {
               @Override public void onErrorResponse(VolleyError volleyError) {
                 LogHelper.e(volleyError.toString());
                 swipe_refresh.setRefreshing(false);
               }
 
-          @Override public void onResponse(String object) {
-            if (object.contains("result:")) {
+              @Override public void onResponse(String object) {
+                if (object.contains("result:")) {
                   ToastHelper.toastShort(ThreadDisplayActivity.this, "没有新帖");
                   swipe_refresh.setRefreshing(false);
                 } else {
@@ -236,14 +235,15 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
   // request data from net
   private void loadData() {
 
-    Api.getInstance().getForumShowthreadPage(entity.getThreadid(), currPage,
-        new VolleyHelper.ResponseListener<String>() {
+    Api.getInstance()
+        .getForumShowthreadPage(entity.getThreadid(), currPage,
+            new VolleyHelper.ResponseListener<String>() {
               @Override public void onErrorResponse(VolleyError volleyError) {
                 ToastHelper.toastShort(ThreadDisplayActivity.this, volleyError.toString());
                 swipe_refresh.setRefreshing(false);
               }
 
-          @Override public void onResponse(String object) {
+              @Override public void onResponse(String object) {
                 try {
                   parseJSON(object);
                 } catch (JSONException e) {
@@ -453,6 +453,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
           forumThreadHolder.tv_title.setVisibility(View.GONE);
         }
 
+        setHtmlText(forumThreadHolder.tv_msg, entity.getMessage());
         if (entity.getThumbnail() == 1) {
           Api.getInstance()
               .getForumFullThread(entity.getPostid(), new VolleyHelper.ResponseListener<String>() {
@@ -466,8 +467,6 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
                   setHtmlText(forumThreadHolder.tv_msg, entity.getMessage());
                 }
               });
-        } else {
-          setHtmlText(forumThreadHolder.tv_msg, entity.getMessage());
         }
 
         if ((entity.getThumbnailattachments() != null
@@ -500,10 +499,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
             imageView.setOnClickListener(new View.OnClickListener() {
               @Override public void onClick(View v) {
-                Intent intent = new Intent(ThreadDisplayActivity.this, ImageActivity.class);
-                intent.putExtra("title", title);
-                intent.putExtra("url", api.getImageAttachmentPCUrl((int) v.getTag()));
-                startActivity(intent);
+                gotoImageActivity(api.getImageAttachmentPCUrl((int) v.getTag()));
               }
             });
 
@@ -558,11 +554,23 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
       }
     }
 
-    private void setHtmlText(final TextView textView, final String htmlStr) {
-      final VolleyImageGetter imageGetter = VolleyImageGetter.from(textView);
-      final HtmlTextWatcher watcher = new HtmlTextWatcher(textView, imageGetter, htmlStr);
-      textView.addTextChangedListener(watcher);
-      textView.setText(Html.fromHtml(htmlStr, imageGetter, null));
+    private void gotoImageActivity(String url) {
+      Intent intent = new Intent(ThreadDisplayActivity.this, ImageActivity.class);
+      intent.putExtra("title", title);
+      intent.putExtra("url", url);
+      startActivity(intent);
+    }
+
+    private void setHtmlText(final ImageClickableTextView textView, final String htmlStr) {
+      textView.setListener(new ImageClickableTextView.OnImageClickListener() {
+        @Override public void imageClicked(String imageUrl) {
+          // 一般以带gif扩展名的是表情
+          if (!imageUrl.endsWith(".gif")) {
+            gotoImageActivity(imageUrl);
+          }
+        }
+      });
+      textView.setHtmlString(htmlStr);
     }
 
     @Override public int getItemCount() {
@@ -588,7 +596,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
     public TextView tv_time;
     public TextView tv_replay;
     public TextView tv_title;
-    public TextView tv_msg;
+    public ImageClickableTextView tv_msg;
     public LinearLayout ll_attachment;
     public LinearLayout ll_image_attachment;
     public LinearLayout ll_other_attachment;
@@ -601,7 +609,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
       tv_time = (TextView) itemView.findViewById(R.id.tv_time);
       tv_replay = (TextView) itemView.findViewById(R.id.tv_reply);
       tv_title = (TextView) itemView.findViewById(R.id.tv_title);
-      tv_msg = (TextView) itemView.findViewById(R.id.tv_msg);
+      tv_msg = (ImageClickableTextView) itemView.findViewById(R.id.tv_msg);
       ll_attachment = (LinearLayout) itemView.findViewById(R.id.ll_attachment);
       ll_image_attachment = (LinearLayout) itemView.findViewById(R.id.ll_image_attachment);
       ll_other_attachment = (LinearLayout) itemView.findViewById(R.id.ll_other_attachment);
@@ -612,61 +620,6 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
     public FootHolder(View itemView) {
       super(itemView);
-    }
-  }
-
-  class HtmlTextWatcher implements TextWatcher {
-
-    private TextView textView;
-    private VolleyImageGetter imageGetter;
-    private String htmlStr;
-    private int finishCount = 0;
-    private int taskCount = 0;
-
-    public HtmlTextWatcher(TextView textView, VolleyImageGetter imageGetter, String htmlStr) {
-      this.textView = textView;
-      this.imageGetter = imageGetter;
-      this.htmlStr = htmlStr;
-      finishCount = 0;
-    }
-
-    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    @Override public void afterTextChanged(final Editable s) {
-
-      taskCount = imageGetter.getUrls().size();
-      for (final String url : imageGetter.getUrls()) {
-        LogHelper.e(url);
-        VolleyHelper.requestImageWithCacheAndHeader(url, Api.getInstance().getCookieHeader(),
-            new VolleyHelper.ResponseListener<Bitmap>() {
-              @Override public void onErrorResponse(VolleyError volleyError) {
-                commitTask();
-              }
-
-              @Override public void onResponse(Bitmap bitmap) {
-                final String key = VolleyHelper.getCacheKey(url);
-                // request success, cache bitmap and relayout textView
-                if (bitmap != null) {
-                  AndroidHelper.getImageDiskCache().putBitmap(key, bitmap);
-                }
-                commitTask();
-              }
-            });
-      }
-    }
-
-    private void commitTask() {
-      finishCount++;
-      if (finishCount == taskCount) {
-        textView.removeTextChangedListener(this);
-        textView.setText(Html.fromHtml(htmlStr, imageGetter, null));
-      }
     }
   }
 }
