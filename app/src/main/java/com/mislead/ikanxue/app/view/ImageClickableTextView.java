@@ -11,12 +11,14 @@ import android.text.style.ImageSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.RequestFuture;
 import com.mislead.ikanxue.app.util.AndroidHelper;
 import com.mislead.ikanxue.app.util.LogHelper;
 import com.mislead.ikanxue.app.volley.ImageRequest;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
 import com.mislead.ikanxue.app.volley.VolleyImageGetter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -123,7 +125,15 @@ public class ImageClickableTextView extends TextView {
               }
 
               @Override public void onError(Throwable e) {
-                LogHelper.e(e.getMessage());
+
+                if (e instanceof VolleyError) {
+                  VolleyError cause = (VolleyError) e.getCause();
+                  String s = new String(cause.networkResponse.data, Charset.forName("UTF-8"));
+                  LogHelper.e(s);
+                } else {
+                  LogHelper.e(e.getMessage());
+                }
+
               }
 
               @Override public void onNext(BitmapEntry entry) {
