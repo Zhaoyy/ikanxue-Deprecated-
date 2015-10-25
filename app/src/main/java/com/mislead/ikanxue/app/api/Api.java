@@ -100,6 +100,10 @@ public class Api {
     return header;
   }
 
+  public String getCookieString() {
+    return isLogin() ? mCookieStorage.getCookies() : "";
+  }
+
   public void requestJSONObjectByGet(String url,
       VolleyHelper.ResponseListener<JSONObject> listener) {
     if (isLogin()) {
