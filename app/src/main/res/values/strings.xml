@@ -66,6 +66,7 @@
   <string name="reply">回复</string>
   <string name="ref_template"><Data><![CDATA[ <div class=\"quote\"><i><i>最初由 <strong>%1$s<\/strong>发布<\/i>:<br \/>\r\n%2$s<\/i><\/div> ]]> </Data></string>
   <string name="reply_with_reference">回复中引用原始信息</string>
+  <string name="need_login">该操作需要用户先登录！</string>
 
   <string-array name="topic_list">
     <item>【求助】</item>
