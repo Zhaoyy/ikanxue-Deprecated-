@@ -481,35 +481,57 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
             new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.setMargins(0, 8, 0, 0);
+        List<ForumThreadObject.ThumbnailattachmentsEntity> notImage = null;
         // 处理图片附件
         if (entity.getThumbnailattachments() != null
             && entity.getThumbnailattachments().size() > 0) {
           forumThreadHolder.ll_image_attachment.setVisibility(View.VISIBLE);
           forumThreadHolder.ll_image_attachment.removeAllViews();
+
+          notImage = new ArrayList<ForumThreadObject.ThumbnailattachmentsEntity>();
+
           for (ForumThreadObject.ThumbnailattachmentsEntity attachment : entity.getThumbnailattachments()) {
 
             if (attachment == null) continue;
 
-            String url = Api.getInstance().getAttachmentImgUrl(attachment.getAttachmentid());
+            if (attachment.getFilename().endsWith(".jpe")
+                || attachment.getFilename()
+                .endsWith(".jpeg")
+                || attachment.getFilename().endsWith(".jpg")
+                || attachment.getFilename().endsWith(".png")
+                || attachment.getFilename().endsWith(".gif")) {
 
-            ImageView imageView = new ImageView(ThreadDisplayActivity.this);
-            imageView.setLayoutParams(lp);
+              String url = Api.getInstance().getAttachmentImgUrl(attachment.getAttachmentid());
 
-            imageView.setTag(attachment.getAttachmentid());
+              ImageView imageView = new ImageView(ThreadDisplayActivity.this);
+              imageView.setLayoutParams(lp);
 
-            imageView.setOnClickListener(new View.OnClickListener() {
-              @Override public void onClick(View v) {
-                gotoImageActivity(api.getImageAttachmentPCUrl((int) v.getTag()));
-              }
-            });
+              imageView.setTag(attachment.getAttachmentid());
 
-            VolleyHelper.requestImageWithCache(url, imageView, AndroidHelper.getImageDiskCache(),
-                R.mipmap.image_404, R.mipmap.image_404);
+              imageView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                  gotoImageActivity(api.getImageAttachmentPCUrl((int) v.getTag()));
+                }
+              });
 
-            forumThreadHolder.ll_image_attachment.addView(imageView);
+              VolleyHelper.requestImageWithCache(url, imageView, AndroidHelper.getImageDiskCache(),
+                  R.mipmap.image_404, R.mipmap.image_404);
+
+              forumThreadHolder.ll_image_attachment.addView(imageView);
+            } else {
+              notImage.add(attachment);
+            }
           }
         } else {
           forumThreadHolder.ll_image_attachment.setVisibility(View.GONE);
+        }
+
+        if (entity.getOtherattachments() == null) {
+          entity.setOtherattachments(notImage == null ? null : notImage);
+        } else if (notImage != null) {
+          for (ForumThreadObject.ThumbnailattachmentsEntity attachment : notImage) {
+            entity.getOtherattachments().add(attachment);
+          }
         }
 
         //处理其他附件
