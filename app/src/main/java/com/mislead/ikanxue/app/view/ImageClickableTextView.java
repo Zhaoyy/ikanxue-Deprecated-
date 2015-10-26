@@ -140,6 +140,8 @@ public class ImageClickableTextView extends TextView {
                 // add bitmap to cache
                 if (entry.getBitmap() != null) {
                   AndroidHelper.getImageDiskCache().putBitmap(entry.getKey(), entry.getBitmap());
+
+                  entry.getBitmap().recycle();
                 }
               }
             });
