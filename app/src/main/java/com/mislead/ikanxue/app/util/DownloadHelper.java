@@ -4,16 +4,24 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
 import com.mislead.ikanxue.app.activity.LoginActivity;
 import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.base.Constants;
-import com.mislead.ikanxue.app.model.ForumThreadObject;
 import com.mislead.ikanxue.app.view.ConfirmDialog;
+import com.mislead.ikanxue.app.volley.VolleyHelper;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import org.apache.http.HttpVersion;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.htmlparser.Parser;
+import org.htmlparser.filters.StringFilter;
+import org.htmlparser.util.NodeList;
+import org.htmlparser.util.ParserException;
+import org.htmlparser.visitors.HtmlPage;
 
 /**
  * DownloadHelper
@@ -21,6 +29,8 @@ import org.apache.http.HttpVersion;
  * on 15-10-18.
  */
 public class DownloadHelper {
+
+  private static final Pattern pattern = Pattern.compile("a href=\"(.*?)\"");
 
   private Context context;
   private DownloadManager downloadManager;
@@ -63,10 +73,9 @@ public class DownloadHelper {
     return split[0];
   }
 
-  public void addDownloadTask(final Context context,
-      final ForumThreadObject.ThumbnailattachmentsEntity entity) {
+  public void addDownloadTask(final Context context, final int id, final String fileName) {
 
-    final String content = context.getString(R.string.download_note, entity.getFilename());
+    final String content = context.getString(R.string.download_note, fileName);
     String needLogin = context.getString(R.string.need_login);
     final boolean isLogin = Api.getInstance().isLogin();
     int theme_id = ShPreUtil.getInt(Constants.THEME_ID, R.style.Theme_Dark);
@@ -74,7 +83,7 @@ public class DownloadHelper {
         new ConfirmDialog.OnConfirmListener() {
           @Override public void onConfirm() {
             if (isLogin) {
-              downloadAttachment(entity);
+              downloadAttachment(id, fileName);
             } else {
               context.startActivity(new Intent(context, LoginActivity.class));
             }
@@ -83,17 +92,50 @@ public class DownloadHelper {
     dialog.show();
   }
 
-  private void downloadAttachment(ForumThreadObject.ThumbnailattachmentsEntity entity) {
-    String url = Api.getInstance().getAttachmentImgUrl(entity.getAttachmentid());
+  private void downloadAttachment(int id, final String fileName) {
+    Api.getInstance().getForumPCHtml(id, new VolleyHelper.ResponseListener<String>() {
+      @Override public void onErrorResponse(VolleyError error) {
+        downloadUrl(null, null);
+      }
+
+      @Override public void onResponse(String response) {
+        String url = null;
+        try {
+          Parser parser = new Parser(response);
+          HtmlPage page = new HtmlPage(parser);
+          parser.visitAllNodesWith(page);
+
+          NodeList nodes = page.getBody();
+          StringFilter filter = new StringFilter(fileName);
+          nodes = nodes.extractAllNodesThatMatch(filter, true);
+
+          if (nodes.size() > 0) {
+            Matcher matcher = pattern.matcher(nodes.elementAt(0).getParent().getText());
+
+            if (matcher.find()) {
+              url = matcher.group(1);
+            }
+          }
+        } catch (ParserException e) {
+          e.printStackTrace();
+        }
+        downloadUrl(Api.DOMAIN + Api.PATH + url, fileName);
+      }
+    });
+  }
+
+  private void downloadUrl(String url, String fileName) {
+
+    if (TextUtils.isEmpty(url)) {
+      ToastHelper.toastShort(context, "获取文件下载地址失败！");
+      return;
+    }
+
+    //url = Api.DOMAIN + Api.PATH + "attachment.php?attachmentid=99762&amp;d=1441030101";
     //开始下载
-    Uri resource = Uri.parse(encodeGB(url));
+    Uri resource = Uri.parse(url);
     DownloadManager.Request request = new DownloadManager.Request(resource);
-    request.addRequestHeader("Cookie", Api.getInstance().getCookieString());
-    request.addRequestHeader("http.protocol.version", HttpVersion.HTTP_1_1.toString());
-    request.addRequestHeader("http.useragent",
-        "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)");
-    request.addRequestHeader("http.protocol.expect-continue", Boolean.FALSE.toString());
-    request.addRequestHeader("http.protocol.content-charset", "UTF-8");
+    request.addRequestHeader("Cookie", Api.getInstance().getPcStyleCookieString());
     request.setAllowedNetworkTypes(
         DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
     request.setAllowedOverRoaming(false);
@@ -106,8 +148,8 @@ public class DownloadHelper {
     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
     request.setVisibleInDownloadsUi(true);
     //sdcard的目录下的ikanxue文件夹
-    request.setDestinationInExternalPublicDir("ikanxue", entity.getFilename());
-    request.setTitle(entity.getFilename());
+    request.setDestinationInExternalPublicDir("ikanxue", fileName);
+    request.setTitle(fileName);
     long id = downloadManager.enqueue(request);
   }
 }

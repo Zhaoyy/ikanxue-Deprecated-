@@ -94,14 +94,22 @@ public class Api {
   }
 
   public Map<String, String> getCookieHeader() {
+    return getCookieHeader(false);
+  }
+
+  public Map<String, String> getCookieHeader(boolean pcStyle) {
     if (!isLogin()) return null;
     Map<String, String> header = new HashMap<>();
-    header.put("Cookie", mCookieStorage.getCookies());
+    header.put("Cookie", pcStyle ? getPcStyleCookieString() : getPcStyleCookieString());
     return header;
   }
 
   public String getCookieString() {
     return isLogin() ? mCookieStorage.getCookies() : "";
+  }
+
+  public String getPcStyleCookieString() {
+    return getCookieString().replace(STYLE, PC_STYLE);
   }
 
   public void requestJSONObjectByGet(String url,
@@ -201,6 +209,12 @@ public class Api {
       final VolleyHelper.ResponseListener<String> responseListener) {
     String url = DOMAIN + PATH + "showthread.php?" + STYLE + "&t=" + id + "&page=" + page;
     requestStringByGet(url, responseListener);
+  }
+
+  public void getForumPCHtml(int id, VolleyHelper.ResponseListener<String> responseListener) {
+    String url = DOMAIN + PATH + "showthread.php?" + "t=" + id;
+    VolleyHelper.requestStringWithHeadersAndParams(Request.Method.GET, url, responseListener,
+        getCookieHeader(true), null);
   }
 
   /**

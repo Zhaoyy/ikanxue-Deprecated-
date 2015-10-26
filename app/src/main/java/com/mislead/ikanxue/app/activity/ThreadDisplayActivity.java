@@ -52,7 +52,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
   private static String TAG = "ThreadDisplayActivity";
   private int currPage = 1;
-  private ForumThreadTitleObject.ThreadListEntity entity;
+  private ForumThreadTitleObject.ThreadListEntity threadEntity;
   private int lastFirstPostId = 0;
   private String title;
 
@@ -124,7 +124,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
     btn_reply = (ImageButton) findViewById(R.id.btn_reply);
 
     Intent intent = getIntent();
-    entity = (ForumThreadTitleObject.ThreadListEntity) intent.getSerializableExtra("entity");
+    threadEntity = (ForumThreadTitleObject.ThreadListEntity) intent.getSerializableExtra("entity");
     title = intent.getStringExtra("title");
     setTitle(title);
 
@@ -143,7 +143,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
     if (favorDao == null) {
       favorDao = new FavorDao(this);
     }
-    favorDao.addFavor(entity);
+    favorDao.addFavor(threadEntity);
     ToastHelper.toastShort(this, "帖子收藏成功!");
   }
 
@@ -188,7 +188,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
       }
     });
     // thread has closed
-    if (entity.getOpen() != 1) {
+    if (threadEntity.getOpen() != 1) {
       ll_reply.setVisibility(View.GONE);
     }
 
@@ -202,8 +202,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
   private void refresh() {
 
     // check there is new post or not
-    Api.getInstance()
-        .checkNewPostInShowThreadPage(entity.getThreadid(), lastRefreshTime,
+    Api.getInstance().checkNewPostInShowThreadPage(threadEntity.getThreadid(), lastRefreshTime,
             new VolleyHelper.ResponseListener<String>() {
               @Override public void onErrorResponse(VolleyError volleyError) {
                 LogHelper.e(volleyError.toString());
@@ -235,8 +234,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
   // request data from net
   private void loadData() {
 
-    Api.getInstance()
-        .getForumShowthreadPage(entity.getThreadid(), currPage,
+    Api.getInstance().getForumShowthreadPage(threadEntity.getThreadid(), currPage,
             new VolleyHelper.ResponseListener<String>() {
               @Override public void onErrorResponse(VolleyError volleyError) {
                 ToastHelper.toastShort(ThreadDisplayActivity.this, volleyError.toString());
@@ -315,39 +313,41 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
       }
 
       Api.getInstance()
-          .quickReply(entity.getThreadid(), reply, new VolleyHelper.ResponseListener<String>() {
-            @Override public void onErrorResponse(VolleyError volleyError) {
-              LogHelper.e(volleyError.toString());
-            }
-
-            @Override public void onResponse(String object) {
-              try {
-                JSONObject jsonObject = new JSONObject(object);
-
-                int result = jsonObject.getInt("result");
-
-                switch (result) {
-                  case Api.NEW_POST_SUCCESS:
-                    ToastHelper.toastLong(ThreadDisplayActivity.this, R.string.new_post_success);
-                    addNewReply(reply);
-                    et_reply.setText("");
-                    break;
-                  case Api.NEW_POST_FAIL_WITHIN_THIRTY_SECONDS:
-                    ToastHelper.toastLong(ThreadDisplayActivity.this,
-                        R.string.new_post_fail_within_thirty_seconds);
-                    return;
-                  case Api.NEW_POST_FAIL_WITHIN_FIVE_MINUTES:
-                    ToastHelper.toastLong(ThreadDisplayActivity.this,
-                        R.string.new_post_fail_within_five_minutes);
-                    return;
-                  default:
-                    break;
+          .quickReply(threadEntity.getThreadid(), reply,
+              new VolleyHelper.ResponseListener<String>() {
+                @Override public void onErrorResponse(VolleyError volleyError) {
+                  LogHelper.e(volleyError.toString());
                 }
-              } catch (JSONException e) {
-                e.printStackTrace();
-              }
-            }
-          });
+
+                @Override public void onResponse(String object) {
+                  try {
+                    JSONObject jsonObject = new JSONObject(object);
+
+                    int result = jsonObject.getInt("result");
+
+                    switch (result) {
+                      case Api.NEW_POST_SUCCESS:
+                        ToastHelper.toastLong(ThreadDisplayActivity.this,
+                            R.string.new_post_success);
+                        addNewReply(reply);
+                        et_reply.setText("");
+                        break;
+                      case Api.NEW_POST_FAIL_WITHIN_THIRTY_SECONDS:
+                        ToastHelper.toastLong(ThreadDisplayActivity.this,
+                            R.string.new_post_fail_within_thirty_seconds);
+                        return;
+                      case Api.NEW_POST_FAIL_WITHIN_FIVE_MINUTES:
+                        ToastHelper.toastLong(ThreadDisplayActivity.this,
+                            R.string.new_post_fail_within_five_minutes);
+                        return;
+                      default:
+                        break;
+                    }
+                  } catch (JSONException e) {
+                    e.printStackTrace();
+                  }
+                }
+              });
     } else {
       ThreadDisplayActivity.this.startActivity(
           new Intent(ThreadDisplayActivity.this, LoginActivity.class));
@@ -534,7 +534,8 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
                 DownloadHelper downloadHelper =
                     DownloadHelper.getInstance(ThreadDisplayActivity.this);
-                downloadHelper.addDownloadTask(ThreadDisplayActivity.this, attachment);
+                downloadHelper.addDownloadTask(ThreadDisplayActivity.this,
+                    threadEntity.getThreadid(), attachment.getFilename());
               }
             });
 
