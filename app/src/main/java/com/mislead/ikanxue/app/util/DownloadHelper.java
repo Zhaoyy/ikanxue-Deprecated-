@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 import com.android.volley.VolleyError;
 import com.mislead.ikanxue.app.R;
@@ -19,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.StringFilter;
 import org.htmlparser.util.NodeList;
@@ -131,11 +131,13 @@ public class DownloadHelper {
           StringFilter filter = new StringFilter(fileName);
           nodes = nodes.extractAllNodesThatMatch(filter, true);
 
-          if (nodes.size() > 0) {
-            Matcher matcher = pattern.matcher(nodes.elementAt(0).getParent().getText());
+          for (int i = 0; i < nodes.size(); i++) {
+            Node node = nodes.elementAt(i);
+            Matcher matcher = pattern.matcher(node.getParent().getText());
 
             if (matcher.find()) {
               url = matcher.group(1);
+              break;
             }
           }
         } catch (ParserException e) {
@@ -146,13 +148,18 @@ public class DownloadHelper {
     });
   }
 
+  private boolean isNUllOrEmptyUrl(String url) {
+    return url == null || url.trim().length() == 0 || url.trim().toLowerCase().equals("null");
+  }
+
   private void downloadUrl(String url, String fileName) {
 
-    if (TextUtils.isEmpty(url)) {
+    if (isNUllOrEmptyUrl(url)) {
       ToastHelper.toastShort(context, "获取文件下载地址失败！");
       return;
     }
 
+    LogHelper.e(url);
     //url = Api.DOMAIN + Api.PATH + "attachment.php?attachmentid=99762&amp;d=1441030101";
     //开始下载
     Uri resource = Uri.parse(url);
