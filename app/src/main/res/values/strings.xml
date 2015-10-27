@@ -62,11 +62,12 @@
   <string name="quick_reply">快速回复，不少于6个字</string>
   <string name="confirm">确定</string>
   <string name="cancel">取消</string>
-  <string name="download_note">确定要下载”%1$s“？\n\n文件将会下载到SDCard的ikanxue目录下。</string>
+  <string name="download_note">确定要下载“%1$s”？\n\n文件将会下载到SDCard的ikanxue目录下。</string>
   <string name="reply">回复</string>
   <string name="ref_template"><Data><![CDATA[ <div class=\"quote\"><i><i>最初由 <strong>%1$s<\/strong>发布<\/i>:<br \/>\r\n%2$s<\/i><\/div> ]]> </Data></string>
   <string name="reply_with_reference">回复中引用原始信息</string>
   <string name="need_login">该操作需要用户先登录！</string>
+  <string name="file_exists">“%1$s”已经存在，是否要重新下载？</string>
 
   <string-array name="topic_list">
     <item>【求助】</item>

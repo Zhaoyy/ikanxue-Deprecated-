@@ -4,6 +4,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 import com.android.volley.VolleyError;
@@ -13,6 +14,7 @@ import com.mislead.ikanxue.app.api.Api;
 import com.mislead.ikanxue.app.base.Constants;
 import com.mislead.ikanxue.app.view.ConfirmDialog;
 import com.mislead.ikanxue.app.volley.VolleyHelper;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
@@ -31,6 +33,8 @@ import org.htmlparser.visitors.HtmlPage;
 public class DownloadHelper {
 
   private static final Pattern pattern = Pattern.compile("a href=\"(.*?)\"");
+  private String DirName;
+  private static final String ikxDir = "ikanxue";
 
   private Context context;
   private DownloadManager downloadManager;
@@ -39,6 +43,13 @@ public class DownloadHelper {
     this.context = context;
     context = context.getApplicationContext();
     downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+
+    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+      DirName =
+          Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + ikxDir;
+    } else {
+      DirName = Environment.getDataDirectory().getAbsolutePath() + File.separator + ikxDir;
+    }
   }
 
   // single instance
@@ -75,12 +86,23 @@ public class DownloadHelper {
 
   public void addDownloadTask(final Context context, final int id, final String fileName) {
 
-    final String content = context.getString(R.string.download_note, fileName);
-    String needLogin = context.getString(R.string.need_login);
+    String content = context.getString(R.string.download_note, fileName);
     final boolean isLogin = Api.getInstance().isLogin();
+
+    LogHelper.e(DirName);
+    if (!isLogin) {
+      content = context.getString(R.string.need_login);
+    } else {
+      File file = new File(DirName, fileName);
+
+      if (file.exists()) {
+        content = context.getString(R.string.file_exists, fileName);
+      }
+    }
+
     int theme_id = ShPreUtil.getInt(Constants.THEME_ID, R.style.Theme_Dark);
-    ConfirmDialog dialog = new ConfirmDialog(context, theme_id, isLogin ? content : needLogin,
-        new ConfirmDialog.OnConfirmListener() {
+    ConfirmDialog dialog =
+        new ConfirmDialog(context, theme_id, content, new ConfirmDialog.OnConfirmListener() {
           @Override public void onConfirm() {
             if (isLogin) {
               downloadAttachment(id, fileName);
@@ -148,7 +170,7 @@ public class DownloadHelper {
     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
     request.setVisibleInDownloadsUi(true);
     //sdcard的目录下的ikanxue文件夹
-    request.setDestinationInExternalPublicDir("ikanxue", fileName);
+    request.setDestinationInExternalPublicDir(ikxDir, fileName);
     request.setTitle(fileName);
     long id = downloadManager.enqueue(request);
   }
