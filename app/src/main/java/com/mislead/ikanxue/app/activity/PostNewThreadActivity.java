@@ -88,6 +88,7 @@ public class PostNewThreadActivity extends SwipeBackActivity {
             intent.putExtra("threadid", id);
 
             setResult(502, intent);
+            finish();
           } catch (JSONException e) {
             LogHelper.e(e.toString());
           }
