@@ -100,7 +100,7 @@ public class Api {
   public Map<String, String> getCookieHeader(boolean pcStyle) {
     if (!isLogin()) return null;
     Map<String, String> header = new HashMap<>();
-    header.put("Cookie", pcStyle ? getPcStyleCookieString() : getPcStyleCookieString());
+    header.put("Cookie", pcStyle ? getPcStyleCookieString() : getCookieString());
     return header;
   }
 

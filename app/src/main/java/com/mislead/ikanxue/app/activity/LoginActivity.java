@@ -143,6 +143,8 @@ public class LoginActivity extends SwipeBackActivity {
                                                               @Override public void onErrorResponse(
                                                                   VolleyError volleyError) {
                                                                 LogHelper.e(volleyError.toString());
+                                                                mHandler.sendEmptyMessage(
+                                                                    HttpClientUtil.NET_SUCCESS);
                                                               }
 
                                                               @Override public void onResponse(
@@ -152,6 +154,8 @@ public class LoginActivity extends SwipeBackActivity {
                                                                       .setLoginUserType(
                                                                           object.getString(
                                                                               "usertitle"));
+                                                                  mHandler.sendEmptyMessage(
+                                                                      HttpClientUtil.NET_SUCCESS);
                                                                 } catch (JSONException e) {
                                                                   e.printStackTrace();
                                                                 }
@@ -161,8 +165,6 @@ public class LoginActivity extends SwipeBackActivity {
                                                     LoginActivity.this.sendBroadcast(new Intent(
                                                         MyApplication.LOGIN_STATE_CHANGE_ACTION));
                                                     AndroidHelper.hideProgressDialog();
-                                                    mHandler.sendEmptyMessage(
-                                                        HttpClientUtil.NET_SUCCESS);
                                                   } catch (JSONException e) {
                                                     e.printStackTrace();
                                                   }
