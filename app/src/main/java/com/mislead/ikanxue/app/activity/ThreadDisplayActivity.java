@@ -40,6 +40,7 @@ import java.util.Calendar;
 import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * ThreadDisplayActivity
@@ -75,6 +76,8 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
 
   private List<ForumThreadObject.PostbitsEntity> threads =
       new ArrayList<ForumThreadObject.PostbitsEntity>();
+
+  private CompositeSubscription compositeSubscription = new CompositeSubscription();
 
   private Runnable runnable = new Runnable() {
     @Override public void run() {
@@ -145,6 +148,15 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
     }
     favorDao.addFavor(threadEntity);
     ToastHelper.toastShort(this, "帖子收藏成功!");
+  }
+
+  @Override protected void onDestroy() {
+
+    if (compositeSubscription.hasSubscriptions()) {
+      compositeSubscription.unsubscribe();
+    }
+
+    super.onDestroy();
   }
 
   private void initView() {
@@ -636,6 +648,7 @@ public class ThreadDisplayActivity extends SwipeBackActivity {
       ll_attachment = (LinearLayout) itemView.findViewById(R.id.ll_attachment);
       ll_image_attachment = (LinearLayout) itemView.findViewById(R.id.ll_image_attachment);
       ll_other_attachment = (LinearLayout) itemView.findViewById(R.id.ll_other_attachment);
+      tv_msg.setCompositeSubscription(compositeSubscription);
     }
   }
 

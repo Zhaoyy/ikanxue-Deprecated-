@@ -56,6 +56,10 @@ public class ImageClickableTextView extends TextView {
     }
   }
 
+  public void setCompositeSubscription(CompositeSubscription compositeSubscription) {
+    this.compositeSubscription = compositeSubscription;
+  }
+
   public ImageClickableTextView(Context context) {
     super(context);
   }
