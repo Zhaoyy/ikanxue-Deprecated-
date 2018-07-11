@@ -1,3 +1,7 @@
+[Deprecated]
+- 用户登录方法已经失效。
+- 看雪网站已经改版，手机直接浏览效果更佳。
+
 #Kanxue
 i看雪是个人根据看雪API开发的第三方Android APP。目的是为了学习和交流Android开发技术。
 
